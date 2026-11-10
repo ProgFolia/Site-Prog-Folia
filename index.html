@@ -17,10 +17,10 @@
   <!-- Canvas Confetti CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
-  <!-- Google Fonts: Orbitron, Space Grotesk & Syne -->
+  <!-- Google Fonts: Orbitron, Space Grotesk, Syne & Rajdhani -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
 
   <!-- Configurações do Tailwind com Paleta Psytrance UV -->
   <script>
@@ -30,13 +30,14 @@
           fontFamily: {
             psy: ['Orbitron', 'sans-serif'],
             syne: ['Syne', 'sans-serif'],
+            raj: ['Rajdhani', 'sans-serif'],
             sans: ['Space Grotesk', 'sans-serif'],
           },
           colors: {
             trance: {
               black: '#07040d',
               dark: '#0e071e',
-              card: 'rgba(20, 11, 41, 0.75)',
+              card: 'rgba(20, 11, 41, 0.82)',
               uvPurple: '#8A2BE2',
               neonPink: '#FF007F',
               neonCyan: '#00F5D4',
@@ -161,7 +162,8 @@
 
         <!-- Miolo Central com logo.png do GitHub -->
         <div class="relative z-10 w-28 h-28 rounded-full bg-trance-dark border-2 border-trance-neonPink/70 flex items-center justify-center shadow-2xl glow-pink overflow-hidden p-2.5 backdrop-blur-md">
-          <img src="logo.png" alt="Prog Folia Logo" class="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(0,245,212,0.6)]">
+          <img src="logo.png" alt="Prog Folia Logo" class="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(0,245,212,0.6)]" onerror="this.style.display='none'; document.getElementById('splashFallbackEmblem').classList.remove('hidden');">
+          <div id="splashFallbackEmblem" class="hidden text-4xl text-trance-neonCyan animate-pulse">🕉️</div>
         </div>
       </div>
 
@@ -178,7 +180,7 @@
       </div>
 
       <p class="text-xs sm:text-sm text-gray-300 max-w-md font-light leading-relaxed">
-        Em 2027 iremos embarcar em uma jornada para nos lembrar do porquê estamos vivos e celebrar em comunhão com presença e intensidade
+        Em 2027 iremos embarcar em uma jornada para nos lembrar do porquê estamos vivos e celebrar em comunhão com presença e intensidade.
       </p>
 
       <div class="flex flex-col sm:flex-row items-center gap-3 w-full max-w-xs sm:max-w-md pt-2">
@@ -201,7 +203,7 @@
     </div>
   </div>
 
-  <!-- VÍDEO EM LOOPING INFINITO NO PLANO DE FUNDO -->
+  <!-- VÍDEO EM LOOPING INFINITO NO PLANO DE FUNDO (OPACIDADE 0.70 E NITIDEZ 100%) -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
     <video id="bgLoopVideo" autoplay loop muted playsinline preload="auto"
            class="w-full h-full object-cover"
@@ -234,18 +236,19 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- 1. CABEÇALHO / NAVBAR -->
+  <!-- 1. CABEÇALHO / NAVBAR COM LOGO EXPANDIDA (h-16) -->
   <!-- ========================================================================= -->
   <header class="fixed top-0 left-0 right-0 z-40 bg-trance-black/85 backdrop-blur-xl border-b border-purple-500/20 transition-all duration-300" id="mainHeader">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         
-        <a href="#" class="flex items-center gap-3 group">
+        <a href="#" class="flex items-center gap-3.5 group">
           <div class="relative flex items-center justify-center">
-            <img src="logo.png" alt="Prog Folia Logo" class="h-16 w-auto max-h-16 object-contain rounded-lg transition-transform group-hover:scale-105" 
+            <!-- Logo principal aumentada com h-16 (64px) e nitidez máxima -->
+            <img src="logo.png" alt="Prog Folia Logo" class="h-16 w-auto max-h-16 object-contain rounded-xl transition-transform group-hover:scale-105 filter drop-shadow-[0_0_10px_rgba(0,245,212,0.5)]" 
                  onerror="this.style.display='none'; document.getElementById('navbarFallbackLogo').classList.remove('hidden');">
             
-            <div id="navbarFallbackLogo" class="hidden relative w-12 h-12 rounded-2xl bg-gradient-to-tr from-trance-uvPurple via-trance-neonPink to-trance-neonCyan flex items-center justify-center shadow-lg p-0.5">
+            <div id="navbarFallbackLogo" class="hidden relative w-14 h-14 rounded-2xl bg-gradient-to-tr from-trance-uvPurple via-trance-neonPink to-trance-neonCyan flex items-center justify-center shadow-lg p-0.5">
               <div class="w-full h-full bg-trance-black rounded-[14px] flex items-center justify-center">
                 <i class="fa-solid fa-atom text-trance-neonCyan text-2xl group-hover:rotate-180 transition-transform duration-700"></i>
               </div>
@@ -264,19 +267,22 @@
         </a>
 
         <!-- Desktop Navigation Links -->
-        <nav class="hidden lg:flex items-center gap-7 text-xs font-semibold uppercase tracking-wider">
+        <nav class="hidden lg:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider">
           <a href="#sobre" class="hover:text-trance-neonCyan transition-colors">Manifesto</a>
-          <a href="#trajeto" class="hover:text-trance-neonCyan transition-colors">Trajeto Vitória</a>
+          <a href="#trajeto" class="hover:text-trance-neonCyan transition-colors">Trajeto</a>
           <a href="#lineup" class="hover:text-trance-neonCyan transition-colors">Line-Up</a>
           <a href="#playlist" class="text-green-400 hover:text-white transition-colors flex items-center gap-1.5">
             <i class="fa-brands fa-spotify text-sm"></i> Playlist
           </a>
           <a href="#abadas" class="text-trance-solarGold hover:text-white transition-colors flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-trance-neonPink animate-ping"></span>
-            Abadás Oficiais
+            Abadás
           </a>
           <a href="#sorteio" class="hover:text-trance-neonCyan transition-colors">Sorteio</a>
-          <a href="#apoio" class="hover:text-trance-neonCyan transition-colors">Contribuição Voluntária</a>
+          <a href="#apoio" class="hover:text-trance-neonCyan transition-colors">Apoio</a>
+          <a href="#contato" class="text-trance-neonCyan hover:text-white transition-colors flex items-center gap-1.5 font-bold">
+            <i class="fa-brands fa-whatsapp text-sm text-green-400"></i> Contato
+          </a>
         </nav>
 
         <!-- Social & Quick Action Buttons -->
@@ -330,7 +336,10 @@
           <span class="text-[10px] px-2 py-0.5 rounded-full bg-trance-neonPink/20 text-trance-neonPink border border-trance-neonPink/40 font-bold">Lote Limitado</span>
         </a>
         <a href="#sorteio" class="mobile-nav-link py-2 border-b border-white/5 hover:text-trance-neonCyan">Sorteio Memento Vivere</a>
-        <a href="#apoio" class="mobile-nav-link py-2 hover:text-trance-neonCyan">Contribuição Voluntária</a>
+        <a href="#apoio" class="mobile-nav-link py-2 border-b border-white/5 hover:text-trance-neonCyan">Contribuição Voluntária</a>
+        <a href="#contato" class="mobile-nav-link py-2 text-green-400 flex items-center gap-2">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp: +55 (27) 98813-8664
+        </a>
       </nav>
       
       <div class="pt-4 flex flex-col gap-3">
@@ -339,6 +348,9 @@
         </button>
         <a href="https://instagram.com/progfolia" target="_blank" class="w-full py-3 rounded-xl border border-pink-500/40 bg-pink-500/10 text-center font-bold text-pink-300 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
           <i class="fa-brands fa-instagram text-lg"></i> Seguir @progfolia
+        </a>
+        <a href="https://wa.me/5527988138664" target="_blank" class="w-full py-3 rounded-xl border border-green-500/40 bg-green-500/15 text-center font-bold text-green-400 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+          <i class="fa-brands fa-whatsapp text-lg"></i> Chamar no WhatsApp
         </a>
         <a href="#abadas" class="mobile-nav-link w-full py-3 rounded-xl bg-gradient-to-r from-trance-neonPink to-trance-uvPurple text-center font-psy font-bold text-xs uppercase tracking-wider text-white shadow-lg">
           Garantir Abadá Agora
@@ -454,7 +466,7 @@
               <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400">
                 <i class="fa-brands fa-whatsapp text-green-400"></i>
               </span>
-              <input type="tel" id="buyerPhone" required placeholder="(27) 99999-9999" 
+              <input type="tel" id="buyerPhone" required placeholder="(27) 98813-8664" 
                      class="w-full pl-10 pr-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white placeholder-gray-500 focus:outline-none focus:border-sky-400 text-xs sm:text-sm font-mono">
             </div>
           </div>
@@ -978,7 +990,7 @@
                 </div>
                 <div>
                   <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">WhatsApp (com DDD):</label>
-                  <input type="tel" id="sorteioWhatsapp" required placeholder="(27) 99999-9999" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-trance-solarGold text-sm">
+                  <input type="tel" id="sorteioWhatsapp" required placeholder="(27) 98813-8664" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-trance-solarGold text-sm">
                 </div>
                 <div>
                   <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">Seu @ do Instagram:</label>
@@ -1015,7 +1027,7 @@
             CONTRIBUIÇÃO VOLUNTÁRIA
           </h2>
           <p class="text-gray-300 text-sm leading-relaxed">
-            Você que mora longe, em outro estado, outro país, ou até em outra dimensão e não vai conseguir no nosso bloco e quer nos ajudar a crescer? Sua doação junto com as vendas dos abadás nos ajudam a custear o bloco seja comprando uma água pra equipe ou ajudando no cachê do artista, toda ajuda é bem vinda! 🩵
+            Você que mora longe, em outro estado, outro país, ou até em outra dimensão e não vai conseguir colar no nosso bloco e quer nos ajudar a crescer? Sua doação junto com as vendas dos abadás nos ajudam a custear o bloco seja comprando água para a equipe ou viabilizando os custos de som e trio elétrico. Toda ajuda é bem-vinda! 🩵
           </p>
         </div>
 
@@ -1045,7 +1057,7 @@
                 Chave PIX:
               </label>
               <div class="flex items-center gap-2">
-                <input type="text" id="pixKeyInput" readonly value="pix@progfolia.com.br" 
+                <input type="text" id="pixKeyInput" readonly value="blocoprogfolia@gmail.com" 
                        class="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-trance-solarGold font-mono text-xs sm:text-sm select-all">
                 <button onclick="copyPixKey()" id="btnCopyPix" 
                         class="px-5 py-3 rounded-xl bg-trance-neonCyan hover:bg-trance-neonCyan/90 text-trance-black font-psy font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shrink-0">
@@ -1056,8 +1068,8 @@
             </div>
 
             <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300 space-y-1.5 font-mono">
-              <div><strong>Titular:</strong> <span id="pixTitularDisplay" class="text-trance-neonCyan">Coletivo Prog Folia ES</span></div>
-              <div><strong>Finalidade:</strong> Ajuda nas finanças do bloco, contratação de profissionais, insumos para o cortejo e afins.</div>
+              <div><strong>Titular:</strong> <span id="pixTitularDisplay" class="text-trance-neonCyan">Lara Tassinae Guimaraes</span></div>
+              <div><strong>Finalidade:</strong> Ajuda nas finanças do bloco, contratação de profissionais, insumos para o cortejo e estrutura do trio.</div>
             </div>
           </div>
         </div>
@@ -1091,9 +1103,9 @@
         </button>
       </div>
 
-      <a id="btnFaqWhatsApp" href="#" target="_blank" rel="noopener noreferrer" 
+      <a id="btnFaqWhatsApp" href="https://wa.me/5527988138664" target="_blank" rel="noopener noreferrer" 
          class="w-full py-2.5 rounded-xl bg-green-500 hover:bg-green-600 text-white font-psy font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-colors">
-        <i class="fa-brands fa-whatsapp text-base"></i> Chamar no WhatsApp
+        <i class="fa-brands fa-whatsapp text-base"></i> Chamar no WhatsApp (+55 27 98813-8664)
       </a>
     </div>
 
@@ -1105,21 +1117,25 @@
     </button>
   </div>
 
-  <!-- 12. RODAPÉ COMPLETO -->
-  <footer class="relative z-10 bg-black/95 border-t border-purple-500/20 text-gray-400 py-16 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-12">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div class="space-y-4 md:col-span-1">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-xl bg-trance-neonPink flex items-center justify-center text-white text-sm">
-              <i class="fa-solid fa-atom"></i>
-            </div>
-            <span class="font-psy font-black text-lg text-white">PROG FOLIA</span>
-          </div>
-          <p class="text-xs text-gray-400 leading-relaxed">
-            O primeiro bloco de Psytrance do Espírito Santo.<br>
-            Edição 2027 - Memento Vivere.
-          </p>
+  <!-- ========================================================================= -->
+  <!-- 12. RODAPÉ COMPLETO COM CONTATO DIRETO (+5527988138664) -->
+  <!-- ========================================================================= -->
+  <!-- 4. Coluna de Contato com Botão WhatsApp -->
+        <div class="space-y-3" id="contato">
+          <h4 class="font-psy font-bold text-white text-xs uppercase tracking-wider">Contato</h4>
+          
+          <!-- Botão WhatsApp com link direto ocultando o número na tela -->
+          <a href="https://wa.me/5527988138664?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Prog%20Folia." 
+             target="_blank" rel="noopener noreferrer" 
+             class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white font-psy font-bold text-xs uppercase tracking-wider shadow-lg hover:scale-105 active:scale-95 transition-all">
+            <i class="fa-brands fa-whatsapp text-base"></i>
+            <span>WhatsApp</span>
+          </a>
+
+          <p class="text-xs text-trance-neonCyan font-mono pt-1">@progfolia</p>
+          <button onclick="openAdminModal()" class="text-gray-500 hover:text-trance-neonCyan transition-colors flex items-center gap-1.5 text-xs pt-1">
+            <i class="fa-solid fa-lock text-[10px]"></i> <span>Área do Admin</span>
+          </button>
         </div>
 
         <div class="space-y-3">
@@ -1128,21 +1144,50 @@
             <li><a href="#trajeto" class="hover:text-trance-neonCyan transition-colors">Trajeto em 2027 Vitória - ES</a></li>
             <li><a href="#abadas" class="hover:text-trance-neonCyan transition-colors">Pré-Venda de Abadás</a></li>
             <li><a href="#sorteio" class="hover:text-trance-neonCyan transition-colors">Sorteio Memento Vivere</a></li>
+            <li><a href="#apoio" class="hover:text-trance-neonCyan transition-colors">Contribuição Voluntária</a></li>
           </ul>
         </div>
 
         <div class="space-y-3">
           <h4 class="font-psy font-bold text-white text-xs uppercase tracking-wider">Pilares</h4>
           <p class="text-xs text-gray-300">Paz, Amor, União e Respeito na folia de rua de Vitória.</p>
+          <p class="text-[11px] text-gray-500 font-mono">Memento Vivere: lembre-se de viver intensamente cada instante.</p>
         </div>
 
+        <!-- ABA DE CONTATO COM WHATSAPP DESTACADO -->
         <div class="space-y-3">
-          <h4 class="font-psy font-bold text-white text-xs uppercase tracking-wider">Contato</h4>
-          <p class="text-xs text-trance-neonCyan font-mono">@progfolia</p>
-          <button onclick="openAdminModal()" class="text-gray-500 hover:text-trance-neonCyan transition-colors flex items-center gap-1.5 text-xs pt-2">
-            <i class="fa-solid fa-lock text-[10px]"></i> <span>Área do Admin</span>
-          </button>
+          <h4 class="font-psy font-bold text-white text-xs uppercase tracking-wider">Contato Oficial</h4>
+          
+          <ul class="space-y-2 text-xs">
+            <li>
+              <a href="https://instagram.com/progfolia" target="_blank" rel="noopener noreferrer" class="text-pink-400 hover:text-white transition-colors flex items-center gap-2 font-mono">
+                <i class="fa-brands fa-instagram text-sm"></i> @progfolia
+              </a>
+            </li>
+            <li>
+              <a href="https://wa.me/5527988138664" target="_blank" rel="noopener noreferrer" class="text-green-400 hover:text-white transition-colors flex items-center gap-2 font-mono font-bold">
+                <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp: +5527988138664
+              </a>
+            </li>
+            <li>
+              <span class="text-gray-400 font-mono text-[11px] flex items-center gap-2">
+                <i class="fa-regular fa-envelope text-xs text-trance-neonCyan"></i> blocoprogfolia@gmail.com
+              </span>
+            </li>
+          </ul>
+
+          <div class="pt-2">
+            <button onclick="openAdminModal()" class="text-gray-500 hover:text-trance-neonCyan transition-colors flex items-center gap-1.5 text-xs">
+              <i class="fa-solid fa-lock text-[10px]"></i> <span>Área do Admin</span>
+            </button>
+          </div>
         </div>
+
+      </div>
+
+      <div class="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 font-mono gap-3">
+        <span>© 2027 Prog Folia. Todos os direitos reservados.</span>
+        <span>Vitória • Espírito Santo • Brasil</span>
       </div>
     </div>
   </footer>
