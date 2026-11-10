@@ -201,6 +201,16 @@
     </div>
   </div>
 
+  <!-- VÍDEO EM LOOPING INFINITO NO PLANO DE FUNDO (BRILHO 42% E NITIDEZ 100%) -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <video id="bgLoopVideo" autoplay loop muted playsinline preload="auto"
+           class="w-full h-full object-cover"
+           style="opacity: 0.42; filter: none;">
+      <source src="ABERTURA.mp4" type="video/mp4">
+      <source src="abertura.mp4" type="video/mp4">
+    </video>
+  </div>
+
   <!-- Ambient Trance Nebulae Glows de Fundo -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
     <div class="absolute -top-32 -left-32 w-[480px] h-[480px] bg-trance-uvPurple rounded-full blur-[170px] opacity-30 animate-glow-pulse"></div>
@@ -1096,7 +1106,7 @@
   </div>
 
   <!-- 12. RODAPÉ COMPLETO -->
-  <footer class="bg-black/95 border-t border-purple-500/20 text-gray-400 py-16 px-4 sm:px-6 lg:px-8">
+  <footer class="relative z-10 bg-black/95 border-t border-purple-500/20 text-gray-400 py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto space-y-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div class="space-y-4 md:col-span-1">
@@ -1259,6 +1269,11 @@
         setTimeout(() => {
           splash.style.display = 'none';
         }, 850);
+      }
+
+      const bgVid = document.getElementById('bgLoopVideo');
+      if (bgVid && bgVid.paused) {
+        bgVid.play().catch(() => {});
       }
 
       if (withAudio) {
@@ -1959,6 +1974,11 @@
       if (audioEl) {
         audioEl.addEventListener('play', () => { isPlaying = true; updateAudioUI(true); });
         audioEl.addEventListener('pause', () => { isPlaying = false; updateAudioUI(false); });
+      }
+
+      const bgVid = document.getElementById('bgLoopVideo');
+      if (bgVid) {
+        bgVid.play().catch(() => {});
       }
 
       initCountdown();
