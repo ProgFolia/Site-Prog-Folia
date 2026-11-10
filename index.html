@@ -146,8 +146,8 @@
 
     <div class="relative z-10 max-w-xl mx-auto flex flex-col items-center space-y-7">
       
-      <!-- Mandala Geométrica Giratória -->
-      <div class="relative w-44 h-44 sm:w-52 sm:h-52 flex items-center justify-center">
+      <!-- Mandala Geométrica Giratória com a Logo Centralizada -->
+      <div class="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
         <svg class="absolute inset-0 w-full h-full animate-spin-slow opacity-75" viewBox="0 0 200 200">
           <circle cx="100" cy="100" r="90" fill="none" stroke="#00F5D4" stroke-width="1.5" stroke-dasharray="6 8" />
           <polygon points="100,10 178,55 178,145 100,190 22,145 22,55" fill="none" stroke="#FF007F" stroke-width="1.5" opacity="0.6"/>
@@ -159,9 +159,9 @@
           <circle cx="80" cy="80" r="50" fill="none" stroke="#00F5D4" stroke-width="1.5"/>
         </svg>
 
-        <div class="relative z-10 w-24 h-24 rounded-full bg-trance-dark border-2 border-trance-neonPink/60 flex items-center justify-center shadow-2xl glow-pink">
-          <img src="logo.png" alt="Logo" class="w-16 h-16 object-contain" onerror="this.style.display='none'; document.getElementById('splashFallbackEmblem').classList.remove('hidden');">
-          <div id="splashFallbackEmblem" class="hidden text-4xl text-trance-neonCyan animate-pulse">🕉️</div>
+        <!-- Miolo Central com logo.png do GitHub -->
+        <div class="relative z-10 w-28 h-28 rounded-full bg-trance-dark border-2 border-trance-neonPink/70 flex items-center justify-center shadow-2xl glow-pink overflow-hidden p-2.5 backdrop-blur-md">
+          <img src="logo.png" alt="Prog Folia Logo" class="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(0,245,212,0.6)]">
         </div>
       </div>
 
@@ -201,7 +201,7 @@
     </div>
   </div>
 
-  <!-- VÍDEO EM LOOPING INFINITO NO PLANO DE FUNDO (BRILHO 42% E NITIDEZ 100%) -->
+  <!-- VÍDEO EM LOOPING INFINITO NO PLANO DE FUNDO -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
     <video id="bgLoopVideo" autoplay loop muted playsinline preload="auto"
            class="w-full h-full object-cover"
