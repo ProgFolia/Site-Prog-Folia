@@ -283,6 +283,8 @@
             Abadás
           </a>
           <a href="#sorteio" class="hover:text-trance-neonCyan transition-colors">Sorteio</a>
+          <a href="#imprensa" class="hover:text-trance-neonCyan transition-colors">Imprensa</a>
+          <a href="#patrocinio" class="hover:text-trance-solarGold transition-colors">Patrocínio</a>
           <a href="#apoio" class="hover:text-trance-neonCyan transition-colors">Apoio</a>
           <a href="#contato" class="text-trance-neonCyan hover:text-white transition-colors flex items-center gap-1.5 font-bold">
             <i class="fa-brands fa-whatsapp text-sm text-green-400"></i> Contato
@@ -340,6 +342,8 @@
           <span class="text-[10px] px-2 py-0.5 rounded-full bg-trance-neonPink/20 text-trance-neonPink border border-trance-neonPink/40 font-bold">Lote Limitado</span>
         </a>
         <a href="#sorteio" class="mobile-nav-link py-2 border-b border-white/5 hover:text-trance-neonCyan">Sorteio Memento Vivere</a>
+        <a href="#imprensa" class="mobile-nav-link py-2 border-b border-white/5 hover:text-trance-neonCyan">Imprensa & Criadores</a>
+        <a href="#patrocinio" class="mobile-nav-link py-2 border-b border-white/5 text-trance-solarGold">Apoio e Patrocínio</a>
         <a href="#apoio" class="mobile-nav-link py-2 border-b border-white/5 hover:text-trance-neonCyan">Contribuição Voluntária</a>
         <a href="#contato" class="mobile-nav-link py-2 text-green-400 flex items-center gap-2">
           <i class="fa-brands fa-whatsapp"></i> WhatsApp: +55 (27) 98813-8664
@@ -585,7 +589,7 @@
         <div class="flex items-center justify-center pt-1">
           <div class="inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-white/5 border border-purple-500/30 text-xs sm:text-sm text-trance-neonCyan font-semibold backdrop-blur-sm shadow-inner">
             <i class="fa-solid fa-eye text-trance-neonPink animate-pulse"></i>
-            <span>Mais informações em breve, fique de olho em nossas redes</span>
+            <span>Fique de olho em nossas redes!</span>
           </div>
         </div>
 
@@ -819,14 +823,50 @@
           
           <div class="lg:col-span-5 flex flex-col items-center">
             <div class="relative w-full max-w-sm rounded-2xl bg-trance-black/80 border border-purple-500/30 flex flex-col items-center p-6 shadow-inner group">
-              <div class="w-32 h-36 bg-gradient-to-b from-trance-neonPink via-purple-700 to-trance-neonCyan rounded-2xl flex flex-col items-center justify-center shadow-2xl relative p-3 shrink-0">
-                <span class="font-psy font-black text-xs text-white tracking-widest text-center">PROG FOLIA</span>
-                <span class="text-[9px] font-syne text-trance-solarGold font-bold mt-1">MEMENTO VIVERE</span>
-                <i class="fa-solid fa-atom text-white/90 text-2xl mt-2 animate-spin-slow"></i>
-                <span class="text-[8px] text-white/80 uppercase font-mono mt-2">Vitória 2027</span>
+              
+              <!-- MOCKUP DO ABADÁ COM FALLBACK ELEGANTE -->
+              <div class="relative w-full max-w-[240px] aspect-[4/5] rounded-2xl bg-gradient-to-b from-purple-950/60 to-black border border-purple-500/40 p-3 shadow-2xl flex flex-col items-center justify-center overflow-hidden glow-purple">
+                <span class="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded-md bg-trance-neonCyan/20 border border-trance-neonCyan/40 text-[9px] font-psy font-bold text-trance-neonCyan uppercase tracking-wider">
+                  Mockup 3D
+                </span>
+
+                <!-- Imagem do mockup do abadá (tenta mockup-abada.png, abada.png ou logo) -->
+                <img src="mockup-abada.png" 
+                     alt="Mockup do Abadá Prog Folia 2027" 
+                     class="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,0,127,0.4)] transition-transform duration-500 group-hover:scale-105"
+                     onerror="this.onerror=null; this.src='abada.png'; this.onerror=() => { this.style.display='none'; document.getElementById('mockupVectorFallback').classList.remove('hidden'); }">
+
+                <!-- Fallback vetorial ilustrativo de abadá caso o arquivo ainda não esteja na pasta -->
+                <div id="mockupVectorFallback" class="hidden w-full h-full flex flex-col items-center justify-center text-center p-2">
+                  <div class="relative w-28 h-32 flex items-center justify-center">
+                    <svg viewBox="0 0 100 120" class="w-full h-full filter drop-shadow-[0_0_12px_rgba(0,245,212,0.5)]">
+                      <defs>
+                        <linearGradient id="abadaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#FF007F" />
+                          <stop offset="50%" stop-color="#8A2BE2" />
+                          <stop offset="100%" stop-color="#00F5D4" />
+                        </linearGradient>
+                      </defs>
+                      <!-- Silhueta estilizada de regata/abadá -->
+                      <path d="M 28 10 Q 38 22 50 22 Q 62 22 72 10 L 88 28 L 78 42 L 74 110 L 26 110 L 22 42 L 12 28 Z" fill="url(#abadaGrad)" stroke="#FFE600" stroke-width="1.5" />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center pt-3 pointer-events-none">
+                      <span class="font-psy font-black text-[7.5px] text-white tracking-widest">PROG FOLIA</span>
+                      <span class="text-[6px] text-trance-solarGold font-bold">2027</span>
+                      <i class="fa-solid fa-atom text-white/90 text-sm mt-1 animate-spin-slow"></i>
+                    </div>
+                  </div>
+                  <span class="text-[9px] text-gray-400 font-mono mt-2">Salve o arquivo como <strong class="text-trance-neonPink">mockup-abada.png</strong></span>
+                </div>
               </div>
 
-              <div class="mt-5 space-y-3 text-left w-full">
+              <!-- AVISO EXPLÍCITO DE REPRESENTAÇÃO / MOCKUP -->
+              <div class="mt-3.5 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-[10.5px] text-center font-mono leading-relaxed">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i>
+                <strong>Atenção:</strong> Imagem meramente ilustrativa. Esta é uma representação conceitual (mockup) de como irão ficar os abadás e não condiz 100% com a realidade da peça física final.
+              </div>
+
+              <div class="mt-4 space-y-3 text-left w-full">
                 <div class="text-center">
                   <h4 class="font-psy font-bold text-base text-white">Abadá Prog Folia 2027</h4>
                 </div>
@@ -1042,10 +1082,125 @@
       </div>
     </section>
 
-    <!-- 10. SEÇÃO CONTRIBUIÇÃO VOLUNTÁRIA / CHAVE PIX -->
+    <!-- 10. SEÇÃO IMPRENSA E CRIADORES DE CONTEÚDO -->
+    <section id="imprensa" class="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <div class="relative bg-gradient-to-br from-trance-card via-purple-950/40 to-trance-black rounded-3xl border-2 border-trance-neonCyan/40 p-8 sm:p-12 shadow-2xl overflow-hidden glow-cyan">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <div class="lg:col-span-5 space-y-4">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-trance-neonCyan/15 text-trance-neonCyan font-psy font-bold text-xs uppercase tracking-wider border border-trance-neonCyan/30">
+              <i class="fa-solid fa-camera-retro"></i> Coletivo Audiovisual
+            </span>
+            <h2 class="font-psy font-black text-3xl sm:text-4xl text-white leading-tight">
+              IMPRENSA & <span class="text-trance-neonCyan">CRIADORES</span>
+            </h2>
+            <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+              Você que é fotógrafo, videomaker/filmmaker, jornalista ou criador de conteúdo e gostaria de participar do coletivo audio visual do bloco nos mande uma mensagem!
+            </p>
+            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2 text-xs text-gray-400 font-mono">
+              <div class="flex items-center gap-2 text-trance-solarGold font-bold">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Benefícios do Coletivo:</span>
+              </div>
+              <p>• Acesso livre aos bastidores e trio elétrico</p>
+              <p>• Divulgação oficial de créditos nas redes</p>
+              <p>• Integração com a comunidade Psytrance capixaba</p>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7">
+            <div class="bg-trance-black/85 rounded-2xl p-6 sm:p-8 border border-white/15 shadow-xl">
+              <form id="imprensaForm" onsubmit="handleImprensaSubmit(event)" class="space-y-4">
+                <div>
+                  <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                    Nome Completo <span class="text-trance-neonPink">*</span>:
+                  </label>
+                  <input type="text" id="imprensaNome" required placeholder="Seu nome ou nome artístico"
+                         class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-trance-neonCyan text-sm">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                      Área que Atua <span class="text-trance-neonPink">*</span>:
+                    </label>
+                    <input type="text" id="imprensaArea" required placeholder="Ex: Fotografia, Videomaker..."
+                           class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-trance-neonCyan text-sm">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                      Cidade / Estado <span class="text-trance-neonPink">*</span>:
+                    </label>
+                    <input type="text" id="imprensaCidade" required placeholder="Ex: Vitória - ES"
+                           class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-trance-neonCyan text-sm">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                    Portfólio ou Instagram <span class="text-trance-neonPink">*</span>:
+                  </label>
+                  <input type="text" id="imprensaPortfolio" required placeholder="@seuperfil ou link do portfólio"
+                         class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-trance-neonCyan text-sm">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                    Por que quer participar do nosso coletivo audio visual? <span class="text-trance-neonPink">*</span>
+                  </label>
+                  <textarea id="imprensaMotivo" required rows="3" placeholder="Conte brevemente sobre sua motivação e seu trabalho..."
+                            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-trance-neonCyan text-sm resize-none"></textarea>
+                </div>
+
+                <button type="submit" 
+                        class="w-full py-4 rounded-xl bg-gradient-to-r from-trance-neonCyan via-trance-uvPurple to-trance-neonPink text-white font-psy font-bold text-xs uppercase tracking-wider shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 glow-cyan">
+                  <i class="fa-brands fa-whatsapp text-lg text-green-300"></i>
+                  <span>Enviar dados pelo WhatsApp</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. SEÇÃO APOIO E PATROCÍNIO -->
+    <section id="patrocinio" class="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <div class="relative bg-gradient-to-br from-amber-950/40 via-trance-card to-purple-950/50 rounded-3xl border-2 border-trance-solarGold/50 p-8 sm:p-12 shadow-2xl overflow-hidden glow-pink text-center space-y-6">
+        <div class="max-w-2xl mx-auto space-y-4">
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-trance-solarGold/15 border border-trance-solarGold/40 text-trance-solarGold font-psy font-bold text-xs uppercase tracking-wider">
+            <i class="fa-solid fa-handshake animate-pulse"></i> Parcerias Oficiais
+          </span>
+
+          <h2 class="font-psy font-black text-3xl sm:text-5xl text-white">
+            APOIO E <span class="text-trance-solarGold">PATROCÍNIO</span>
+          </h2>
+
+          <p class="text-gray-200 text-sm sm:text-base leading-relaxed">
+            Você que deseja fortalecer nosso bloco com seu patrocínio ou com o seu apoio, nos mande uma mensagem no whatsapp agora mesmo!
+          </p>
+
+          <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="https://wa.me/5527988138664?text=Ol%C3%A1%20Prog%20Folia%2C%20tenho%20interesse%20em%20apoiar%20o%20bloco!" 
+               target="_blank" rel="noopener noreferrer"
+               class="w-full sm:w-auto px-8 py-4 rounded-2xl font-psy font-black text-xs sm:text-sm uppercase tracking-wider bg-gradient-to-r from-trance-solarGold via-trance-neonPink to-trance-neonCyan text-trance-black shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3">
+              <i class="fa-brands fa-whatsapp text-2xl text-green-950"></i>
+              <span>FALAR SOBRE PATROCÍNIO NO WHATSAPP</span>
+            </a>
+          </div>
+
+          <p class="text-[11px] text-gray-400 font-mono">
+            Empresas, marcas parceiras e coletivos culturais: venham construir esse capítulo histórico conosco!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. SEÇÃO CONTRIBUIÇÃO VOLUNTÁRIA / CHAVE PIX -->
     <section id="apoio" class="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
       <div class="bg-trance-card rounded-3xl border border-purple-500/30 p-8 sm:p-12 shadow-2xl relative">
-        <div class="text-center max-w-2xl mx-auto mb-10 space-y-3">
+        <div class="text-center max-w-2xl mx-auto mb-8 space-y-3">
           <h2 class="font-psy font-black text-3xl sm:text-4xl text-white">
             CONTRIBUIÇÃO VOLUNTÁRIA
           </h2>
@@ -1054,45 +1209,29 @@
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center max-w-3xl mx-auto">
-          <div class="md:col-span-5 flex flex-col items-center text-center">
-            <div class="p-4 rounded-2xl bg-white shadow-2xl">
-              <svg class="w-40 h-40" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="10" width="40" height="40" rx="4" fill="#07040d"/>
-                <rect x="18" y="18" width="24" height="24" rx="2" fill="white"/>
-                <rect x="24" y="24" width="12" height="12" fill="#8A2BE2"/>
-                <rect x="110" y="10" width="40" height="40" rx="4" fill="#07040d"/>
-                <rect x="118" y="18" width="24" height="24" rx="2" fill="white"/>
-                <rect x="124" y="24" width="12" height="12" fill="#00F5D4"/>
-                <rect x="10" y="110" width="40" height="40" rx="4" fill="#07040d"/>
-                <rect x="18" y="118" width="24" height="24" rx="2" fill="white"/>
-                <rect x="24" y="124" width="12" height="12" fill="#FF007F"/>
-                <rect x="65" y="65" width="30" height="30" rx="8" fill="#FF007F"/>
-                <text x="80" y="85" font-size="14" text-anchor="middle" fill="white">🕉️</text>
-              </svg>
+        <div class="max-w-xl mx-auto space-y-4">
+          <div>
+            <label class="block text-xs font-psy font-bold text-gray-300 uppercase mb-1.5 text-center sm:text-left">
+              Chave PIX Oficial:
+            </label>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+              <input type="text" id="pixKeyInput" readonly value="blocoprogfolia@gmail.com" 
+                     class="w-full px-4 py-3.5 rounded-xl bg-black/60 border border-white/15 text-trance-solarGold font-mono text-xs sm:text-sm select-all text-center sm:text-left">
+              <button onclick="copyPixKey()" id="btnCopyPix" 
+                      class="px-6 py-3.5 rounded-xl bg-trance-neonCyan hover:bg-trance-neonCyan/90 text-trance-black font-psy font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shrink-0">
+                <i class="fa-regular fa-copy"></i>
+                <span>Copiar Chave</span>
+              </button>
             </div>
-            <span class="text-xs text-gray-400 mt-2 font-mono">Chave Pix de Apoio Oficial</span>
           </div>
 
-          <div class="md:col-span-7 space-y-4">
-            <div>
-              <label class="block text-xs font-psy font-bold text-gray-300 uppercase mb-1.5">
-                Chave PIX:
-              </label>
-              <div class="flex items-center gap-2">
-                <input type="text" id="pixKeyInput" readonly value="blocoprogfolia@gmail.com" 
-                       class="w-full px-4 py-3 rounded-xl bg-black/60 border border-white/15 text-trance-solarGold font-mono text-xs sm:text-sm select-all">
-                <button onclick="copyPixKey()" id="btnCopyPix" 
-                        class="px-5 py-3 rounded-xl bg-trance-neonCyan hover:bg-trance-neonCyan/90 text-trance-black font-psy font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shrink-0">
-                  <i class="fa-regular fa-copy"></i>
-                  <span>Copiar</span>
-                </button>
-              </div>
+          <div class="p-4 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300 space-y-2 font-mono">
+            <div class="flex flex-wrap justify-between items-center gap-1 border-b border-white/5 pb-2">
+              <span class="text-gray-400">Titular da Conta:</span>
+              <strong id="pixTitularDisplay" class="text-trance-neonCyan">Lara Tassinae Guimaraes</strong>
             </div>
-
-            <div class="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-300 space-y-1.5 font-mono">
-              <div><strong>Titular:</strong> <span id="pixTitularDisplay" class="text-trance-neonCyan">Lara Tassinae Guimaraes</span></div>
-              <div><strong>Finalidade:</strong> Ajuda nas finanças do bloco, contratação de profissionais, insumos para o cortejo e estrutura do trio.</div>
+            <div class="text-[11px] text-gray-400 leading-relaxed pt-1">
+              <strong>Finalidade:</strong> Apoio direto na estrutura do trio elétrico, sonorização, água para a equipe e viabilização da folia independente na avenida.
             </div>
           </div>
         </div>
@@ -1149,7 +1288,8 @@
         
         <div class="space-y-4 md:col-span-1">
           <div class="flex items-center gap-3">
-            <span class="text-2xl text-trance-neonCyan">🕉️</span>
+            <img src="logo.png" alt="Prog Folia Logo" class="h-9 w-auto max-h-9 object-contain rounded-lg filter drop-shadow-[0_0_8px_rgba(0,245,212,0.4)]" onerror="this.style.display='none'; document.getElementById('footerFallbackLogo').classList.remove('hidden');">
+            <span id="footerFallbackLogo" class="hidden text-2xl text-trance-neonCyan">🕉️</span>
             <span class="font-psy font-black text-lg text-white">PROG FOLIA</span>
           </div>
           <p class="text-xs text-gray-400 leading-relaxed">
@@ -1164,6 +1304,8 @@
             <li><a href="#trajeto" class="hover:text-trance-neonCyan transition-colors">Trajeto em 2027 Vitória - ES</a></li>
             <li><a href="#abadas" class="hover:text-trance-neonCyan transition-colors">Pré-Venda de Abadás</a></li>
             <li><a href="#sorteio" class="hover:text-trance-neonCyan transition-colors">Sorteio Memento Vivere</a></li>
+            <li><a href="#imprensa" class="hover:text-trance-neonCyan transition-colors">Imprensa & Criadores</a></li>
+            <li><a href="#patrocinio" class="hover:text-trance-solarGold transition-colors">Apoio e Patrocínio</a></li>
             <li><a href="#apoio" class="hover:text-trance-neonCyan transition-colors">Contribuição Voluntária</a></li>
           </ul>
         </div>
@@ -1186,7 +1328,7 @@
             </li>
             <li>
               <a href="https://wa.me/5527988138664" target="_blank" rel="noopener noreferrer" class="text-green-400 hover:text-white transition-colors flex items-center gap-2 font-mono font-bold">
-                <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp: +5527988138664
+                <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
               </a>
             </li>
             <li>
@@ -1434,8 +1576,8 @@
       PRE_SALE_END_DATE: new Date('2026-12-01T23:59:59-03:00'),
       FIRST_LOT_END_DATE: new Date('2026-12-25T23:59:59-03:00'),
 
-      // DATA ALVO DO CARNAVAL 2027 (Vitória - ES)
-      CARNAVAL_TARGET_DATE: new Date('2027-02-06T14:00:00-03:00')
+      // DATA ALVO DO CARNAVAL 2027 (Vitória - ES: 08/02/2027 às 08:00h)
+      CARNAVAL_TARGET_DATE: new Date('2027-02-08T08:00:00-03:00')
     };
 
     function getTotalSalesCount() {
@@ -2414,6 +2556,37 @@
       btnIcon.className = "fa-solid fa-ticket";
       btnText.innerText = "CADASTRAR E GERAR NÚMERO DA SORTE";
     });
+
+    // =========================================================================
+    // CADASTRO DE IMPRENSA & COLETIVO AUDIOVISUAL VIA WHATSAPP
+    // =========================================================================
+    function handleImprensaSubmit(event) {
+      event.preventDefault();
+
+      const nome = document.getElementById('imprensaNome').value.trim();
+      const area = document.getElementById('imprensaArea').value.trim();
+      const cidade = document.getElementById('imprensaCidade').value.trim();
+      const portfolio = document.getElementById('imprensaPortfolio').value.trim();
+      const motivo = document.getElementById('imprensaMotivo').value.trim();
+
+      if (!nome || !area || !cidade || !portfolio || !motivo) {
+        showToast("Atenção", "Por favor, preencha todos os campos obrigatórios.", false);
+        return;
+      }
+
+      const waMessage = 
+        `*CADASTRO COLETIVO AUDIOVISUAL - PROG FOLIA 2027*\n\n` +
+        `• *Nome:* ${nome}\n` +
+        `• *Área de Atuação:* ${area}\n` +
+        `• *Cidade / UF:* ${cidade}\n` +
+        `• *Portfólio / Instagram:* ${portfolio}\n` +
+        `• *Por que quer participar:* ${motivo}`;
+
+      const waUrl = `https://wa.me/${CONFIG.ORGANIZER_WHATSAPP}?text=${encodeURIComponent(waMessage)}`;
+
+      showToast("Redirecionando...", "Abrindo WhatsApp com seus dados formatados!");
+      window.open(waUrl, '_blank');
+    }
 
     function copyPixKey() {
       const input = document.getElementById('pixKeyInput');
