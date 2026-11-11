@@ -1308,12 +1308,16 @@
         </button>
       </div>
 
-      <div class="my-3 flex items-center gap-2">
+      <div class="my-3 flex items-center justify-between gap-2">
         <div class="relative flex-1">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-gray-400"></i>
           <input type="text" id="sorteioSearchInput" oninput="filterSorteioList()" placeholder="Buscar por Nome, CPF, Instagram ou Número..." 
                  class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-black/50 border border-white/15 text-white placeholder-gray-500 focus:outline-none focus:border-trance-solarGold">
         </div>
+        <button onclick="syncSorteioFromGoogleSheets(true)" title="Recarregar dados da planilha" class="px-3 py-2 rounded-xl bg-purple-900/40 hover:bg-purple-900/80 border border-purple-500/40 text-trance-neonCyan text-xs font-mono font-bold flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-arrows-rotate" id="syncSheetsIcon"></i>
+          <span class="hidden sm:inline">Sincronizar</span>
+        </button>
       </div>
 
       <div id="adminSorteioItemsList" class="flex-1 overflow-y-auto space-y-2.5 pr-1 py-1">
@@ -1439,9 +1443,41 @@
       return stored !== null ? parseInt(stored, 10) : 0;
     }
 
+    // Variável global em memória sincronizada com a Planilha do Google
+    let remoteLotteryList = [];
+
     function getLotteryEntriesCount() {
-      const stored = localStorage.getItem('progfolia_registered_cpfs');
-      return stored ? JSON.parse(stored).length : 0;
+      return remoteLotteryList.length || (JSON.parse(localStorage.getItem('progfolia_registered_cpfs') || '[]').length);
+    }
+
+    // Sincroniza os dados da planilha Google em qualquer dispositivo (PC, celular, etc.)
+    async function syncSorteioFromGoogleSheets(showNotification = false) {
+      if (!CONFIG.GOOGLE_SHEETS_URL || !CONFIG.GOOGLE_SHEETS_URL.startsWith('http')) return;
+      const icon = document.getElementById('syncSheetsIcon');
+      if (icon) icon.classList.add('animate-spin');
+
+      try {
+        const response = await fetch(CONFIG.GOOGLE_SHEETS_URL);
+        if (response.ok) {
+          const data = await response.json();
+          if (data && Array.isArray(data.list)) {
+            remoteLotteryList = data.list;
+            localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(remoteLotteryList));
+            
+            const countEl = document.getElementById('adminSorteioCountDisplay');
+            if (countEl) countEl.innerText = `${remoteLotteryList.length} participantes`;
+
+            if (showNotification) {
+              showToast("Sincronizado", `${remoteLotteryList.length} cadastros carregados da planilha!`);
+            }
+            renderSorteioList();
+          }
+        }
+      } catch (err) {
+        console.warn("Falha ao sincronizar com a planilha:", err);
+      } finally {
+        if (icon) icon.classList.remove('animate-spin');
+      }
     }
 
     function generateRandomLotteryCode() {
@@ -2196,8 +2232,12 @@
     }
 
     function isCpfAlreadyRegistered(cleanCpf) {
-      const registered = getRegisteredCpfs();
-      return registered.some(item => item.cleanCpf === cleanCpf);
+      // Verifica na lista sincronizada e na base local
+      const listToCheck = remoteLotteryList.length > 0 ? remoteLotteryList : getRegisteredCpfs();
+      return listToCheck.some(item => {
+        const itemCpf = item.cleanCpf || cleanCpfDigits(item.cpf || '');
+        return itemCpf === cleanCpf;
+      });
     }
 
     function checkUserRegistrationStatus() {
@@ -2278,7 +2318,7 @@
       btn.disabled = true;
       btn.classList.add('opacity-75');
       btnIcon.className = "fa-solid fa-spinner animate-spin";
-      btnText.innerText = "VALIDANDO & GRAVANDO NA PLANILHA...";
+      btnText.innerText = "VALIDANDO COM A PLANILHA...";
 
       // Gera número da sorte aleatório de 6 dígitos
       const lotteryData = generateRandomLotteryCode();
@@ -2286,9 +2326,8 @@
       const luckyFormatted = lotteryData.formatted;
       const formattedCpf = formatCpfString(cleanCpf);
       const maskedCpfForDisplay = `${cleanCpf.slice(0, 3)}.***.***-${cleanCpf.slice(9, 11)}`;
-      let isSyncedOnline = false;
 
-      // Dispara envio para o Google Sheets se a URL estiver configurada
+      // Dispara envio para o Google Sheets com validação de duplicidade no backend
       if (CONFIG.GOOGLE_SHEETS_URL && CONFIG.GOOGLE_SHEETS_URL.startsWith('http')) {
         try {
           const payload = {
@@ -2301,23 +2340,36 @@
             instagram: instagram
           };
 
-          await fetch(CONFIG.GOOGLE_SHEETS_URL, {
+          const response = await fetch(CONFIG.GOOGLE_SHEETS_URL, {
             method: 'POST',
-            mode: 'no-cors', // Permite envio direto para Google Apps Script sem erro de CORS
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload)
           });
 
-          isSyncedOnline = true;
+          if (response.ok) {
+            const result = await response.json().catch(() => null);
+            if (result && result.status === 'duplicate') {
+              if (hint) {
+                hint.innerText = "Este CPF já participou e gerou seu número da sorte.";
+                hint.classList.remove('hidden');
+              }
+              showToast("Cadastro Duplicado", "Este CPF já está registrado na planilha do sorteio!", false);
+              btn.disabled = false;
+              btn.classList.remove('opacity-75');
+              btnIcon.className = "fa-solid fa-ticket";
+              btnText.innerText = "CADASTRAR E GERAR NÚMERO DA SORTE";
+              return;
+            }
+          }
         } catch (err) {
           console.warn("Aviso ao sincronizar com Google Sheets:", err);
         }
       }
 
-      // Registra o CPF na lista de bloqueio permanente com dados completos para consulta no Admin
-      const registeredCpfs = getRegisteredCpfs();
-      registeredCpfs.push({
+      // Registra na base e no ticket local
+      const newEntry = {
         cleanCpf: cleanCpf,
+        cpf: formattedCpf,
         cpfMascarado: maskedCpfForDisplay,
         nome: nome,
         whatsapp: whatsapp,
@@ -2326,13 +2378,15 @@
         numeroFormatado: luckyFormatted,
         data: new Date().toISOString(),
         dataRegistro: new Date().toLocaleString('pt-BR')
-      });
-      localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(registeredCpfs));
+      };
 
-      // Salva o ticket do usuário localmente para consultas futuras
+      remoteLotteryList.push(newEntry);
+      localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(remoteLotteryList));
+
       const userTicket = {
         nome: nome,
         cpfMascarado: maskedCpfForDisplay,
+        cleanCpf: cleanCpf,
         whatsapp: whatsapp,
         instagram: instagram,
         numeroFormatado: luckyFormatted,
@@ -2346,11 +2400,7 @@
       document.getElementById('luckyParticipantCpf').innerText = `CPF: ${maskedCpfForDisplay}`;
 
       if (syncStatusEl) {
-        if (isSyncedOnline || CONFIG.GOOGLE_SHEETS_URL) {
-          syncStatusEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-1 text-green-400"></i>Registrado na planilha oficial com sucesso!`;
-        } else {
-          syncStatusEl.innerHTML = `<i class="fa-solid fa-check-double mr-1 text-trance-solarGold"></i>Número da sorte ${luckyFormatted} gerado com sucesso!`;
-        }
+        syncStatusEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-1 text-green-400"></i>Registrado e autenticado na planilha oficial!`;
       }
 
       document.getElementById('sorteioForm').classList.add('hidden');
@@ -2438,7 +2488,7 @@
     function renderSorteioList(filterText = "") {
       const listContainer = document.getElementById('adminSorteioItemsList');
       const counterEl = document.getElementById('adminSorteioTotalCounter');
-      const registered = getRegisteredCpfs();
+      const registered = remoteLotteryList.length > 0 ? remoteLotteryList : getRegisteredCpfs();
 
       let items = registered.map((item, index) => ({ ...item, originalIndex: index }));
 
@@ -2447,6 +2497,7 @@
         items = items.filter(i => 
           (i.nome && i.nome.toLowerCase().includes(q)) ||
           (i.cleanCpf && i.cleanCpf.includes(q)) ||
+          (i.cpf && i.cpf.includes(q)) ||
           (i.instagram && i.instagram.toLowerCase().includes(q)) ||
           (i.whatsapp && i.whatsapp.includes(q)) ||
           (i.numeroFormatado && i.numeroFormatado.toLowerCase().includes(q))
@@ -2454,7 +2505,7 @@
       }
 
       if (counterEl) {
-        counterEl.innerText = `${items.length} de ${registered.length} cadastro(s)`;
+        counterEl.innerText = `${items.length} de ${registered.length} cadastro(s) sincronizado(s)`;
       }
 
       if (items.length === 0) {
@@ -2462,7 +2513,7 @@
           <div class="p-8 text-center bg-white/5 rounded-2xl border border-white/10 space-y-2">
             <span class="text-3xl">🎟️</span>
             <h5 class="text-xs font-psy font-bold text-white uppercase">Nenhum cadastro encontrado</h5>
-            <p class="text-[11px] text-gray-400">Os participantes cadastrados aparecerão listados aqui.</p>
+            <p class="text-[11px] text-gray-400">Os participantes cadastrados na planilha aparecerão listados aqui.</p>
           </div>
         `;
         return;
@@ -2471,7 +2522,7 @@
       let html = "";
       items.forEach(item => {
         const displayName = item.nome || "Participante Anônimo";
-        const displayCpf = item.cpfMascarado || (item.cleanCpf ? formatCpfString(item.cleanCpf) : "Não informado");
+        const displayCpf = item.cpfMascarado || (item.cpf || (item.cleanCpf ? formatCpfString(item.cleanCpf) : "Não informado"));
         const displayDate = item.dataRegistro || (item.data ? new Date(item.data).toLocaleString('pt-BR') : "Data indisponível");
 
         html += `
@@ -2479,7 +2530,7 @@
             <div class="space-y-1 min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="px-2 py-0.5 rounded-md bg-trance-solarGold/15 border border-trance-solarGold/40 text-trance-solarGold font-psy font-black text-xs">
-                  ${item.numeroFormatado || '#PROG-' + item.numero}
+                  ${item.numeroFormatado || '#PROG-' + (item.numero || item.numeroSorte)}
                 </span>
                 <span class="font-bold text-xs text-white truncate">${displayName}</span>
               </div>
@@ -2511,14 +2562,14 @@
     }
 
     function promptDeleteLotteryEntry(index) {
-      const registered = getRegisteredCpfs();
+      const registered = remoteLotteryList.length > 0 ? remoteLotteryList : getRegisteredCpfs();
       const target = registered[index];
       if (!target) return;
 
       targetIndexToDelete = index;
       const targetDesc = document.getElementById('deleteConfirmTargetDescription');
       const name = target.nome || "Participante";
-      const ticket = target.numeroFormatado || target.numero;
+      const ticket = target.numeroFormatado || target.numero || target.numeroSorte;
       targetDesc.innerHTML = `Deseja realmente apagar o cadastro de <strong>${name}</strong> (${ticket})?`;
 
       document.getElementById('adminDeleteConfirmModal').classList.remove('hidden');
@@ -2529,15 +2580,18 @@
       document.getElementById('adminDeleteConfirmModal').classList.add('hidden');
     }
 
-    function executeConfirmedDelete() {
+    async function executeConfirmedDelete() {
       if (targetIndexToDelete === null) return;
-      const registered = getRegisteredCpfs();
-      const deleted = registered.splice(targetIndexToDelete, 1);
+      const registered = remoteLotteryList.length > 0 ? remoteLotteryList : getRegisteredCpfs();
+      const deleted = registered.splice(targetIndexToDelete, 1)[0];
+
+      // Remove do cache local
+      remoteLotteryList = registered;
       localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(registered));
 
-      // Se o usuário excluído era o que estava salvo no próprio dispositivo, libera o formulário
+      // Se o usuário excluído era o salvo neste aparelho, libera o formulário
       const localTicket = JSON.parse(localStorage.getItem('progfolia_user_registered_ticket') || 'null');
-      if (localTicket && deleted[0] && deleted[0].numeroFormatado === localTicket.numeroFormatado) {
+      if (localTicket && deleted && (deleted.cleanCpf === localTicket.cleanCpf || deleted.numeroFormatado === localTicket.numeroFormatado)) {
         localStorage.removeItem('progfolia_user_registered_ticket');
         const form = document.getElementById('sorteioForm');
         const res = document.getElementById('sorteioResult');
@@ -2547,10 +2601,19 @@
         if (notice) notice.classList.add('hidden');
       }
 
+      // Comunica a exclusão para a Planilha do Google
+      if (deleted && deleted.cleanCpf && CONFIG.GOOGLE_SHEETS_URL) {
+        fetch(CONFIG.GOOGLE_SHEETS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'delete', cpf: deleted.cleanCpf })
+        }).catch(() => {});
+      }
+
       closeDeleteConfirmModal();
       renderSorteioList(document.getElementById('sorteioSearchInput').value);
       showAdminDashboard();
-      showToast("Cadastro Removido", "O registro foi excluído da base com sucesso.");
+      showToast("Cadastro Removido", "O registro foi excluído da base e da planilha com sucesso.");
     }
 
     // =========================================================================
@@ -2727,10 +2790,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Limpeza imediata dos cadastros de teste anteriores
-      localStorage.removeItem('progfolia_registered_cpfs');
-      localStorage.removeItem('progfolia_user_registered_ticket');
-
       document.getElementById('pixKeyInput').value = CONFIG.PIX_KEY;
       document.getElementById('pixTitularDisplay').innerText = CONFIG.PIX_TITULAR;
       const waText = encodeURIComponent("Olá! Estou no site do Prog Folia e tenho dúvidas sobre o bloco de Carnaval.");
@@ -2753,6 +2812,7 @@
       updateAdminVisibility();
       initCarnivalConfetti();
       checkUserRegistrationStatus();
+      syncSorteioFromGoogleSheets();
     });
   </script>
 </body>
