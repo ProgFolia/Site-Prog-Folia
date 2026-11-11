@@ -1269,8 +1269,7 @@
       API_CHECKOUT_ENDPOINT: "/api/create-preference",
 
       // URL DO WEBHOOK GOOGLE APPS SCRIPT PARA O GOOGLE PLANILHAS
-      // Cole aqui ou configure direto pela Área do Admin (PIN: progzito1602)
-      GOOGLE_SHEETS_URL: localStorage.getItem('progfolia_google_sheets_url') || "",
+      GOOGLE_SHEETS_URL: localStorage.getItem('progfolia_google_sheets_url') || "https://script.google.com/macros/s/AKfycbzIlCIBqDET8ivNUNNdKajR_UpwcIQKa_zLVB9kt0Zc_OPfcgklNz4GCexc9ueRIZhs/exec",
 
       // REGRAS DE LOTES E PREÇOS
       PRE_SALE_PRICE: 55,
@@ -1291,7 +1290,7 @@
     }
 
     function getLotteryEntriesCount() {
-      const stored = localStorage.getItem('progfolia_lottery_entries_count');
+      const stored = localStorage.getItem('progfolia_last_lottery_num');
       return stored !== null ? parseInt(stored, 10) : 0;
     }
 
