@@ -824,34 +824,69 @@
           <div class="lg:col-span-5 flex flex-col items-center">
             <div class="relative w-full max-w-sm rounded-2xl bg-trance-black/80 border border-purple-500/30 flex flex-col items-center p-6 shadow-inner group">
               
-              <!-- MOCKUP DO ABADÁ CLICÁVEL COM INDICADOR DE ZOOM (OTIMIZADO PARA MOBILE) -->
+              <!-- MOCKUP DO ABADÁ CLICÁVEL (SEMPRE VISÍVEL EM CELULAR, PC E PRÉVIA) -->
               <div onclick="openAbadaZoomModal()" 
-                   class="relative w-full max-w-[260px] min-h-[300px] sm:min-h-[340px] rounded-2xl bg-gradient-to-b from-purple-950/70 to-black border border-purple-500/40 p-4 shadow-2xl flex flex-col items-center justify-center overflow-hidden glow-purple cursor-pointer group hover:border-trance-neonPink hover:scale-[1.02] transition-all"
+                   id="abadaCardContainer"
+                   class="relative w-full max-w-[270px] min-h-[340px] rounded-2xl bg-gradient-to-b from-purple-950/80 via-black to-trance-dark border border-purple-500/40 p-4 shadow-2xl flex flex-col items-center justify-center overflow-hidden glow-purple cursor-pointer group hover:border-trance-neonPink hover:scale-[1.02] transition-all"
                    title="Clique para ampliar e ver detalhes do abadá">
                 
-                <span class="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded-md bg-trance-neonCyan/20 border border-trance-neonCyan/40 text-[9px] font-psy font-bold text-trance-neonCyan uppercase tracking-wider flex items-center gap-1 group-hover:bg-trance-neonPink/30 group-hover:border-trance-neonPink group-hover:text-white transition-colors">
+                <span class="absolute top-2.5 right-2.5 z-20 px-2 py-0.5 rounded-md bg-trance-neonCyan/20 border border-trance-neonCyan/40 text-[9px] font-psy font-bold text-trance-neonCyan uppercase tracking-wider flex items-center gap-1 group-hover:bg-trance-neonPink/30 group-hover:border-trance-neonPink group-hover:text-white transition-colors">
                   <i class="fa-solid fa-magnifying-glass-plus"></i> Zoom
                 </span>
 
-                <!-- Imagem do mockup do abadá com carregamento inteligente multi-extensão -->
+                <!-- Imagem Real (Exibida dinamicamente caso exista no repositório ou enviada pelo Admin) -->
                 <img id="abadaThumbImg"
-                     src="mockup-abada.png" 
                      alt="Mockup do Abadá Prog Folia 2027" 
-                     class="max-w-full max-h-[260px] object-contain filter drop-shadow-[0_0_15px_rgba(255,0,127,0.4)] transition-transform duration-500 group-hover:scale-105"
-                     onerror="handleAbadaImageError(this)">
+                     class="hidden max-w-full max-h-[280px] object-contain filter drop-shadow-[0_0_18px_rgba(255,0,127,0.5)] transition-transform duration-500 group-hover:scale-105">
 
-                <!-- Fallback visual estilizado caso o arquivo de imagem ainda não esteja no servidor -->
-                <div id="mockupVectorFallback" class="hidden w-full flex flex-col items-center justify-center text-center py-2">
-                  <div class="w-36 h-44 rounded-2xl bg-gradient-to-b from-trance-neonPink via-purple-700 to-trance-neonCyan p-3.5 flex flex-col items-center justify-between shadow-2xl relative border border-white/20">
-                    <span class="font-psy font-black text-xs text-white tracking-widest text-center leading-tight">PROG FOLIA</span>
-                    <span class="text-[9.5px] font-syne text-trance-solarGold font-bold tracking-wider">MEMENTO VIVERE</span>
-                    <i class="fa-solid fa-atom text-white/95 text-3xl animate-spin-slow filter drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]"></i>
-                    <span class="text-[9px] text-white/90 uppercase font-mono tracking-widest">Vitória 2027</span>
-                  </div>
+                <!-- Mockup Gráfico Oficial em Alta Resolução (Garante visualização 100% perfeita sem depender de imagem externa) -->
+                <div id="mockupSvgGraphic" class="w-full flex flex-col items-center justify-center select-none py-1 transition-transform duration-500 group-hover:scale-105">
+                  <svg viewBox="0 0 200 240" class="w-48 h-56 drop-shadow-[0_0_20px_rgba(255,0,127,0.45)]">
+                    <defs>
+                      <linearGradient id="abadaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FF007F" />
+                        <stop offset="45%" stop-color="#8A2BE2" />
+                        <stop offset="100%" stop-color="#00F5D4" />
+                      </linearGradient>
+                      <linearGradient id="trimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#FFE600" />
+                        <stop offset="100%" stop-color="#00F5D4" />
+                      </linearGradient>
+                      <radialGradient id="psyAura" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="rgba(0,245,212,0.4)" />
+                        <stop offset="100%" stop-color="transparent" />
+                      </radialGradient>
+                    </defs>
+
+                    <!-- Silhueta Oficial do Abadá / Regata Dry-Fit -->
+                    <path d="M 65,10 C 78,24 122,24 135,10 L 165,30 C 158,48 152,70 162,90 L 152,94 C 145,78 146,55 148,42 L 146,220 C 146,224 142,228 138,228 L 62,228 C 58,228 54,224 54,220 L 52,42 C 54,55 55,78 48,94 L 38,90 C 48,70 42,48 35,30 Z" 
+                          fill="url(#abadaGrad)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" />
+
+                    <!-- Gola Canelada em Destaque -->
+                    <path d="M 65,10 C 78,24 122,24 135,10 C 124,18 76,18 65,10 Z" fill="url(#trimGrad)" />
+
+                    <!-- Aura Mística Central -->
+                    <circle cx="100" cy="130" r="45" fill="url(#psyAura)" />
+
+                    <!-- Mandalas e Geometria Sagrada -->
+                    <circle cx="100" cy="130" r="30" fill="none" stroke="#FFE600" stroke-width="1" stroke-dasharray="3 3" opacity="0.75" />
+                    <circle cx="100" cy="130" r="22" fill="none" stroke="#00F5D4" stroke-width="1.2" opacity="0.8" />
+                    
+                    <!-- Átomo Psy Central -->
+                    <ellipse cx="100" cy="130" rx="16" ry="6" fill="none" stroke="#FFFFFF" stroke-width="1.2" transform="rotate(30 100 130)" />
+                    <ellipse cx="100" cy="130" rx="16" ry="6" fill="none" stroke="#FFFFFF" stroke-width="1.2" transform="rotate(-30 100 130)" />
+                    <circle cx="100" cy="130" r="3" fill="#FFE600" />
+
+                    <!-- Textos Oficiais Gravados na Estampa -->
+                    <text x="100" y="72" font-family="'Orbitron', sans-serif" font-weight="900" font-size="11" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">PROG FOLIA</text>
+                    <text x="100" y="85" font-family="'Syne', sans-serif" font-weight="800" font-size="7.5" fill="#FFE600" text-anchor="middle" letter-spacing="1">MEMENTO VIVERE</text>
+                    <text x="100" y="180" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="7.5" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">VITÓRIA • 2027</text>
+                    <text x="100" y="192" font-family="'Rajdhani', sans-serif" font-weight="600" font-size="6" fill="#00F5D4" text-anchor="middle" letter-spacing="1">DRY-FIT EDITION</text>
+                  </svg>
                 </div>
 
                 <!-- Botão Flutuante de Indicação de Clique -->
-                <div class="absolute bottom-2.5 inset-x-3 py-1.5 px-2 rounded-lg bg-black/80 backdrop-blur-sm border border-white/10 flex items-center justify-center gap-1.5 text-[10px] text-trance-neonCyan font-mono group-hover:bg-trance-neonPink group-hover:text-white transition-all shadow-md">
+                <div class="absolute bottom-2.5 inset-x-3 py-1.5 px-2 rounded-lg bg-black/80 backdrop-blur-sm border border-white/10 flex items-center justify-center gap-1.5 text-[10px] text-trance-neonCyan font-mono group-hover:bg-trance-neonPink group-hover:text-white transition-all shadow-md z-10">
                   <i class="fa-solid fa-expand text-[9px]"></i>
                   <span>Clique para ver em tela cheia</span>
                 </div>
@@ -1581,24 +1616,51 @@
     <!-- Área de Exibição Central com suporte a Pan e Zoom -->
     <div id="abadaZoomContainer" class="relative flex-1 w-full max-w-4xl flex items-center justify-center overflow-hidden my-3 cursor-grab active:cursor-grabbing">
       <div id="abadaZoomWrapper" class="transition-transform duration-100 ease-out flex items-center justify-center max-w-full max-h-full">
-        <img id="abadaModalImage" src="mockup-abada.png" alt="Abadá Prog Folia Zoom" 
-             class="max-w-[85vw] max-h-[68vh] object-contain filter drop-shadow-[0_0_30px_rgba(255,0,127,0.45)] pointer-events-none"
-             onerror="this.onerror=null; this.style.display='none'; document.getElementById('abadaModalFallback').classList.remove('hidden'); document.getElementById('abadaModalFallback').classList.add('flex');">
-        <div id="abadaModalFallback" class="hidden flex-col items-center justify-center p-6 text-center">
-          <div class="w-48 h-60 rounded-3xl bg-gradient-to-b from-trance-neonPink via-purple-700 to-trance-neonCyan p-5 flex flex-col items-center justify-between shadow-2xl border border-white/25">
-            <span class="font-psy font-black text-sm text-white tracking-widest text-center">PROG FOLIA</span>
-            <span class="text-xs font-syne text-trance-solarGold font-bold">MEMENTO VIVERE</span>
-            <i class="fa-solid fa-atom text-white text-4xl animate-spin-slow filter drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"></i>
-            <span class="text-[10px] text-white/90 uppercase font-mono">Vitória 2027</span>
+        <!-- Imagem Real no Zoom -->
+        <img id="abadaModalImage" alt="Abadá Prog Folia Zoom" 
+             class="hidden max-w-[85vw] max-h-[68vh] object-contain filter drop-shadow-[0_0_30px_rgba(255,0,127,0.45)] pointer-events-none">
+        
+        <!-- Mockup Vetorial no Zoom (Caso não haja imagem personalizada carregada) -->
+        <div id="abadaModalSvgHolder" class="flex flex-col items-center justify-center p-4">
+          <div class="w-[280px] sm:w-[360px] max-w-[85vw] drop-shadow-[0_0_35px_rgba(0,245,212,0.5)]">
+            <svg viewBox="0 0 200 240" class="w-full h-auto">
+              <defs>
+                <linearGradient id="modalAbadaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FF007F" />
+                  <stop offset="45%" stop-color="#8A2BE2" />
+                  <stop offset="100%" stop-color="#00F5D4" />
+                </linearGradient>
+                <linearGradient id="modalTrimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#FFE600" />
+                  <stop offset="100%" stop-color="#00F5D4" />
+                </linearGradient>
+              </defs>
+
+              <path d="M 65,10 C 78,24 122,24 135,10 L 165,30 C 158,48 152,70 162,90 L 152,94 C 145,78 146,55 148,42 L 146,220 C 146,224 142,228 138,228 L 62,228 C 58,228 54,224 54,220 L 52,42 C 54,55 55,78 48,94 L 38,90 C 48,70 42,48 35,30 Z" 
+                    fill="url(#modalAbadaGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" />
+
+              <path d="M 65,10 C 78,24 122,24 135,10 C 124,18 76,18 65,10 Z" fill="url(#modalTrimGrad)" />
+
+              <circle cx="100" cy="130" r="30" fill="none" stroke="#FFE600" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.85" />
+              <circle cx="100" cy="130" r="22" fill="none" stroke="#00F5D4" stroke-width="1.5" />
+              
+              <ellipse cx="100" cy="130" rx="16" ry="6" fill="none" stroke="#FFFFFF" stroke-width="1.4" transform="rotate(30 100 130)" />
+              <ellipse cx="100" cy="130" rx="16" ry="6" fill="none" stroke="#FFFFFF" stroke-width="1.4" transform="rotate(-30 100 130)" />
+              <circle cx="100" cy="130" r="3.5" fill="#FFE600" />
+
+              <text x="100" y="72" font-family="'Orbitron', sans-serif" font-weight="900" font-size="11" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">PROG FOLIA</text>
+              <text x="100" y="85" font-family="'Syne', sans-serif" font-weight="800" font-size="7.5" fill="#FFE600" text-anchor="middle" letter-spacing="1">MEMENTO VIVERE</text>
+              <text x="100" y="180" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="7.5" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">VITÓRIA • 2027</text>
+              <text x="100" y="192" font-family="'Rajdhani', sans-serif" font-weight="600" font-size="6" fill="#00F5D4" text-anchor="middle" letter-spacing="1">DRY-FIT EDITION</text>
+            </svg>
           </div>
-          <span class="text-[11px] text-gray-400 font-mono mt-3">Representação Conceitual Oficial</span>
         </div>
       </div>
     </div>
 
     <!-- Rodapé de Dicas e Atalhos -->
     <div class="w-full max-w-4xl pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 font-mono gap-2 text-center sm:text-left z-20">
-      <span>💡 Role o scroll do mouse ou use os botões para dar zoom. Arraste a imagem para navegar pelos detalhes.</span>
+      <span>💡 Role o scroll do mouse ou use os botões para dar zoom. Arraste para navegar pelos detalhes.</span>
       <button onclick="closeAbadaZoomModal()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-all text-xs">
         Fechar Visualização
       </button>
@@ -2052,73 +2114,74 @@
 
       if (existingIndex > -1) {
         cart[existingIndex].quantity += selectedQty;
-      } else {
-        cart.push({
-          id: 'abada_' + Date.now(),
-          size: isCustomSize ? 'Sob Encomenda' : selectedSize,
-          isCustom: isCustomSize,
-          customLabel: customLabel,
-          unitPrice: unitPrice,
-          quantity: selectedQty
-        });
-      }
+      <div id="adminDashboard" class="hidden space-y-4">
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2 font-mono text-xs">
+          <div class="flex justify-between">
+            <span>Vendas Registradas:</span>
+            <strong id="adminSalesCountDisplay" class="text-trance-neonCyan">0 un.</strong>
+          </div>
+          <div class="flex justify-between">
+            <span>Lote Vigente:</span>
+            <strong id="adminCurrentLotDisplay" class="text-trance-solarGold">Pré-Venda (R$ 55)</strong>
+          </div>
+          <div class="flex justify-between border-t border-white/10 pt-2">
+            <span>Inscritos no Sorteio:</span>
+            <strong id="adminSorteioCountDisplay" class="text-trance-neonGreen">0 participantes</strong>
+          </div>
+        </div>
 
-      localStorage.setItem('progfolia_cart_2027', JSON.stringify(cart));
-
-      confetti({
-        particleCount: 70,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
-
-      const label = isCustomSize ? `Sob Encomenda (${customLabel})` : selectedSize;
-      showToast("Adicionado ao Carrinho!", `${selectedQty}x Abadá ${label} adicionado(s) com sucesso.`);
-
-      selectedQty = 1;
-      renderStockBadges();
-      renderCartUI();
-    }
-
-    function toggleCartDrawer(open) {
-      const drawer = document.getElementById('cartDrawer');
-      const backdrop = document.getElementById('cartBackdrop');
-
-      if (open) {
-        renderCartUI();
-        backdrop.classList.remove('opacity-0', 'pointer-events-none');
-        backdrop.classList.add('opacity-100');
-        drawer.classList.remove('translate-x-full');
-      } else {
-        backdrop.classList.remove('opacity-100');
-        backdrop.classList.add('opacity-0', 'pointer-events-none');
-        drawer.classList.add('translate-x-full');
-      }
-    }
-
-    function renderCartUI() {
-      const listContainer = document.getElementById('cartItemsList');
-      const totalDisplay = document.getElementById('cartTotalDisplay');
-      const subtitle = document.getElementById('cartDrawerSubtitle');
-
-      const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const totalAmount = cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
-
-      document.getElementById('cartNavBadge').innerText = totalItemsCount;
-      document.getElementById('mobileCartNavBadge').innerText = totalItemsCount;
-      document.getElementById('btnCartCount').innerText = totalItemsCount;
-      document.getElementById('mobileCartMenuCount').innerText = `${totalItemsCount} un.`;
-
-      subtitle.innerText = `${totalItemsCount} item(s) selecionado(s)`;
-      totalDisplay.innerText = `R$ ${totalAmount.toFixed(2).replace('.', ',')}`;
-
-      if (cart.length === 0) {
-        listContainer.innerHTML = `
-          <div class="h-full flex flex-col items-center justify-center text-center p-6 space-y-4">
-            <div class="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-3xl text-gray-400">🛒</div>
-            <div>
-              <h4 class="font-psy font-bold text-white text-sm">Seu carrinho está vazio</h4>
-              <p class="text-xs text-gray-400 mt-1">Selecione os tamanhos para montar seu pedido.</p>
+        <!-- Botões de Acesso aos Relatórios Detalhados em Pop-up -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <button type="button" onclick="openSorteioListModal()" class="p-3 rounded-xl bg-purple-900/40 hover:bg-purple-900/70 border border-purple-500/40 text-left transition-all group">
+            <div class="flex items-center justify-between text-xs text-trance-solarGold font-psy font-bold mb-1">
+              <span>Sorteio</span>
+              <i class="fa-solid fa-users text-sm group-hover:scale-110 transition-transform"></i>
             </div>
+            <p class="text-[10px] text-gray-300">Ver e gerenciar inscritos</p>
+          </button>
+
+          <button type="button" onclick="openOrdersListModal()" class="p-3 rounded-xl bg-sky-950/40 hover:bg-sky-900/70 border border-sky-500/40 text-left transition-all group">
+            <div class="flex items-center justify-between text-xs text-trance-neonCyan font-psy font-bold mb-1">
+              <span>Vendas Abadás</span>
+              <i class="fa-solid fa-shirt text-sm group-hover:scale-110 transition-transform"></i>
+            </div>
+            <p class="text-[10px] text-gray-300">Tamanhos e quantidades</p>
+          </button>
+        </div>
+
+        <!-- Gerenciador de Imagem do Abadá (Upload Direto do Telefone ou PC) -->
+        <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 space-y-2 text-[11px]">
+          <span class="font-psy font-bold text-trance-neonPink uppercase block">Imagem Personalizada do Abadá:</span>
+          <div class="flex items-center gap-2">
+            <label class="flex-1 py-2 px-3 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 text-center font-bold text-white cursor-pointer transition-colors text-xs">
+              <i class="fa-solid fa-upload mr-1"></i> Escolher do Dispositivo
+              <input type="file" accept="image/*" onchange="handleAdminAbadaUpload(event)" class="hidden">
+            </label>
+            <button onclick="handleAdminResetAbadaImage()" title="Restaurar padrão" class="py-2 px-3 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-300 text-xs">
+              Resetar
+            </button>
+          </div>
+          <p class="text-[9.5px] text-gray-400 font-mono">Você pode testar a foto do seu abadá no celular antes mesmo de subir ao GitHub!</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-black/50 border border-white/10 space-y-2 text-[11px]">
+          <span class="font-psy font-bold text-gray-300 uppercase block">Webhook Google Sheets:</span>
+          <input type="url" id="adminGoogleSheetUrlInput" placeholder="https://script.google.com/macros/s/.../exec"
+                 class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/20 text-white font-mono text-xs focus:outline-none focus:border-trance-solarGold">
+          <div class="flex gap-2">
+            <button onclick="saveAdminSheetUrl()" class="flex-1 py-1.5 rounded-lg bg-trance-solarGold text-trance-black font-bold text-xs">
+              Salvar URL
+            </button>
+            <a id="adminOpenSheetLink" href="#" target="_blank" class="px-3 py-1.5 rounded-lg bg-white/10 text-gray-300 hover:text-white text-xs flex items-center gap-1">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir
+            </a>
+          </div>
+        </div>
+
+        <button onclick="handleAdminLogout()" class="w-full py-2.5 rounded-xl bg-white/10 text-gray-300 text-xs font-semibold">
+          Encerrar Sessão
+        </button>
+      </div>
           </div>
         `;
         document.getElementById('btnCheckoutCart').classList.add('opacity-50', 'pointer-events-none');
@@ -2243,463 +2306,7 @@
     }
 
     // =========================================================================
-    // EXECUÇÃO DO CHECKOUT DINÂMICO VIA MERCADO PAGO / WHATSAPP FALLBACK
-    // =========================================================================
-    async function handleProceedPayment(event) {
-      event.preventDefault();
-
-      const name = document.getElementById('buyerName').value.trim();
-      const phone = document.getElementById('buyerPhone').value.trim();
-      const email = document.getElementById('buyerEmail').value.trim();
-      const btn = document.getElementById('btnMainCheckout');
-      const btnText = document.getElementById('btnMainCheckoutText');
-      const btnIcon = document.getElementById('btnCheckoutIcon');
-      const errorBox = document.getElementById('checkoutApiError');
-      const errorMsg = document.getElementById('checkoutApiErrorMsg');
-
-      if (errorBox) errorBox.classList.add('hidden');
-
-      if (!name || !phone || !email) {
-        showToast("Atenção", "Preencha todos os campos para prosseguir.", false);
-        return;
-      }
-
-      const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const totalAmount = cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
-
-      btn.disabled = true;
-      btn.classList.add('opacity-75');
-      btnIcon.className = "fa-solid fa-spinner animate-spin text-base";
-      btnText.innerText = "CONECTANDO AO MERCADO PAGO...";
-
-      // Salva o registro detalhado da venda na base local para o Admin
-      const orderRecord = {
-        id: 'PED-' + Date.now().toString().slice(-6),
-        data: new Date().toLocaleString('pt-BR'),
-        buyer: { name, phone, email },
-        items: cart.map(item => ({
-          size: item.size,
-          isCustom: !!item.isCustom,
-          customLabel: item.customLabel || '',
-          quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          subtotal: item.unitPrice * item.quantity
-        })),
-        totalItems: totalItemsCount,
-        totalAmount: totalAmount
-      };
-      const existingOrders = JSON.parse(localStorage.getItem('progfolia_orders_list') || '[]');
-      existingOrders.unshift(orderRecord);
-      localStorage.setItem('progfolia_orders_list', JSON.stringify(existingOrders));
-
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 6000);
-
-        const response = await fetch(CONFIG.API_CHECKOUT_ENDPOINT, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            buyer: { name, phone, email },
-            items: cart
-          }),
-          signal: controller.signal
-        });
-
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data.init_point) {
-            const currentSales = getTotalSalesCount();
-            localStorage.setItem('progfolia_total_sales_2027', currentSales + totalItemsCount);
-
-            showToast("Bilheteria Aberta!", "Redirecionando para a tela de pagamento oficial.");
-            
-            setTimeout(() => {
-              window.location.href = data.init_point;
-            }, 600);
-            return;
-          }
-        }
-
-        throw new Error("Endpoint serverless em ambiente de teste ou token pendente");
-
-      } catch (err) {
-        // Fallback elegante para pré-visualização estática sem quebrar a jornada do usuário
-        console.warn("API de checkout offline ou em preview estático. Gerando link direto para a organização:", err);
-        
-        const currentSales = getTotalSalesCount();
-        localStorage.setItem('progfolia_total_sales_2027', currentSales + totalItemsCount);
-
-        const cartDescription = cart.map(i => `${i.quantity}x ${i.size} (${i.isCustom ? i.customLabel : 'Padrão'})`).join(', ');
-        const waMsg = encodeURIComponent(
-          `*PEDIDO DE ABADÁ - PROG FOLIA 2027*\n\n` +
-          `• Titular: ${name}\n` +
-          `• WhatsApp: ${phone}\n` +
-          `• E-mail: ${email}\n` +
-          `• Itens: ${cartDescription}\n` +
-          `• Valor Total: R$ ${totalAmount.toFixed(2).replace('.', ',')}\n\n` +
-          `Quero realizar o pagamento via PIX (${CONFIG.PIX_KEY}) ou Cartão!`
-        );
-
-        showToast("Pedido Gerado com Sucesso!", "Redirecionando para a central de atendimento oficial.");
-        setTimeout(() => {
-          window.open(`https://wa.me/${CONFIG.ORGANIZER_WHATSAPP}?text=${waMsg}`, '_blank');
-          closeCheckoutModal();
-        }, 800);
-
-      } finally {
-        btn.disabled = false;
-        btn.classList.remove('opacity-75');
-        btnIcon.className = "fa-solid fa-lock text-base";
-        btnText.innerText = `PAGAR R$ ${totalAmount.toFixed(2).replace('.', ',')} NO MERCADO PAGO`;
-      }
-    }
-
-    // =========================================================================
-    // UTILITÁRIOS, CONTAGEM REGRESSIVA & CONFETES
-    // =========================================================================
-    function initCountdown() {
-      function updateTimer() {
-        const now = new Date().getTime();
-        const distance = CONFIG.CARNAVAL_TARGET_DATE.getTime() - now;
-
-        if (distance < 0) {
-          document.getElementById('countdownDays').innerText = "00";
-          document.getElementById('countdownHours').innerText = "00";
-          document.getElementById('countdownMinutes').innerText = "00";
-          document.getElementById('countdownSeconds').innerText = "00";
-          return;
-        }
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById('countdownDays').innerText = String(days).padStart(2, '0');
-        document.getElementById('countdownHours').innerText = String(hours).padStart(2, '0');
-        document.getElementById('countdownMinutes').innerText = String(minutes).padStart(2, '0');
-        document.getElementById('countdownSeconds').innerText = String(seconds).padStart(2, '0');
-      }
-
-      updateTimer();
-      setInterval(updateTimer, 1000);
-    }
-
-    // =========================================================================
-    // VALIDAÇÃO & MÁSCARA DE CPF COM REGRA ANTI-DUPLICIDADE
-    // =========================================================================
-    function cleanCpfDigits(cpf) {
-      return (cpf || '').replace(/\D/g, '');
-    }
-
-    function formatCpfString(value) {
-      const digits = cleanCpfDigits(value).slice(0, 11);
-      if (digits.length <= 3) return digits;
-      if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
-      if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
-      return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`;
-    }
-
-    function isValidCpf(cpf) {
-      const clean = cleanCpfDigits(cpf);
-      if (clean.length !== 11) return false;
-      if (/^(\d)\1{10}$/.test(clean)) return false; // Bloqueia sequências repetidas (00000000000, 11111111111...)
-
-      let sum = 0;
-      for (let i = 0; i < 9; i++) {
-        sum += parseInt(clean.charAt(i), 10) * (10 - i);
-      }
-      let firstCheck = 11 - (sum % 11);
-      if (firstCheck >= 10) firstCheck = 0;
-      if (firstCheck !== parseInt(clean.charAt(9), 10)) return false;
-
-      sum = 0;
-      for (let i = 0; i < 10; i++) {
-        sum += parseInt(clean.charAt(i), 10) * (11 - i);
-      }
-      let secondCheck = 11 - (sum % 11);
-      if (secondCheck >= 10) secondCheck = 0;
-      return secondCheck === parseInt(clean.charAt(10), 10);
-    }
-
-    function getRegisteredCpfs() {
-      return JSON.parse(localStorage.getItem('progfolia_registered_cpfs') || '[]');
-    }
-
-    function isCpfAlreadyRegistered(cleanCpf) {
-      // Verifica na lista sincronizada e na base local
-      const listToCheck = remoteLotteryList.length > 0 ? remoteLotteryList : getRegisteredCpfs();
-      return listToCheck.some(item => {
-        const itemCpf = item.cleanCpf || cleanCpfDigits(item.cpf || '');
-        return itemCpf === cleanCpf;
-      });
-    }
-
-    function checkUserRegistrationStatus() {
-      const lastUserReg = localStorage.getItem('progfolia_user_registered_ticket');
-      const notice = document.getElementById('sorteioAlreadyRegisteredNotice');
-      if (lastUserReg && notice) {
-        notice.classList.remove('hidden');
-      }
-    }
-
-    function showSavedLotteryTicket() {
-      const saved = JSON.parse(localStorage.getItem('progfolia_user_registered_ticket') || 'null');
-      if (!saved) return;
-
-      document.getElementById('luckyNumberDisplay').innerText = saved.numeroFormatado;
-      document.getElementById('luckyParticipantName').innerText = `${saved.nome} (${saved.instagram}) • ${saved.whatsapp}`;
-      document.getElementById('luckyParticipantCpf').innerText = `CPF: ${saved.cpfMascarado}`;
-      
-      const syncStatusEl = document.getElementById('luckySheetSyncStatus');
-      if (syncStatusEl) {
-        syncStatusEl.innerHTML = `<i class="fa-solid fa-circle-check text-trance-neonCyan mr-1"></i>Cadastro já confirmado anteriormente no sistema.`;
-      }
-
-      document.getElementById('sorteioForm').classList.add('hidden');
-      document.getElementById('sorteioResult').classList.remove('hidden');
-    }
-
-    // Máscara dinâmica no input do CPF
-    const cpfInputEl = document.getElementById('sorteioCpf');
-    if (cpfInputEl) {
-      cpfInputEl.addEventListener('input', function(e) {
-        const formatted = formatCpfString(e.target.value);
-        e.target.value = formatted;
-        const hint = document.getElementById('cpfValidationHint');
-        if (hint) hint.classList.add('hidden');
-      });
-    }
-
-    // =========================================================================
-    // SUBMISSÃO DO SORTEIO COM BLOQUEIO DE DUPLICADOS
-    // =========================================================================
-    document.getElementById('sorteioForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const nome = document.getElementById('sorteioNome').value.trim();
-      const rawCpf = document.getElementById('sorteioCpf').value.trim();
-      const whatsapp = document.getElementById('sorteioWhatsapp').value.trim();
-      const instagram = document.getElementById('sorteioInstagram').value.trim();
-
-      const btn = document.getElementById('btnSubmitSorteio');
-      const btnText = document.getElementById('btnSorteioText');
-      const btnIcon = document.getElementById('btnSorteioIcon');
-      const hint = document.getElementById('cpfValidationHint');
-      const syncStatusEl = document.getElementById('luckySheetSyncStatus');
-
-      const cleanCpf = cleanCpfDigits(rawCpf);
-
-      // 1. Validação estrutural do CPF
-      if (!isValidCpf(cleanCpf)) {
-        if (hint) {
-          hint.innerText = "Por favor, digite um CPF válido.";
-          hint.classList.remove('hidden');
-        }
-        showToast("CPF Inválido", "O número de CPF informado não é válido.", false);
-        document.getElementById('sorteioCpf').focus();
-        return;
-      }
-
-      // 2. Regra Anti-Duplicidade: Verifica se o CPF já foi registrado
-      if (isCpfAlreadyRegistered(cleanCpf)) {
-        if (hint) {
-          hint.innerText = "Este CPF já participou e gerou seu número da sorte.";
-          hint.classList.remove('hidden');
-        }
-        showToast("Cadastro Duplicado", "Este CPF já está cadastrado no sorteio!", false);
-        return;
-      }
-
-      btn.disabled = true;
-      btn.classList.add('opacity-75');
-      btnIcon.className = "fa-solid fa-spinner animate-spin";
-      btnText.innerText = "VALIDANDO COM A PLANILHA...";
-
-      // Gera número da sorte aleatório de 6 dígitos
-      const lotteryData = generateRandomLotteryCode();
-      const luckyNumeric = lotteryData.numeric;
-      const luckyFormatted = lotteryData.formatted;
-      const formattedCpf = formatCpfString(cleanCpf);
-      const maskedCpfForDisplay = `${cleanCpf.slice(0, 3)}.***.***-${cleanCpf.slice(9, 11)}`;
-
-      // Dispara envio para o Google Sheets com validação de duplicidade no backend
-      if (CONFIG.GOOGLE_SHEETS_URL && CONFIG.GOOGLE_SHEETS_URL.startsWith('http')) {
-        try {
-          const payload = {
-            dataRegistro: new Date().toLocaleString('pt-BR'),
-            numeroSorte: luckyNumeric,
-            numeroFormatado: luckyFormatted,
-            nome: nome,
-            cpf: formattedCpf,
-            whatsapp: whatsapp,
-            instagram: instagram
-          };
-
-          const response = await fetch(CONFIG.GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
-          });
-
-          if (response.ok) {
-            const result = await response.json().catch(() => null);
-            if (result && result.status === 'duplicate') {
-              if (hint) {
-                hint.innerText = "Este CPF já participou e gerou seu número da sorte.";
-                hint.classList.remove('hidden');
-              }
-              showToast("Cadastro Duplicado", "Este CPF já está registrado na planilha do sorteio!", false);
-              btn.disabled = false;
-              btn.classList.remove('opacity-75');
-              btnIcon.className = "fa-solid fa-ticket";
-              btnText.innerText = "CADASTRAR E GERAR NÚMERO DA SORTE";
-              return;
-            }
-          }
-        } catch (err) {
-          console.warn("Aviso ao sincronizar com Google Sheets:", err);
-        }
-      }
-
-      // Registra na base e no ticket local
-      const newEntry = {
-        cleanCpf: cleanCpf,
-        cpf: formattedCpf,
-        cpfMascarado: maskedCpfForDisplay,
-        nome: nome,
-        whatsapp: whatsapp,
-        instagram: instagram,
-        numero: luckyNumeric,
-        numeroFormatado: luckyFormatted,
-        data: new Date().toISOString(),
-        dataRegistro: new Date().toLocaleString('pt-BR')
-      };
-
-      remoteLotteryList.push(newEntry);
-      localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(remoteLotteryList));
-
-      const userTicket = {
-        nome: nome,
-        cpfMascarado: maskedCpfForDisplay,
-        cleanCpf: cleanCpf,
-        whatsapp: whatsapp,
-        instagram: instagram,
-        numeroFormatado: luckyFormatted,
-        data: new Date().toISOString()
-      };
-      localStorage.setItem('progfolia_user_registered_ticket', JSON.stringify(userTicket));
-
-      // Atualiza interface do cupom gerado
-      document.getElementById('luckyNumberDisplay').innerText = luckyFormatted;
-      document.getElementById('luckyParticipantName').innerText = `${nome} (${instagram}) • ${whatsapp}`;
-      document.getElementById('luckyParticipantCpf').innerText = `CPF: ${maskedCpfForDisplay}`;
-
-      if (syncStatusEl) {
-        syncStatusEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-1 text-green-400"></i>Registrado e autenticado na planilha oficial!`;
-      }
-
-      document.getElementById('sorteioForm').classList.add('hidden');
-      document.getElementById('sorteioResult').classList.remove('hidden');
-
-      confetti({ particleCount: 160, spread: 95, origin: { y: 0.65 } });
-      showToast("Número Gerado!", `Seu número da sorte é o ${luckyFormatted}.`);
-
-      btn.disabled = false;
-      btn.classList.remove('opacity-75');
-      btnIcon.className = "fa-solid fa-ticket";
-      btnText.innerText = "CADASTRAR E GERAR NÚMERO DA SORTE";
-    });
-
-    // =========================================================================
-    // CADASTRO DE IMPRENSA & COLETIVO AUDIOVISUAL VIA WHATSAPP
-    // =========================================================================
-    function handleImprensaSubmit(event) {
-      event.preventDefault();
-
-      const nome = document.getElementById('imprensaNome').value.trim();
-      const area = document.getElementById('imprensaArea').value.trim();
-      const cidade = document.getElementById('imprensaCidade').value.trim();
-      const portfolio = document.getElementById('imprensaPortfolio').value.trim();
-      const motivo = document.getElementById('imprensaMotivo').value.trim();
-
-      if (!nome || !area || !cidade || !portfolio || !motivo) {
-        showToast("Atenção", "Por favor, preencha todos os campos obrigatórios.", false);
-        return;
-      }
-
-      const waMessage = 
-        `*CADASTRO COLETIVO AUDIOVISUAL - PROG FOLIA 2027*\n\n` +
-        `• *Nome:* ${nome}\n` +
-        `• *Área de Atuação:* ${area}\n` +
-        `• *Cidade / UF:* ${cidade}\n` +
-        `• *Portfólio / Instagram:* ${portfolio}\n` +
-        `• *Por que quer participar:* ${motivo}`;
-
-      const waUrl = `https://wa.me/${CONFIG.ORGANIZER_WHATSAPP}?text=${encodeURIComponent(waMessage)}`;
-
-      showToast("Redirecionando...", "Abrindo WhatsApp com seus dados formatados!");
-      window.open(waUrl, '_blank');
-    }
-
-    function copyPixKey() {
-      const input = document.getElementById('pixKeyInput');
-      input.select();
-      document.execCommand('copy');
-      showToast("PIX Copiado!", "Chave PIX copiada para a área de transferência.");
-    }
-
-    function copySpotifyLink() {
-      const dummyInput = document.createElement('input');
-      dummyInput.value = CONFIG.SPOTIFY_PLAYLIST_URL;
-      document.body.appendChild(dummyInput);
-      dummyInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(dummyInput);
-      showToast("Link Copiado!", "Link da playlist do Spotify copiado com sucesso!");
-    }
-
-    function toggleFaqPopup() {
-      document.getElementById('faqPopup').classList.toggle('hidden');
-    }
-
-    function faqAnswer(topic) {
-      if (topic === 'gratuito') {
-        showToast("100% Gratuito na Rua", "O cortejo na avenida é livre para todos. O abadá garante brindes e apoia o trio.");
-      } else if (topic === 'abada') {
-        showToast("Uso do Abadá", "Não é obrigatório para curtir na rua, mas fortalece a sustentabilidade do bloco.");
-      }
-    }
-
-    function showToast(title, message, isSuccess = true) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastTitle').innerText = title;
-      document.getElementById('toastMessage').innerText = message;
-      document.getElementById('toastIcon').className = isSuccess 
-        ? "w-9 h-9 rounded-full flex items-center justify-center bg-trance-neonCyan text-trance-black font-black text-sm shrink-0"
-        : "w-9 h-9 rounded-full flex items-center justify-center bg-red-500 text-white font-black text-sm shrink-0";
-      document.getElementById('toastIcon').innerHTML = isSuccess ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-exclamation"></i>';
-
-      toast.classList.remove('translate-x-[160%]');
-      toast.classList.add('translate-x-0');
-
-      setTimeout(() => {
-        toast.classList.remove('translate-x-0');
-        toast.classList.add('translate-x-[160%]');
-      }, 4000);
-    }
-
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-    document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
-
-    // =========================================================================
-    // VISUALIZADOR DE ZOOM DO ABADÁ (LIGHTBOX INTERATIVO)
+    // VISUALIZADOR DE ZOOM DO ABADÁ & CARREGAMENTO RESILIENTE (DESKTOP & MOBILE)
     // =========================================================================
     let currentAbadaZoom = 1;
     let abadaPanX = 0;
@@ -2707,58 +2314,100 @@
     let isDraggingAbada = false;
     let startDragX = 0;
     let startDragY = 0;
+    let activeAbadaImageUrl = null;
 
-    // Lista de extensões e nomes prováveis para contornar case-sensitive no GitHub Pages
-    const ABADA_FALLBACK_SOURCES = [
-      'mockup-abada.png',
-      'mockup-abada.PNG',
-      'mockup-abada.jpg',
-      'mockup-abada.jpeg',
-      'abada.png',
-      'abada.PNG',
-      'abada.jpg',
-      'abada.jpeg',
-      'mockup.png',
-      'mockup.jpg'
-    ];
-    let currentAbadaFallbackIndex = 0;
-
-    function handleAbadaImageError(img) {
-      currentAbadaFallbackIndex++;
-      if (currentAbadaFallbackIndex < ABADA_FALLBACK_SOURCES.length) {
-        img.src = ABADA_FALLBACK_SOURCES[currentAbadaFallbackIndex];
-      } else {
-        // Se nenhuma imagem existir no repositório, exibe o cartão vetorial responsivo
-        img.style.display = 'none';
-        const fallback = document.getElementById('mockupVectorFallback');
-        if (fallback) {
-          fallback.classList.remove('hidden');
-          fallback.classList.add('flex');
-        }
+    // Detecta imagens reais sem quebrar a tela ou gerar loops de erro
+    function detectAndApplyAbadaImage() {
+      // 1. Prioridade: Imagem carregada pelo admin localmente
+      const savedCustom = localStorage.getItem('progfolia_custom_abada_image');
+      if (savedCustom) {
+        applyAbadaImageToUI(savedCustom);
+        return;
       }
+
+      // 2. Procura silenciosa pelos arquivos mais comuns no GitHub
+      const candidates = [
+        'mockup-abada.png',
+        'mockup-abada.PNG',
+        'abada.png',
+        'abada.PNG',
+        'mockup.png',
+        'mockup-abada.jpg',
+        'abada.jpg'
+      ];
+
+      function probeNext(index) {
+        if (index >= candidates.length) {
+          // Mantém o mockup vetorial em exibição perfeita
+          return;
+        }
+
+        const tester = new Image();
+        tester.onload = function() {
+          applyAbadaImageToUI(candidates[index]);
+        };
+        tester.onerror = function() {
+          probeNext(index + 1);
+        };
+        tester.src = candidates[index];
+      }
+
+      probeNext(0);
+    }
+
+    function applyAbadaImageToUI(url) {
+      activeAbadaImageUrl = url;
+      const thumb = document.getElementById('abadaThumbImg');
+      const svgGraphic = document.getElementById('mockupSvgGraphic');
+      const modalImg = document.getElementById('abadaModalImage');
+      const modalSvg = document.getElementById('abadaModalSvgHolder');
+
+      if (thumb && svgGraphic) {
+        thumb.src = url;
+        thumb.classList.remove('hidden');
+        svgGraphic.classList.add('hidden');
+      }
+
+      if (modalImg && modalSvg) {
+        modalImg.src = url;
+        modalImg.classList.remove('hidden');
+        modalSvg.classList.add('hidden');
+      }
+    }
+
+    function handleAdminAbadaUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64 = e.target.result;
+        localStorage.setItem('progfolia_custom_abada_image', base64);
+        applyAbadaImageToUI(base64);
+        showToast("Mockup Atualizado!", "Sua imagem agora está ativa no card e no zoom!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleAdminResetAbadaImage() {
+      localStorage.removeItem('progfolia_custom_abada_image');
+      activeAbadaImageUrl = null;
+      const thumb = document.getElementById('abadaThumbImg');
+      const svgGraphic = document.getElementById('mockupSvgGraphic');
+      const modalImg = document.getElementById('abadaModalImage');
+      const modalSvg = document.getElementById('abadaModalSvgHolder');
+
+      if (thumb) thumb.classList.add('hidden');
+      if (svgGraphic) svgGraphic.classList.remove('hidden');
+      if (modalImg) modalImg.classList.add('hidden');
+      if (modalSvg) modalSvg.classList.remove('hidden');
+
+      detectAndApplyAbadaImage();
+      showToast("Padrão Restaurado", "Exibindo o mockup oficial do sistema.");
     }
 
     function openAbadaZoomModal() {
       const modal = document.getElementById('abadaZoomModal');
-      const thumb = document.getElementById('abadaThumbImg');
-      const modalImg = document.getElementById('abadaModalImage');
-      const modalFallback = document.getElementById('abadaModalFallback');
-
-      if (thumb && thumb.style.display !== 'none' && thumb.naturalWidth > 0) {
-        modalImg.src = thumb.src;
-        modalImg.style.display = 'block';
-        if (modalFallback) {
-          modalFallback.classList.add('hidden');
-          modalFallback.classList.remove('flex');
-        }
-      } else {
-        modalImg.style.display = 'none';
-        if (modalFallback) {
-          modalFallback.classList.remove('hidden');
-          modalFallback.classList.add('flex');
-        }
-      }
-
       resetAbadaZoom();
       if (modal) {
         modal.classList.remove('hidden');
@@ -2809,14 +2458,12 @@
       const container = document.getElementById('abadaZoomContainer');
       if (!container) return;
 
-      // Zoom através da roda do mouse (scroll wheel)
       container.addEventListener('wheel', (e) => {
         e.preventDefault();
         const delta = e.deltaY < 0 ? 0.2 : -0.2;
         zoomAbada(delta);
       }, { passive: false });
 
-      // Início do arrasto com mouse
       container.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
         isDraggingAbada = true;
@@ -2835,7 +2482,6 @@
         isDraggingAbada = false;
       });
 
-      // Suporte a toques e pinça (pinch-to-zoom) no celular
       let initialTouchDist = null;
       container.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
@@ -2871,7 +2517,6 @@
         initialTouchDist = null;
       });
 
-      // Fechar modal ao pressionar ESC
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           closeAbadaZoomModal();
@@ -3225,6 +2870,7 @@
       initCarnivalConfetti();
       checkUserRegistrationStatus();
       syncSorteioFromGoogleSheets();
+      detectAndApplyAbadaImage();
       initAbadaZoomEvents();
     });
   </script>
