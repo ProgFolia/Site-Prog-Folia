@@ -1248,6 +1248,25 @@
           </div>
         </div>
 
+        <!-- Botões de Acesso aos Relatórios Detalhados em Pop-up -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <button type="button" onclick="openSorteioListModal()" class="p-3 rounded-xl bg-purple-900/40 hover:bg-purple-900/70 border border-purple-500/40 text-left transition-all group">
+            <div class="flex items-center justify-between text-xs text-trance-solarGold font-psy font-bold mb-1">
+              <span>Sorteio</span>
+              <i class="fa-solid fa-users text-sm group-hover:scale-110 transition-transform"></i>
+            </div>
+            <p class="text-[10px] text-gray-300">Ver e gerenciar inscritos</p>
+          </button>
+
+          <button type="button" onclick="openOrdersListModal()" class="p-3 rounded-xl bg-sky-950/40 hover:bg-sky-900/70 border border-sky-500/40 text-left transition-all group">
+            <div class="flex items-center justify-between text-xs text-trance-neonCyan font-psy font-bold mb-1">
+              <span>Vendas Abadás</span>
+              <i class="fa-solid fa-shirt text-sm group-hover:scale-110 transition-transform"></i>
+            </div>
+            <p class="text-[10px] text-gray-300">Tamanhos e quantidades</p>
+          </button>
+        </div>
+
         <div class="p-3 rounded-xl bg-black/50 border border-white/10 space-y-2 text-[11px]">
           <span class="font-psy font-bold text-gray-300 uppercase block">Webhook Google Sheets:</span>
           <input type="url" id="adminGoogleSheetUrlInput" placeholder="https://script.google.com/macros/s/.../exec"
@@ -1264,6 +1283,119 @@
 
         <button onclick="handleAdminLogout()" class="w-full py-2.5 rounded-xl bg-white/10 text-gray-300 text-xs font-semibold">
           Encerrar Sessão
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- POP-UP 1: RELATÓRIO DE CADASTROS DO SORTEIO COM EXCLUSÃO INDIVIDUAL -->
+  <!-- ========================================================================= -->
+  <div id="adminSorteioListModal" class="fixed inset-0 z-[10000] bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="relative w-full max-w-3xl bg-trance-dark border border-purple-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-trance-solarGold/15 border border-trance-solarGold/30 text-trance-solarGold flex items-center justify-center text-lg">
+            <i class="fa-solid fa-ticket"></i>
+          </div>
+          <div>
+            <h3 class="font-psy font-bold text-sm sm:text-base text-white uppercase tracking-wider">Inscritos no Sorteio</h3>
+            <p class="text-[11px] text-gray-400 font-mono" id="adminSorteioTotalCounter">0 registros encontrados</p>
+          </div>
+        </div>
+        <button onclick="closeSorteioListModal()" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="my-3 flex items-center gap-2">
+        <div class="relative flex-1">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-gray-400"></i>
+          <input type="text" id="sorteioSearchInput" oninput="filterSorteioList()" placeholder="Buscar por Nome, CPF, Instagram ou Número..." 
+                 class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-black/50 border border-white/15 text-white placeholder-gray-500 focus:outline-none focus:border-trance-solarGold">
+        </div>
+      </div>
+
+      <div id="adminSorteioItemsList" class="flex-1 overflow-y-auto space-y-2.5 pr-1 py-1">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+      <div class="pt-3 border-t border-white/10 shrink-0 flex items-center justify-between text-xs text-gray-400 font-mono">
+        <span>⚠️ A exclusão individual remove o CPF da trava de segurança.</span>
+        <button onclick="closeSorteioListModal()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- POP-UP 2: RELATÓRIO DETALHADO DE VENDAS E TAMANHOS DE ABADÁS -->
+  <!-- ========================================================================= -->
+  <div id="adminOrdersListModal" class="fixed inset-0 z-[10000] bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="relative w-full max-w-3xl bg-trance-dark border border-sky-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl flex flex-col max-h-[92vh]">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-shirt"></i>
+          </div>
+          <div>
+            <h3 class="font-psy font-bold text-sm sm:text-base text-white uppercase tracking-wider">Vendas de Abadás</h3>
+            <p class="text-[11px] text-gray-400 font-mono" id="adminOrdersTotalCounter">0 pedidos registrados</p>
+          </div>
+        </div>
+        <button onclick="closeOrdersListModal()" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="my-3 flex items-center justify-between gap-3">
+        <div class="relative flex-1">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-gray-400"></i>
+          <input type="text" id="orderSearchInput" oninput="filterOrdersList()" placeholder="Buscar por comprador, WhatsApp ou e-mail..." 
+                 class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-black/50 border border-white/15 text-white placeholder-gray-500 focus:outline-none focus:border-trance-neonCyan">
+        </div>
+        <div id="adminTotalAbadasBadge" class="px-3 py-2 rounded-xl bg-sky-950/60 border border-sky-500/30 font-mono text-xs text-sky-300 font-bold whitespace-nowrap">
+          Total: 0 peças
+        </div>
+      </div>
+
+      <div id="adminOrdersItemsList" class="flex-1 overflow-y-auto space-y-3 pr-1 py-1">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+
+      <div class="pt-3 border-t border-white/10 shrink-0 flex items-center justify-between text-xs text-gray-400 font-mono">
+        <span>📦 Especificações de tamanhos sob encomenda são discriminadas em amarelo.</span>
+        <button onclick="closeOrdersListModal()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO (SEM ALERT OU CONFIRM NATIVO) -->
+  <!-- ========================================================================= -->
+  <div id="adminDeleteConfirmModal" class="fixed inset-0 z-[10010] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="relative w-full max-w-sm bg-trance-dark border-2 border-red-500/60 rounded-3xl p-6 text-center space-y-4 shadow-2xl">
+      <div class="w-14 h-14 mx-auto rounded-full bg-red-500/20 text-red-400 flex items-center justify-center text-2xl border border-red-500/40">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <div class="space-y-1">
+        <h4 class="font-psy font-bold text-base text-white">Confirmar Exclusão</h4>
+        <p class="text-xs text-gray-300" id="deleteConfirmTargetDescription">
+          Tem certeza que deseja apagar este cadastro?
+        </p>
+      </div>
+      <div class="p-3 rounded-xl bg-white/5 border border-white/10 text-[11px] text-gray-400 font-mono text-left">
+        Esta ação liberará o CPF para novo cadastro e removerá o registro desta base local.
+      </div>
+      <div class="flex gap-2.5 pt-1">
+        <button onclick="closeDeleteConfirmModal()" class="flex-1 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-gray-300 font-bold text-xs uppercase tracking-wider transition-colors">
+          Cancelar
+        </button>
+        <button onclick="executeConfirmedDelete()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-xs uppercase tracking-wider hover:brightness-110 transition-all shadow-lg">
+          Sim, Apagar
         </button>
       </div>
     </div>
@@ -1462,6 +1594,29 @@
       localStorage.setItem('progfolia_google_sheets_url', val);
       showToast("Configuração Salva", "URL do Google Sheets atualizada!");
       showAdminDashboard();
+    }
+
+    function handleAdminResetLotteryData() {
+      localStorage.removeItem('progfolia_registered_cpfs');
+      localStorage.removeItem('progfolia_user_registered_ticket');
+      localStorage.removeItem('progfolia_last_lottery_num');
+
+      // Restaura o formulário do sorteio para o estado inicial
+      const form = document.getElementById('sorteioForm');
+      const result = document.getElementById('sorteioResult');
+      const notice = document.getElementById('sorteioAlreadyRegisteredNotice');
+      const hint = document.getElementById('cpfValidationHint');
+
+      if (form) {
+        form.reset();
+        form.classList.remove('hidden');
+      }
+      if (result) result.classList.add('hidden');
+      if (notice) notice.classList.add('hidden');
+      if (hint) hint.classList.add('hidden');
+
+      showAdminDashboard();
+      showToast("Base Resetada", "Todos os cadastros e CPFs de teste foram removidos!");
     }
 
     function updateAdminVisibility() {
@@ -1881,6 +2036,26 @@
       btnIcon.className = "fa-solid fa-spinner animate-spin text-base";
       btnText.innerText = "CONECTANDO AO MERCADO PAGO...";
 
+      // Salva o registro detalhado da venda na base local para o Admin
+      const orderRecord = {
+        id: 'PED-' + Date.now().toString().slice(-6),
+        data: new Date().toLocaleString('pt-BR'),
+        buyer: { name, phone, email },
+        items: cart.map(item => ({
+          size: item.size,
+          isCustom: !!item.isCustom,
+          customLabel: item.customLabel || '',
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          subtotal: item.unitPrice * item.quantity
+        })),
+        totalItems: totalItemsCount,
+        totalAmount: totalAmount
+      };
+      const existingOrders = JSON.parse(localStorage.getItem('progfolia_orders_list') || '[]');
+      existingOrders.unshift(orderRecord);
+      localStorage.setItem('progfolia_orders_list', JSON.stringify(existingOrders));
+
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 6000);
@@ -2135,17 +2310,22 @@
 
           isSyncedOnline = true;
         } catch (err) {
-          console.warn("Falha no disparo do Google Sheets:", err);
+          console.warn("Aviso ao sincronizar com Google Sheets:", err);
         }
       }
 
-      // Registra o CPF na lista de bloqueio permanente
+      // Registra o CPF na lista de bloqueio permanente com dados completos para consulta no Admin
       const registeredCpfs = getRegisteredCpfs();
       registeredCpfs.push({
         cleanCpf: cleanCpf,
+        cpfMascarado: maskedCpfForDisplay,
+        nome: nome,
+        whatsapp: whatsapp,
+        instagram: instagram,
         numero: luckyNumeric,
         numeroFormatado: luckyFormatted,
-        data: new Date().toISOString()
+        data: new Date().toISOString(),
+        dataRegistro: new Date().toLocaleString('pt-BR')
       });
       localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(registeredCpfs));
 
@@ -2237,6 +2417,248 @@
     mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
     document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
 
+    // =========================================================================
+    // GERENCIAMENTO AVANÇADO DE CADASTROS DO SORTEIO (ADMIN POP-UP)
+    // =========================================================================
+    let targetIndexToDelete = null;
+
+    function openSorteioListModal() {
+      const modal = document.getElementById('adminSorteioListModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        renderSorteioList();
+      }
+    }
+
+    function closeSorteioListModal() {
+      const modal = document.getElementById('adminSorteioListModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function renderSorteioList(filterText = "") {
+      const listContainer = document.getElementById('adminSorteioItemsList');
+      const counterEl = document.getElementById('adminSorteioTotalCounter');
+      const registered = getRegisteredCpfs();
+
+      let items = registered.map((item, index) => ({ ...item, originalIndex: index }));
+
+      if (filterText.trim()) {
+        const q = filterText.toLowerCase();
+        items = items.filter(i => 
+          (i.nome && i.nome.toLowerCase().includes(q)) ||
+          (i.cleanCpf && i.cleanCpf.includes(q)) ||
+          (i.instagram && i.instagram.toLowerCase().includes(q)) ||
+          (i.whatsapp && i.whatsapp.includes(q)) ||
+          (i.numeroFormatado && i.numeroFormatado.toLowerCase().includes(q))
+        );
+      }
+
+      if (counterEl) {
+        counterEl.innerText = `${items.length} de ${registered.length} cadastro(s)`;
+      }
+
+      if (items.length === 0) {
+        listContainer.innerHTML = `
+          <div class="p-8 text-center bg-white/5 rounded-2xl border border-white/10 space-y-2">
+            <span class="text-3xl">🎟️</span>
+            <h5 class="text-xs font-psy font-bold text-white uppercase">Nenhum cadastro encontrado</h5>
+            <p class="text-[11px] text-gray-400">Os participantes cadastrados aparecerão listados aqui.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = "";
+      items.forEach(item => {
+        const displayName = item.nome || "Participante Anônimo";
+        const displayCpf = item.cpfMascarado || (item.cleanCpf ? formatCpfString(item.cleanCpf) : "Não informado");
+        const displayDate = item.dataRegistro || (item.data ? new Date(item.data).toLocaleString('pt-BR') : "Data indisponível");
+
+        html += `
+          <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="space-y-1 min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded-md bg-trance-solarGold/15 border border-trance-solarGold/40 text-trance-solarGold font-psy font-black text-xs">
+                  ${item.numeroFormatado || '#PROG-' + item.numero}
+                </span>
+                <span class="font-bold text-xs text-white truncate">${displayName}</span>
+              </div>
+              <div class="text-[11px] text-gray-300 flex items-center gap-3 flex-wrap font-mono">
+                <span><i class="fa-solid fa-id-card text-gray-400 mr-1"></i>${displayCpf}</span>
+                <span><i class="fa-brands fa-whatsapp text-green-400 mr-1"></i>${item.whatsapp || '-'}</span>
+                <span><i class="fa-brands fa-instagram text-pink-400 mr-1"></i>${item.instagram || '-'}</span>
+              </div>
+              <div class="text-[10px] text-gray-500 font-mono">
+                <i class="fa-regular fa-clock mr-1"></i>${displayDate}
+              </div>
+            </div>
+
+            <button type="button" onclick="promptDeleteLotteryEntry(${item.originalIndex})" 
+                    class="self-end sm:self-center px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/25 border border-red-500/30 text-red-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all">
+              <i class="fa-regular fa-trash-can"></i>
+              <span>Apagar</span>
+            </button>
+          </div>
+        `;
+      });
+
+      listContainer.innerHTML = html;
+    }
+
+    function filterSorteioList() {
+      const q = document.getElementById('sorteioSearchInput').value;
+      renderSorteioList(q);
+    }
+
+    function promptDeleteLotteryEntry(index) {
+      const registered = getRegisteredCpfs();
+      const target = registered[index];
+      if (!target) return;
+
+      targetIndexToDelete = index;
+      const targetDesc = document.getElementById('deleteConfirmTargetDescription');
+      const name = target.nome || "Participante";
+      const ticket = target.numeroFormatado || target.numero;
+      targetDesc.innerHTML = `Deseja realmente apagar o cadastro de <strong>${name}</strong> (${ticket})?`;
+
+      document.getElementById('adminDeleteConfirmModal').classList.remove('hidden');
+    }
+
+    function closeDeleteConfirmModal() {
+      targetIndexToDelete = null;
+      document.getElementById('adminDeleteConfirmModal').classList.add('hidden');
+    }
+
+    function executeConfirmedDelete() {
+      if (targetIndexToDelete === null) return;
+      const registered = getRegisteredCpfs();
+      const deleted = registered.splice(targetIndexToDelete, 1);
+      localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(registered));
+
+      // Se o usuário excluído era o que estava salvo no próprio dispositivo, libera o formulário
+      const localTicket = JSON.parse(localStorage.getItem('progfolia_user_registered_ticket') || 'null');
+      if (localTicket && deleted[0] && deleted[0].numeroFormatado === localTicket.numeroFormatado) {
+        localStorage.removeItem('progfolia_user_registered_ticket');
+        const form = document.getElementById('sorteioForm');
+        const res = document.getElementById('sorteioResult');
+        const notice = document.getElementById('sorteioAlreadyRegisteredNotice');
+        if (form) form.classList.remove('hidden');
+        if (res) res.classList.add('hidden');
+        if (notice) notice.classList.add('hidden');
+      }
+
+      closeDeleteConfirmModal();
+      renderSorteioList(document.getElementById('sorteioSearchInput').value);
+      showAdminDashboard();
+      showToast("Cadastro Removido", "O registro foi excluído da base com sucesso.");
+    }
+
+    // =========================================================================
+    // GERENCIAMENTO AVANÇADO DE VENDAS DE ABADÁS (ADMIN POP-UP)
+    // =========================================================================
+    function getOrdersList() {
+      return JSON.parse(localStorage.getItem('progfolia_orders_list') || '[]');
+    }
+
+    function openOrdersListModal() {
+      const modal = document.getElementById('adminOrdersListModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        renderOrdersList();
+      }
+    }
+
+    function closeOrdersListModal() {
+      const modal = document.getElementById('adminOrdersListModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function renderOrdersList(filterText = "") {
+      const listContainer = document.getElementById('adminOrdersItemsList');
+      const counterEl = document.getElementById('adminOrdersTotalCounter');
+      const totalPiecesEl = document.getElementById('adminTotalAbadasBadge');
+      const orders = getOrdersList();
+
+      let filtered = orders;
+      if (filterText.trim()) {
+        const q = filterText.toLowerCase();
+        filtered = orders.filter(o => 
+          (o.buyer && o.buyer.name && o.buyer.name.toLowerCase().includes(q)) ||
+          (o.buyer && o.buyer.phone && o.buyer.phone.includes(q)) ||
+          (o.buyer && o.buyer.email && o.buyer.email.toLowerCase().includes(q)) ||
+          (o.id && o.id.toLowerCase().includes(q))
+        );
+      }
+
+      const totalPieces = orders.reduce((sum, o) => sum + (o.totalItems || 0), 0);
+      if (totalPiecesEl) totalPiecesEl.innerText = `Total: ${totalPieces} peças`;
+      if (counterEl) counterEl.innerText = `${filtered.length} de ${orders.length} pedido(s)`;
+
+      if (filtered.length === 0) {
+        listContainer.innerHTML = `
+          <div class="p-8 text-center bg-white/5 rounded-2xl border border-white/10 space-y-2">
+            <span class="text-3xl">🛍️</span>
+            <h5 class="text-xs font-psy font-bold text-white uppercase">Nenhum pedido registrado</h5>
+            <p class="text-[11px] text-gray-400">Assim que os pedidos forem iniciados, a lista com tamanhos e especificações aparecerá aqui.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = "";
+      filtered.forEach((order, idx) => {
+        let itemsHtml = "";
+        order.items.forEach(item => {
+          const isCustom = item.isCustom;
+          const customBadge = isCustom 
+            ? `<span class="px-2 py-0.5 rounded bg-trance-solarGold/20 border border-trance-solarGold/40 text-trance-solarGold font-bold text-[10px]">Sob Encomenda: "${item.customLabel || 'Não especificado'}"</span>` 
+            : `<span class="px-2 py-0.5 rounded bg-white/10 text-trance-neonCyan font-bold text-[10px]">Tamanho: ${item.size}</span>`;
+
+          itemsHtml += `
+            <div class="flex items-center justify-between text-xs py-1 border-b border-white/5">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-bold text-white font-mono">${item.quantity}x</span>
+                ${customBadge}
+              </div>
+              <span class="text-gray-300 font-mono">R$ ${(item.subtotal || (item.unitPrice * item.quantity)).toFixed(2).replace('.', ',')}</span>
+            </div>
+          `;
+        });
+
+        html += `
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-mono text-[10px] font-bold">${order.id || 'PEDIDO'}</span>
+                <span class="font-bold text-xs text-white">${order.buyer ? order.buyer.name : 'Cliente'}</span>
+              </div>
+              <span class="font-psy font-black text-sm text-trance-solarGold">
+                R$ ${(order.totalAmount || 0).toFixed(2).replace('.', ',')}
+              </span>
+            </div>
+
+            <div class="text-[11px] text-gray-300 font-mono flex items-center gap-3 flex-wrap">
+              <span><i class="fa-brands fa-whatsapp text-green-400 mr-1"></i>${order.buyer ? order.buyer.phone : '-'}</span>
+              <span><i class="fa-regular fa-envelope text-blue-300 mr-1"></i>${order.buyer ? order.buyer.email : '-'}</span>
+              <span class="text-gray-500"><i class="fa-regular fa-clock mr-1"></i>${order.data || '-'}</span>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-black/40 border border-white/5 space-y-1">
+              <span class="text-[10px] text-gray-400 uppercase font-mono block mb-1">Itens do Pedido:</span>
+              ${itemsHtml}
+            </div>
+          </div>
+        `;
+      });
+
+      listContainer.innerHTML = html;
+    }
+
+    function filterOrdersList() {
+      const q = document.getElementById('orderSearchInput').value;
+      renderOrdersList(q);
+    }
+
     function initCarnivalConfetti() {
       function setupConfetti(canvasId) {
         const canvas = document.getElementById(canvasId);
@@ -2305,6 +2727,10 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      // Limpeza imediata dos cadastros de teste anteriores
+      localStorage.removeItem('progfolia_registered_cpfs');
+      localStorage.removeItem('progfolia_user_registered_ticket');
+
       document.getElementById('pixKeyInput').value = CONFIG.PIX_KEY;
       document.getElementById('pixTitularDisplay').innerText = CONFIG.PIX_TITULAR;
       const waText = encodeURIComponent("Olá! Estou no site do Prog Folia e tenho dúvidas sobre o bloco de Carnaval.");
