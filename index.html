@@ -987,10 +987,27 @@
 
           <div class="lg:col-span-6">
             <div class="bg-trance-black/80 rounded-2xl p-6 sm:p-8 border border-white/15 shadow-xl">
+              <!-- Aviso caso o usuário já esteja cadastrado no dispositivo -->
+              <div id="sorteioAlreadyRegisteredNotice" class="hidden p-4 mb-4 rounded-xl bg-purple-900/40 border border-trance-solarGold/40 text-xs text-gray-200 space-y-2">
+                <div class="flex items-center gap-2 text-trance-solarGold font-psy font-bold">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span>Você já possui um cadastro ativo!</span>
+                </div>
+                <p>Cada folião pode gerar apenas 1 número da sorte por CPF.</p>
+                <button type="button" onclick="showSavedLotteryTicket()" class="text-trance-neonCyan font-bold underline hover:text-white transition-colors">
+                  Visualizar meu número da sorte gravado
+                </button>
+              </div>
+
               <form id="sorteioForm" class="space-y-4">
                 <div>
                   <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">Seu Nome Completo:</label>
                   <input type="text" id="sorteioNome" required placeholder="Como no seu documento" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-trance-solarGold text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">CPF (1 cadastro por pessoa):</label>
+                  <input type="text" id="sorteioCpf" required maxlength="14" placeholder="000.000.000-00" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-trance-solarGold text-sm font-mono">
+                  <span id="cpfValidationHint" class="hidden text-[10px] text-red-400 font-mono mt-1 block"></span>
                 </div>
                 <div>
                   <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">WhatsApp (com DDD):</label>
@@ -1013,9 +1030,10 @@
                   <span class="text-[10px] uppercase font-psy font-bold tracking-widest text-trance-neonCyan">Cupom Oficial Gravado</span>
                   <div id="luckyNumberDisplay" class="font-psy font-black text-3xl sm:text-4xl text-trance-solarGold tracking-widest my-2">#0001</div>
                   <div class="text-xs text-gray-300" id="luckyParticipantName">Nome do Folião</div>
-                  <span class="text-[10px] text-green-400 font-mono mt-1 block" id="luckySheetSyncStatus"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>Registrado na planilha do sorteio</span>
+                  <div class="text-[11px] text-gray-400 font-mono mt-0.5" id="luckyParticipantCpf">CPF: ***.000.000-**</div>
+                  <span class="text-[10px] text-green-400 font-mono mt-2 block" id="luckySheetSyncStatus"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>Registrado na planilha do sorteio</span>
                 </div>
-                <button onclick="resetSorteioForm()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs">Novo Cadastro</button>
+                <p class="text-[11px] text-gray-400 font-mono">Guarde seu número. O sorteio será apurado pelas nossas redes oficiais!</p>
               </div>
             </div>
           </div>
@@ -1952,25 +1970,137 @@
       setInterval(updateTimer, 1000);
     }
 
+    // =========================================================================
+    // VALIDAÇÃO & MÁSCARA DE CPF COM REGRA ANTI-DUPLICIDADE
+    // =========================================================================
+    function cleanCpfDigits(cpf) {
+      return (cpf || '').replace(/\D/g, '');
+    }
+
+    function formatCpfString(value) {
+      const digits = cleanCpfDigits(value).slice(0, 11);
+      if (digits.length <= 3) return digits;
+      if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+      if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+      return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`;
+    }
+
+    function isValidCpf(cpf) {
+      const clean = cleanCpfDigits(cpf);
+      if (clean.length !== 11) return false;
+      if (/^(\d)\1{10}$/.test(clean)) return false; // Bloqueia sequências repetidas (00000000000, 11111111111...)
+
+      let sum = 0;
+      for (let i = 0; i < 9; i++) {
+        sum += parseInt(clean.charAt(i), 10) * (10 - i);
+      }
+      let firstCheck = 11 - (sum % 11);
+      if (firstCheck >= 10) firstCheck = 0;
+      if (firstCheck !== parseInt(clean.charAt(9), 10)) return false;
+
+      sum = 0;
+      for (let i = 0; i < 10; i++) {
+        sum += parseInt(clean.charAt(i), 10) * (11 - i);
+      }
+      let secondCheck = 11 - (sum % 11);
+      if (secondCheck >= 10) secondCheck = 0;
+      return secondCheck === parseInt(clean.charAt(10), 10);
+    }
+
+    function getRegisteredCpfs() {
+      return JSON.parse(localStorage.getItem('progfolia_registered_cpfs') || '[]');
+    }
+
+    function isCpfAlreadyRegistered(cleanCpf) {
+      const registered = getRegisteredCpfs();
+      return registered.some(item => item.cleanCpf === cleanCpf);
+    }
+
+    function checkUserRegistrationStatus() {
+      const lastUserReg = localStorage.getItem('progfolia_user_registered_ticket');
+      const notice = document.getElementById('sorteioAlreadyRegisteredNotice');
+      if (lastUserReg && notice) {
+        notice.classList.remove('hidden');
+      }
+    }
+
+    function showSavedLotteryTicket() {
+      const saved = JSON.parse(localStorage.getItem('progfolia_user_registered_ticket') || 'null');
+      if (!saved) return;
+
+      document.getElementById('luckyNumberDisplay').innerText = saved.numeroFormatado;
+      document.getElementById('luckyParticipantName').innerText = `${saved.nome} (${saved.instagram}) • ${saved.whatsapp}`;
+      document.getElementById('luckyParticipantCpf').innerText = `CPF: ${saved.cpfMascarado}`;
+      
+      const syncStatusEl = document.getElementById('luckySheetSyncStatus');
+      if (syncStatusEl) {
+        syncStatusEl.innerHTML = `<i class="fa-solid fa-circle-check text-trance-neonCyan mr-1"></i>Cadastro já confirmado anteriormente no sistema.`;
+      }
+
+      document.getElementById('sorteioForm').classList.add('hidden');
+      document.getElementById('sorteioResult').classList.remove('hidden');
+    }
+
+    // Máscara dinâmica no input do CPF
+    const cpfInputEl = document.getElementById('sorteioCpf');
+    if (cpfInputEl) {
+      cpfInputEl.addEventListener('input', function(e) {
+        const formatted = formatCpfString(e.target.value);
+        e.target.value = formatted;
+        const hint = document.getElementById('cpfValidationHint');
+        if (hint) hint.classList.add('hidden');
+      });
+    }
+
+    // =========================================================================
+    // SUBMISSÃO DO SORTEIO COM BLOQUEIO DE DUPLICADOS
+    // =========================================================================
     document.getElementById('sorteioForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const nome = document.getElementById('sorteioNome').value.trim();
+      const rawCpf = document.getElementById('sorteioCpf').value.trim();
       const whatsapp = document.getElementById('sorteioWhatsapp').value.trim();
       const instagram = document.getElementById('sorteioInstagram').value.trim();
 
       const btn = document.getElementById('btnSubmitSorteio');
       const btnText = document.getElementById('btnSorteioText');
       const btnIcon = document.getElementById('btnSorteioIcon');
+      const hint = document.getElementById('cpfValidationHint');
       const syncStatusEl = document.getElementById('luckySheetSyncStatus');
+
+      const cleanCpf = cleanCpfDigits(rawCpf);
+
+      // 1. Validação estrutural do CPF
+      if (!isValidCpf(cleanCpf)) {
+        if (hint) {
+          hint.innerText = "Por favor, digite um CPF válido.";
+          hint.classList.remove('hidden');
+        }
+        showToast("CPF Inválido", "O número de CPF informado não é válido.", false);
+        document.getElementById('sorteioCpf').focus();
+        return;
+      }
+
+      // 2. Regra Anti-Duplicidade: Verifica se o CPF já foi registrado
+      if (isCpfAlreadyRegistered(cleanCpf)) {
+        if (hint) {
+          hint.innerText = "Este CPF já participou e gerou seu número da sorte.";
+          hint.classList.remove('hidden');
+        }
+        showToast("Cadastro Duplicado", "Este CPF já está cadastrado no sorteio!", false);
+        return;
+      }
 
       btn.disabled = true;
       btn.classList.add('opacity-75');
       btnIcon.className = "fa-solid fa-spinner animate-spin";
-      btnText.innerText = "GRAVANDO NA PLANILHA...";
+      btnText.innerText = "VALIDANDO & GRAVANDO NA PLANILHA...";
 
       // Calcula o próximo número sequencial exato (1, 2, 3...)
       const currentSeq = getLotteryEntriesCount() + 1;
       const formattedSeq = `#${String(currentSeq).padStart(4, '0')}`;
+      const formattedCpf = formatCpfString(cleanCpf);
+      const maskedCpfForDisplay = `${cleanCpf.slice(0, 3)}.***.***-${cleanCpf.slice(9, 11)}`;
       let isSyncedOnline = false;
 
       // Dispara envio para o Google Sheets se a URL estiver configurada
@@ -1981,6 +2111,7 @@
             numeroSorte: currentSeq,
             numeroFormatado: formattedSeq,
             nome: nome,
+            cpf: formattedCpf,
             whatsapp: whatsapp,
             instagram: instagram
           };
@@ -1998,23 +2129,34 @@
         }
       }
 
-      // Persiste o sequencial e o histórico local
-      localStorage.setItem('progfolia_lottery_entries_count', currentSeq);
+      // Incrementa o número sequencial oficial
+      localStorage.setItem('progfolia_last_lottery_num', currentSeq);
 
-      const localEntries = JSON.parse(localStorage.getItem('progfolia_lottery_local_history') || '[]');
-      localEntries.push({
+      // Registra o CPF na lista de bloqueio permanente
+      const registeredCpfs = getRegisteredCpfs();
+      registeredCpfs.push({
+        cleanCpf: cleanCpf,
         numero: currentSeq,
         numeroFormatado: formattedSeq,
-        nome,
-        whatsapp,
-        instagram,
         data: new Date().toISOString()
       });
-      localStorage.setItem('progfolia_lottery_local_history', JSON.stringify(localEntries));
+      localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(registeredCpfs));
+
+      // Salva o ticket do usuário localmente para consultas futuras
+      const userTicket = {
+        nome: nome,
+        cpfMascarado: maskedCpfForDisplay,
+        whatsapp: whatsapp,
+        instagram: instagram,
+        numeroFormatado: formattedSeq,
+        data: new Date().toISOString()
+      };
+      localStorage.setItem('progfolia_user_registered_ticket', JSON.stringify(userTicket));
 
       // Atualiza interface do cupom gerado
       document.getElementById('luckyNumberDisplay').innerText = formattedSeq;
       document.getElementById('luckyParticipantName').innerText = `${nome} (${instagram}) • ${whatsapp}`;
+      document.getElementById('luckyParticipantCpf').innerText = `CPF: ${maskedCpfForDisplay}`;
 
       if (syncStatusEl) {
         if (isSyncedOnline || CONFIG.GOOGLE_SHEETS_URL) {
@@ -2035,12 +2177,6 @@
       btnIcon.className = "fa-solid fa-ticket";
       btnText.innerText = "CADASTRAR E GERAR NÚMERO DA SORTE";
     });
-
-    function resetSorteioForm() {
-      document.getElementById('sorteioForm').reset();
-      document.getElementById('sorteioForm').classList.remove('hidden');
-      document.getElementById('sorteioResult').classList.add('hidden');
-    }
 
     function copyPixKey() {
       const input = document.getElementById('pixKeyInput');
@@ -2183,6 +2319,7 @@
       renderCartUI();
       updateAdminVisibility();
       initCarnivalConfetti();
+      checkUserRegistrationStatus();
     });
   </script>
 </body>
