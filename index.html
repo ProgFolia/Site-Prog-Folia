@@ -824,47 +824,34 @@
           <div class="lg:col-span-5 flex flex-col items-center">
             <div class="relative w-full max-w-sm rounded-2xl bg-trance-black/80 border border-purple-500/30 flex flex-col items-center p-6 shadow-inner group">
               
-              <!-- MOCKUP DO ABADÁ CLICÁVEL COM INDICADOR DE ZOOM -->
+              <!-- MOCKUP DO ABADÁ CLICÁVEL COM INDICADOR DE ZOOM (OTIMIZADO PARA MOBILE) -->
               <div onclick="openAbadaZoomModal()" 
-                   class="relative w-full max-w-[240px] aspect-[4/5] rounded-2xl bg-gradient-to-b from-purple-950/60 to-black border border-purple-500/40 p-3 shadow-2xl flex flex-col items-center justify-center overflow-hidden glow-purple cursor-pointer group hover:border-trance-neonPink hover:scale-[1.02] transition-all"
+                   class="relative w-full max-w-[260px] min-h-[300px] sm:min-h-[340px] rounded-2xl bg-gradient-to-b from-purple-950/70 to-black border border-purple-500/40 p-4 shadow-2xl flex flex-col items-center justify-center overflow-hidden glow-purple cursor-pointer group hover:border-trance-neonPink hover:scale-[1.02] transition-all"
                    title="Clique para ampliar e ver detalhes do abadá">
                 
                 <span class="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded-md bg-trance-neonCyan/20 border border-trance-neonCyan/40 text-[9px] font-psy font-bold text-trance-neonCyan uppercase tracking-wider flex items-center gap-1 group-hover:bg-trance-neonPink/30 group-hover:border-trance-neonPink group-hover:text-white transition-colors">
                   <i class="fa-solid fa-magnifying-glass-plus"></i> Zoom
                 </span>
 
-                <!-- Imagem do mockup do abadá (tenta mockup-abada.png, abada.png ou logo) -->
+                <!-- Imagem do mockup do abadá com carregamento inteligente multi-extensão -->
                 <img id="abadaThumbImg"
                      src="mockup-abada.png" 
                      alt="Mockup do Abadá Prog Folia 2027" 
-                     class="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,0,127,0.4)] transition-transform duration-500 group-hover:scale-105"
-                     onerror="handleAbadaThumbError(this)">
+                     class="max-w-full max-h-[260px] object-contain filter drop-shadow-[0_0_15px_rgba(255,0,127,0.4)] transition-transform duration-500 group-hover:scale-105"
+                     onerror="handleAbadaImageError(this)">
 
-                <!-- Fallback vetorial ilustrativo de abadá caso o arquivo ainda não esteja na pasta -->
-                <div id="mockupVectorFallback" class="hidden w-full h-full flex flex-col items-center justify-center text-center p-2">
-                  <div class="relative w-28 h-32 flex items-center justify-center">
-                    <svg viewBox="0 0 100 120" class="w-full h-full filter drop-shadow-[0_0_12px_rgba(0,245,212,0.5)]">
-                      <defs>
-                        <linearGradient id="abadaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stop-color="#FF007F" />
-                          <stop offset="50%" stop-color="#8A2BE2" />
-                          <stop offset="100%" stop-color="#00F5D4" />
-                        </linearGradient>
-                      </defs>
-                      <!-- Silhueta estilizada de regata/abadá -->
-                      <path d="M 28 10 Q 38 22 50 22 Q 62 22 72 10 L 88 28 L 78 42 L 74 110 L 26 110 L 22 42 L 12 28 Z" fill="url(#abadaGrad)" stroke="#FFE600" stroke-width="1.5" />
-                    </svg>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center pt-3 pointer-events-none">
-                      <span class="font-psy font-black text-[7.5px] text-white tracking-widest">PROG FOLIA</span>
-                      <span class="text-[6px] text-trance-solarGold font-bold">2027</span>
-                      <i class="fa-solid fa-atom text-white/90 text-sm mt-1 animate-spin-slow"></i>
-                    </div>
+                <!-- Fallback visual estilizado caso o arquivo de imagem ainda não esteja no servidor -->
+                <div id="mockupVectorFallback" class="hidden w-full flex flex-col items-center justify-center text-center py-2">
+                  <div class="w-36 h-44 rounded-2xl bg-gradient-to-b from-trance-neonPink via-purple-700 to-trance-neonCyan p-3.5 flex flex-col items-center justify-between shadow-2xl relative border border-white/20">
+                    <span class="font-psy font-black text-xs text-white tracking-widest text-center leading-tight">PROG FOLIA</span>
+                    <span class="text-[9.5px] font-syne text-trance-solarGold font-bold tracking-wider">MEMENTO VIVERE</span>
+                    <i class="fa-solid fa-atom text-white/95 text-3xl animate-spin-slow filter drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]"></i>
+                    <span class="text-[9px] text-white/90 uppercase font-mono tracking-widest">Vitória 2027</span>
                   </div>
-                  <span class="text-[9px] text-gray-400 font-mono mt-2">Salve o arquivo como <strong class="text-trance-neonPink">mockup-abada.png</strong></span>
                 </div>
 
                 <!-- Botão Flutuante de Indicação de Clique -->
-                <div class="absolute bottom-2 inset-x-3 py-1 px-2 rounded-lg bg-black/75 backdrop-blur-sm border border-white/10 flex items-center justify-center gap-1.5 text-[9.5px] text-trance-neonCyan font-mono group-hover:bg-trance-neonPink group-hover:text-white transition-all shadow-md">
+                <div class="absolute bottom-2.5 inset-x-3 py-1.5 px-2 rounded-lg bg-black/80 backdrop-blur-sm border border-white/10 flex items-center justify-center gap-1.5 text-[10px] text-trance-neonCyan font-mono group-hover:bg-trance-neonPink group-hover:text-white transition-all shadow-md">
                   <i class="fa-solid fa-expand text-[9px]"></i>
                   <span>Clique para ver em tela cheia</span>
                 </div>
@@ -1596,11 +1583,15 @@
       <div id="abadaZoomWrapper" class="transition-transform duration-100 ease-out flex items-center justify-center max-w-full max-h-full">
         <img id="abadaModalImage" src="mockup-abada.png" alt="Abadá Prog Folia Zoom" 
              class="max-w-[85vw] max-h-[68vh] object-contain filter drop-shadow-[0_0_30px_rgba(255,0,127,0.45)] pointer-events-none"
-             onerror="this.onerror=null; this.src='abada.png';">
+             onerror="this.onerror=null; this.style.display='none'; document.getElementById('abadaModalFallback').classList.remove('hidden'); document.getElementById('abadaModalFallback').classList.add('flex');">
         <div id="abadaModalFallback" class="hidden flex-col items-center justify-center p-6 text-center">
-          <div class="text-6xl text-trance-neonPink mb-3"><i class="fa-solid fa-shirt"></i></div>
-          <p class="font-psy text-sm text-white">Mockup Prog Folia 2027</p>
-          <span class="text-xs text-gray-400 font-mono mt-1">Insira a imagem como <strong>mockup-abada.png</strong></span>
+          <div class="w-48 h-60 rounded-3xl bg-gradient-to-b from-trance-neonPink via-purple-700 to-trance-neonCyan p-5 flex flex-col items-center justify-between shadow-2xl border border-white/25">
+            <span class="font-psy font-black text-sm text-white tracking-widest text-center">PROG FOLIA</span>
+            <span class="text-xs font-syne text-trance-solarGold font-bold">MEMENTO VIVERE</span>
+            <i class="fa-solid fa-atom text-white text-4xl animate-spin-slow filter drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"></i>
+            <span class="text-[10px] text-white/90 uppercase font-mono">Vitória 2027</span>
+          </div>
+          <span class="text-[11px] text-gray-400 font-mono mt-3">Representação Conceitual Oficial</span>
         </div>
       </div>
     </div>
@@ -2717,13 +2708,34 @@
     let startDragX = 0;
     let startDragY = 0;
 
-    function handleAbadaThumbError(img) {
-      img.onerror = () => {
+    // Lista de extensões e nomes prováveis para contornar case-sensitive no GitHub Pages
+    const ABADA_FALLBACK_SOURCES = [
+      'mockup-abada.png',
+      'mockup-abada.PNG',
+      'mockup-abada.jpg',
+      'mockup-abada.jpeg',
+      'abada.png',
+      'abada.PNG',
+      'abada.jpg',
+      'abada.jpeg',
+      'mockup.png',
+      'mockup.jpg'
+    ];
+    let currentAbadaFallbackIndex = 0;
+
+    function handleAbadaImageError(img) {
+      currentAbadaFallbackIndex++;
+      if (currentAbadaFallbackIndex < ABADA_FALLBACK_SOURCES.length) {
+        img.src = ABADA_FALLBACK_SOURCES[currentAbadaFallbackIndex];
+      } else {
+        // Se nenhuma imagem existir no repositório, exibe o cartão vetorial responsivo
         img.style.display = 'none';
         const fallback = document.getElementById('mockupVectorFallback');
-        if (fallback) fallback.classList.remove('hidden');
-      };
-      img.src = 'abada.png';
+        if (fallback) {
+          fallback.classList.remove('hidden');
+          fallback.classList.add('flex');
+        }
+      }
     }
 
     function openAbadaZoomModal() {
@@ -2732,13 +2744,19 @@
       const modalImg = document.getElementById('abadaModalImage');
       const modalFallback = document.getElementById('abadaModalFallback');
 
-      if (thumb && thumb.style.display !== 'none') {
+      if (thumb && thumb.style.display !== 'none' && thumb.naturalWidth > 0) {
         modalImg.src = thumb.src;
         modalImg.style.display = 'block';
-        if (modalFallback) modalFallback.classList.add('hidden');
+        if (modalFallback) {
+          modalFallback.classList.add('hidden');
+          modalFallback.classList.remove('flex');
+        }
       } else {
         modalImg.style.display = 'none';
-        if (modalFallback) modalFallback.classList.remove('hidden');
+        if (modalFallback) {
+          modalFallback.classList.remove('hidden');
+          modalFallback.classList.add('flex');
+        }
       }
 
       resetAbadaZoom();
