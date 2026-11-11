@@ -133,6 +133,48 @@
   </audio>
 
   <!-- ========================================================================= -->
+  <!-- BLOQUEIO POR SENHA / MODO MANUTENÇÃO (GATEKEEPER) -->
+  <!-- ========================================================================= -->
+  <div id="maintenanceGate" class="fixed inset-0 z-[100000] bg-trance-black flex flex-col items-center justify-center p-6 text-center select-none overflow-hidden hidden">
+    <!-- Nebulosas Cósmicas -->
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-trance-uvPurple rounded-full blur-[170px] opacity-40 animate-glow-pulse"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-trance-neonPink rounded-full blur-[180px] opacity-40 animate-glow-pulse" style="animation-delay: 1.5s;"></div>
+    
+    <div class="relative z-10 max-w-md w-full bg-trance-dark/95 border-2 border-purple-500/50 rounded-3xl p-8 sm:p-10 shadow-2xl backdrop-blur-2xl space-y-6 glow-purple">
+      <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-tr from-trance-neonPink via-trance-uvPurple to-trance-neonCyan flex items-center justify-center p-0.5 shadow-xl">
+        <div class="w-full h-full bg-trance-black rounded-[14px] flex items-center justify-center text-3xl text-trance-solarGold animate-pulse">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <span class="text-[11px] font-psy uppercase font-bold tracking-[0.25em] text-trance-neonCyan">Acesso Restrito</span>
+        <h2 class="font-psy font-black text-2xl sm:text-3xl text-white">PROG<span class="text-trance-neonPink">FOLIA</span></h2>
+        <p class="text-xs text-gray-300 font-light leading-relaxed">
+          O site está temporariamente em manutenção ou aguardando autorização para lançamento. Digite a senha para liberar o acesso:
+        </p>
+      </div>
+
+      <form id="gatePasswordForm" onsubmit="handleGateUnlock(event)" class="space-y-4">
+        <div>
+          <input type="password" id="gatePasswordInput" required placeholder="Digite a senha de acesso"
+                 class="w-full px-4 py-3.5 rounded-xl bg-black/60 border border-white/20 text-white font-mono text-center tracking-widest text-sm focus:outline-none focus:border-trance-neonCyan">
+          <span id="gatePasswordError" class="hidden text-[11px] text-red-400 font-mono mt-1.5 block">Senha incorreta. Tente novamente.</span>
+        </div>
+
+        <button type="submit" 
+                class="w-full py-4 rounded-xl bg-gradient-to-r from-trance-neonPink via-trance-uvPurple to-trance-neonCyan text-white font-psy font-bold text-xs uppercase tracking-wider shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all">
+          Liberar Acesso ao Site
+        </button>
+      </form>
+
+      <div class="pt-2 border-t border-white/10 text-[10.5px] text-gray-500 font-mono">
+        Edição 2027 • Memento Vivere
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
   <!-- 0. TELA DE ABERTURA PSICODÉLICA (SPLASH SCREEN / PORTAL DE ENTRADA) -->
   <!-- ========================================================================= -->
   <div id="splashScreen" class="fixed inset-0 z-[9999] bg-trance-black flex flex-col items-center justify-center p-6 text-center select-none overflow-hidden transition-all duration-700">
@@ -1680,6 +1722,14 @@
       PIX_TITULAR: "Lara Tassinae Guimaraes",
       WHATSAPP_NUMBER: "5527988138664",
       TRACK_NAME: "Prog Folia by Zeppy",
+
+      // =======================================================================
+      // CONTROLE DE ACESSO E MANUTENÇÃO POR SENHA
+      // =======================================================================
+      // Mude para true quando quiser tirar do ar e exigir senha para entrar.
+      // Mude para false para liberar o site para todo mundo.
+      MAINTENANCE_MODE: false,
+      SITE_PASSWORD: "progfolia2027", // Senha para liberar o site quando estiver bloqueado
       
       // ENDPOINT DA API SERVERLESS (Cloudflare Pages Function / Netlify / Vercel para Mercado Pago)
       API_CHECKOUT_ENDPOINT: "/api/create-preference",
@@ -3258,7 +3308,54 @@
       setupConfetti('splashConfettiCanvas');
     }
 
+    // =========================================================================
+    // ROTINAS DE CONTROLE DO MODO MANUTENÇÃO / BLOQUEIO POR SENHA
+    // =========================================================================
+    function checkMaintenanceGate() {
+      const isUnlocked = sessionStorage.getItem('progfolia_gate_unlocked') === 'true';
+      const gate = document.getElementById('maintenanceGate');
+
+      if (CONFIG.MAINTENANCE_MODE && !isUnlocked) {
+        if (gate) {
+          gate.classList.remove('hidden');
+          document.body.classList.add('overflow-hidden');
+        }
+      } else {
+        if (gate) {
+          gate.classList.add('hidden');
+          document.body.classList.remove('overflow-hidden');
+        }
+      }
+    }
+
+    function handleGateUnlock(event) {
+      event.preventDefault();
+      const input = document.getElementById('gatePasswordInput');
+      const err = document.getElementById('gatePasswordError');
+      const enteredPass = input ? input.value.trim() : "";
+
+      if (enteredPass === CONFIG.SITE_PASSWORD) {
+        sessionStorage.setItem('progfolia_gate_unlocked', 'true');
+        const gate = document.getElementById('maintenanceGate');
+        if (gate) {
+          gate.classList.add('opacity-0', 'pointer-events-none');
+          setTimeout(() => {
+            gate.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+          }, 350);
+        }
+        showToast("Acesso Liberado!", "Bem-vindo ao Prog Folia 2027.");
+      } else {
+        if (err) err.classList.remove('hidden');
+        if (input) {
+          input.value = "";
+          input.focus();
+        }
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      checkMaintenanceGate();
       document.getElementById('pixKeyInput').value = CONFIG.PIX_KEY;
       document.getElementById('pixTitularDisplay').innerText = CONFIG.PIX_TITULAR;
       const waText = encodeURIComponent("Olá! Estou no site do Prog Folia e tenho dúvidas sobre o bloco de Carnaval.");
