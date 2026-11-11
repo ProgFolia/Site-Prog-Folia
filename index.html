@@ -1028,7 +1028,7 @@
                 <h4 class="font-psy font-bold text-xl text-white">Inscrição Confirmada!</h4>
                 <div class="p-4 rounded-2xl bg-gradient-to-r from-purple-900/40 via-trance-dark to-pink-900/40 border-2 border-dashed border-trance-solarGold/70">
                   <span class="text-[10px] uppercase font-psy font-bold tracking-widest text-trance-neonCyan">Cupom Oficial Gravado</span>
-                  <div id="luckyNumberDisplay" class="font-psy font-black text-3xl sm:text-4xl text-trance-solarGold tracking-widest my-2">#0001</div>
+                  <div id="luckyNumberDisplay" class="font-psy font-black text-2xl sm:text-3xl text-trance-solarGold tracking-widest my-2">#PROG-777777</div>
                   <div class="text-xs text-gray-300" id="luckyParticipantName">Nome do Folião</div>
                   <div class="text-[11px] text-gray-400 font-mono mt-0.5" id="luckyParticipantCpf">CPF: ***.000.000-**</div>
                   <span class="text-[10px] text-green-400 font-mono mt-2 block" id="luckySheetSyncStatus"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>Registrado na planilha do sorteio</span>
@@ -1308,8 +1308,17 @@
     }
 
     function getLotteryEntriesCount() {
-      const stored = localStorage.getItem('progfolia_last_lottery_num');
-      return stored !== null ? parseInt(stored, 10) : 0;
+      const stored = localStorage.getItem('progfolia_registered_cpfs');
+      return stored ? JSON.parse(stored).length : 0;
+    }
+
+    function generateRandomLotteryCode() {
+      // Gera um número da sorte cósmico aleatório de 6 dígitos (100000 a 999999)
+      const randomDigits = Math.floor(100000 + Math.random() * 900000);
+      return {
+        numeric: randomDigits,
+        formatted: `#PROG-${randomDigits}`
+      };
     }
 
     function getCurrentLot() {
@@ -2096,9 +2105,10 @@
       btnIcon.className = "fa-solid fa-spinner animate-spin";
       btnText.innerText = "VALIDANDO & GRAVANDO NA PLANILHA...";
 
-      // Calcula o próximo número sequencial exato (1, 2, 3...)
-      const currentSeq = getLotteryEntriesCount() + 1;
-      const formattedSeq = `#${String(currentSeq).padStart(4, '0')}`;
+      // Gera número da sorte aleatório de 6 dígitos
+      const lotteryData = generateRandomLotteryCode();
+      const luckyNumeric = lotteryData.numeric;
+      const luckyFormatted = lotteryData.formatted;
       const formattedCpf = formatCpfString(cleanCpf);
       const maskedCpfForDisplay = `${cleanCpf.slice(0, 3)}.***.***-${cleanCpf.slice(9, 11)}`;
       let isSyncedOnline = false;
@@ -2108,8 +2118,8 @@
         try {
           const payload = {
             dataRegistro: new Date().toLocaleString('pt-BR'),
-            numeroSorte: currentSeq,
-            numeroFormatado: formattedSeq,
+            numeroSorte: luckyNumeric,
+            numeroFormatado: luckyFormatted,
             nome: nome,
             cpf: formattedCpf,
             whatsapp: whatsapp,
@@ -2129,15 +2139,12 @@
         }
       }
 
-      // Incrementa o número sequencial oficial
-      localStorage.setItem('progfolia_last_lottery_num', currentSeq);
-
       // Registra o CPF na lista de bloqueio permanente
       const registeredCpfs = getRegisteredCpfs();
       registeredCpfs.push({
         cleanCpf: cleanCpf,
-        numero: currentSeq,
-        numeroFormatado: formattedSeq,
+        numero: luckyNumeric,
+        numeroFormatado: luckyFormatted,
         data: new Date().toISOString()
       });
       localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(registeredCpfs));
@@ -2148,13 +2155,13 @@
         cpfMascarado: maskedCpfForDisplay,
         whatsapp: whatsapp,
         instagram: instagram,
-        numeroFormatado: formattedSeq,
+        numeroFormatado: luckyFormatted,
         data: new Date().toISOString()
       };
       localStorage.setItem('progfolia_user_registered_ticket', JSON.stringify(userTicket));
 
       // Atualiza interface do cupom gerado
-      document.getElementById('luckyNumberDisplay').innerText = formattedSeq;
+      document.getElementById('luckyNumberDisplay').innerText = luckyFormatted;
       document.getElementById('luckyParticipantName').innerText = `${nome} (${instagram}) • ${whatsapp}`;
       document.getElementById('luckyParticipantCpf').innerText = `CPF: ${maskedCpfForDisplay}`;
 
@@ -2162,7 +2169,7 @@
         if (isSyncedOnline || CONFIG.GOOGLE_SHEETS_URL) {
           syncStatusEl.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-1 text-green-400"></i>Registrado na planilha oficial com sucesso!`;
         } else {
-          syncStatusEl.innerHTML = `<i class="fa-solid fa-check-double mr-1 text-trance-solarGold"></i>Número sequencial #${currentSeq} reservado com sucesso!`;
+          syncStatusEl.innerHTML = `<i class="fa-solid fa-check-double mr-1 text-trance-solarGold"></i>Número da sorte ${luckyFormatted} gerado com sucesso!`;
         }
       }
 
@@ -2170,7 +2177,7 @@
       document.getElementById('sorteioResult').classList.remove('hidden');
 
       confetti({ particleCount: 160, spread: 95, origin: { y: 0.65 } });
-      showToast("Número Gerado!", `Seu número da sorte sequencial é o ${formattedSeq}.`);
+      showToast("Número Gerado!", `Seu número da sorte é o ${luckyFormatted}.`);
 
       btn.disabled = false;
       btn.classList.remove('opacity-75');
