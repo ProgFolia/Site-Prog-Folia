@@ -978,6 +978,21 @@
                 <input type="text" id="customSizeInput" placeholder="Especifique seu tamanho (Ex: G2, G3, Infantil 12, etc.)" 
                        class="w-full px-4 py-2.5 rounded-xl bg-trance-black border border-trance-neonPink/60 text-white text-xs placeholder-gray-500 focus:outline-none">
               </div>
+
+              <!-- NOVA OPÇÃO: ADICIONAR KIT PROG FOLIA NO COMBO DO ABADÁ -->
+              <div class="pt-2.5 border-t border-white/10">
+                <label class="flex items-start sm:items-center gap-2.5 cursor-pointer group">
+                  <input type="checkbox" id="abadaKitCheck" onchange="toggleAbadaKit(this)" class="w-4 h-4 mt-0.5 sm:mt-0 accent-trance-neonCyan rounded cursor-pointer shrink-0">
+                  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-1">
+                    <span class="text-xs sm:text-sm font-bold text-trance-neonCyan group-hover:text-white transition-colors">
+                      Adicionar Kit Prog Folia <span class="text-gray-300 font-normal">(copo + tirante + porta copo)</span>
+                    </span>
+                    <span class="inline-block w-fit px-2 py-0.5 rounded bg-trance-neonCyan/15 border border-trance-neonCyan/40 text-trance-solarGold font-psy font-bold text-[11px] shrink-0">
+                      + R$ 18,00
+                    </span>
+                  </div>
+                </label>
+              </div>
             </div>
 
             <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white/5 border border-white/10">
@@ -1024,6 +1039,124 @@
 
         </div>
 
+      </div>
+
+      <!-- NOVOS PRODUTOS AVULSOS: COPO, TIRANTE E KIT COMPLETO -->
+      <div class="mt-12 space-y-6">
+        <div class="text-center space-y-1.5">
+          <span class="text-[11px] uppercase font-psy font-bold tracking-[0.25em] text-trance-neonCyan">Acessórios Oficiais</span>
+          <h3 class="font-psy font-black text-2xl sm:text-3xl text-white">
+            COMPLETE SEU <span class="text-trance-neonPink">KIT DE FOLIA</span>
+          </h3>
+          <p class="text-xs sm:text-sm text-gray-400">Adquira também nossos itens oficiais separadamente ou no combo completo:</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- PRODUTO 1: COPO OFICIAL (R$ 15,00) -->
+          <div class="bg-trance-card rounded-3xl border border-purple-500/30 p-6 flex flex-col justify-between shadow-xl hover:border-trance-neonCyan/60 transition-all group">
+            <div class="space-y-4">
+              <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-trance-neonCyan/20 to-purple-900/40 border border-trance-neonCyan/40 flex items-center justify-center text-3xl text-trance-neonCyan group-hover:scale-110 transition-transform shadow-lg">
+                <i class="fa-solid fa-cup-straw"></i>
+              </div>
+              <div class="text-center space-y-1">
+                <h4 class="font-psy font-bold text-base text-white">Copo Oficial</h4>
+                <p class="text-xs text-gray-400">Copo eco personalizado edição Memento Vivere 2027.</p>
+              </div>
+            </div>
+
+            <div class="pt-5 mt-5 border-t border-white/10 space-y-3">
+              <div class="flex items-baseline justify-center gap-1">
+                <span class="text-xs font-bold text-gray-400">R$</span>
+                <span class="font-psy font-black text-3xl text-trance-solarGold">15</span>
+                <span class="text-xs text-gray-400">,00</span>
+              </div>
+
+              <div class="flex items-center justify-center gap-2 bg-trance-black/60 p-1 rounded-xl border border-white/10 max-w-[140px] mx-auto">
+                <button type="button" onclick="changeAccessoryQty('copo', -1)" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-white flex items-center justify-center font-bold">-</button>
+                <span id="qty-copo" class="font-psy font-black text-sm text-white w-8 text-center">1</span>
+                <button type="button" onclick="changeAccessoryQty('copo', 1)" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-white flex items-center justify-center font-bold">+</button>
+              </div>
+
+              <button type="button" onclick="addAccessoryToCart('copo')" 
+                      class="w-full py-3 rounded-xl font-psy font-bold text-xs uppercase tracking-wider bg-white/10 hover:bg-trance-neonCyan hover:text-trance-black border border-trance-neonCyan/40 text-trance-neonCyan transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Adicionar Copo</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- PRODUTO 2: TIRANTE OFICIAL (R$ 18,00) -->
+          <div class="bg-trance-card rounded-3xl border border-purple-500/30 p-6 flex flex-col justify-between shadow-xl hover:border-trance-neonPink/60 transition-all group">
+            <div class="space-y-4">
+              <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-trance-neonPink/20 to-purple-900/40 border border-trance-neonPink/40 flex items-center justify-center text-3xl text-trance-neonPink group-hover:scale-110 transition-transform shadow-lg">
+                <i class="fa-solid fa-ribbon"></i>
+              </div>
+              <div class="text-center space-y-1">
+                <h4 class="font-psy font-bold text-base text-white">Tirante Oficial</h4>
+                <p class="text-xs text-gray-400">Tirante reforçado com engate rápido e arte exclusiva UV.</p>
+              </div>
+            </div>
+
+            <div class="pt-5 mt-5 border-t border-white/10 space-y-3">
+              <div class="flex items-baseline justify-center gap-1">
+                <span class="text-xs font-bold text-gray-400">R$</span>
+                <span class="font-psy font-black text-3xl text-trance-solarGold">18</span>
+                <span class="text-xs text-gray-400">,00</span>
+              </div>
+
+              <div class="flex items-center justify-center gap-2 bg-trance-black/60 p-1 rounded-xl border border-white/10 max-w-[140px] mx-auto">
+                <button type="button" onclick="changeAccessoryQty('tirante', -1)" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-white flex items-center justify-center font-bold">-</button>
+                <span id="qty-tirante" class="font-psy font-black text-sm text-white w-8 text-center">1</span>
+                <button type="button" onclick="changeAccessoryQty('tirante', 1)" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-white flex items-center justify-center font-bold">+</button>
+              </div>
+
+              <button type="button" onclick="addAccessoryToCart('tirante')" 
+                      class="w-full py-3 rounded-xl font-psy font-bold text-xs uppercase tracking-wider bg-white/10 hover:bg-trance-neonPink hover:text-white border border-trance-neonPink/40 text-trance-neonPink transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Adicionar Tirante</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- PRODUTO 3: KIT COMPLETO AVULSO (R$ 25,00) -->
+          <div class="relative bg-gradient-to-b from-trance-card to-purple-950/60 rounded-3xl border-2 border-trance-solarGold/50 p-6 flex flex-col justify-between shadow-2xl hover:border-trance-solarGold transition-all group">
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-trance-solarGold text-trance-black font-psy font-black text-[9.5px] uppercase tracking-wider whitespace-nowrap shadow">
+              ★ COMBO COMPLETO
+            </span>
+
+            <div class="space-y-4 pt-1">
+              <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-trance-solarGold/25 to-pink-900/40 border border-trance-solarGold/50 flex items-center justify-center text-3xl text-trance-solarGold group-hover:scale-110 transition-transform shadow-lg">
+                <i class="fa-solid fa-box-open"></i>
+              </div>
+              <div class="text-center space-y-1">
+                <h4 class="font-psy font-bold text-base text-white">Kit Completo</h4>
+                <p class="text-xs text-gray-300">Copo Oficial + Tirante + Porta Copo exclusivos.</p>
+              </div>
+            </div>
+
+            <div class="pt-5 mt-5 border-t border-white/10 space-y-3">
+              <div class="flex items-baseline justify-center gap-1">
+                <span class="text-xs font-bold text-gray-400">R$</span>
+                <span class="font-psy font-black text-3xl text-trance-solarGold">25</span>
+                <span class="text-xs text-gray-400">,00</span>
+              </div>
+
+              <div class="flex items-center justify-center gap-2 bg-trance-black/60 p-1 rounded-xl border border-white/10 max-w-[140px] mx-auto">
+                <button type="button" onclick="changeAccessoryQty('kit', -1)" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-white flex items-center justify-center font-bold">-</button>
+                <span id="qty-kit" class="font-psy font-black text-sm text-white w-8 text-center">1</span>
+                <button type="button" onclick="changeAccessoryQty('kit', 1)" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-white flex items-center justify-center font-bold">+</button>
+              </div>
+
+              <button type="button" onclick="addAccessoryToCart('kit')" 
+                      class="w-full py-3 rounded-xl font-psy font-bold text-xs uppercase tracking-wider bg-gradient-to-r from-trance-solarGold via-trance-neonPink to-trance-neonCyan text-trance-black shadow-lg hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Adicionar Kit Completo</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
       </div>
 
     </section>
@@ -1661,6 +1794,12 @@
     const CONFIG = {
       ADMIN_PIN: "progzito1602",
       CUSTOM_SIZE_FEE: 10,
+      ABADA_KIT_ADDON_FEE: 18,
+      ACCESSORIES: {
+        copo: { name: "Copo Oficial Prog Folia", price: 15, tag: "Copo Eco 2027", icon: "fa-cup-straw" },
+        tirante: { name: "Tirante Oficial Prog Folia", price: 18, tag: "Tirante UV", icon: "fa-ribbon" },
+        kit: { name: "Kit Completo Prog Folia", price: 25, tag: "Copo + Tirante + Porta Copo", icon: "fa-box-open" }
+      },
       ORGANIZER_WHATSAPP: "5527988138664",
       SPOTIFY_PLAYLIST_URL: "https://open.spotify.com/playlist/50JIH1pE0ujzoXbOA99UwH?si=4tuOhwZpRiWYLuOS5MiPCw",
       PIX_KEY: "blocoprogfolia@gmail.com",
@@ -1673,7 +1812,7 @@
       // =======================================================================
       // Mude para true quando quiser tirar do ar e exigir senha para entrar.
       // Mude para false para liberar o site para todo mundo.
-      MAINTENANCE_MODE: true,
+      MAINTENANCE_MODE: false,
       SITE_PASSWORD: "dinoodinossauro", // Senha configurada para o desbloqueio
       
       // ENDPOINT DA API SERVERLESS (Cloudflare Pages Function / Netlify / Vercel para Mercado Pago)
@@ -2009,11 +2148,63 @@
     let cart = JSON.parse(localStorage.getItem('progfolia_cart_2027')) || [];
     let selectedSize = 'M';
     let isCustomSize = false;
+    let hasAbadaKit = false;
     let selectedQty = 1;
+    let accessoryQtys = { copo: 1, tirante: 1, kit: 1 };
 
     function renderStockBadges() {
       document.getElementById('currentQtyDisplay').innerText = selectedQty;
       updatePriceDisplay();
+    }
+
+    function toggleAbadaKit(checkbox) {
+      hasAbadaKit = checkbox.checked;
+      updatePriceDisplay();
+    }
+
+    function changeAccessoryQty(type, delta) {
+      const next = (accessoryQtys[type] || 1) + delta;
+      if (next < 1 || next > 99) return;
+      accessoryQtys[type] = next;
+      const el = document.getElementById(`qty-${type}`);
+      if (el) el.innerText = next;
+    }
+
+    function addAccessoryToCart(type) {
+      const product = CONFIG.ACCESSORIES[type];
+      if (!product) return;
+      const qty = accessoryQtys[type] || 1;
+
+      const existingIndex = cart.findIndex(item => item.productType === type);
+      if (existingIndex > -1) {
+        cart[existingIndex].quantity += qty;
+      } else {
+        cart.push({
+          id: `${type}_` + Date.now(),
+          productType: type,
+          title: product.name,
+          size: product.tag,
+          icon: product.icon,
+          isCustom: false,
+          customLabel: "",
+          unitPrice: product.price,
+          quantity: qty
+        });
+      }
+
+      localStorage.setItem('progfolia_cart_2027', JSON.stringify(cart));
+
+      confetti({
+        particleCount: 60,
+        spread: 55,
+        origin: { y: 0.65 }
+      });
+
+      showToast("Adicionado ao Carrinho!", `${qty}x ${product.name} adicionado(s)!`);
+      accessoryQtys[type] = 1;
+      const el = document.getElementById(`qty-${type}`);
+      if (el) el.innerText = 1;
+      renderCartUI();
     }
 
     function selectSize(size) {
@@ -2065,7 +2256,8 @@
 
     function updatePriceDisplay() {
       const currentLot = getCurrentLot();
-      const unitPrice = isCustomSize ? (currentLot.price + CONFIG.CUSTOM_SIZE_FEE) : currentLot.price;
+      let unitPrice = isCustomSize ? (currentLot.price + CONFIG.CUSTOM_SIZE_FEE) : currentLot.price;
+      if (hasAbadaKit) unitPrice += CONFIG.ABADA_KIT_ADDON_FEE;
       const totalItem = unitPrice * selectedQty;
 
       document.getElementById('currentPriceDisplay').innerText = currentLot.price.toFixed(0);
@@ -2081,7 +2273,8 @@
 
       document.getElementById('summaryTotalDisplay').innerText = `R$ ${totalItem.toFixed(2).replace('.', ',')}`;
       const displaySizeName = isCustomSize ? "Sob Encomenda" : selectedSize;
-      document.getElementById('summarySizeDisplay').innerText = `${displaySizeName} (${selectedQty}x)`;
+      const kitSuffix = hasAbadaKit ? " + Kit" : "";
+      document.getElementById('summarySizeDisplay').innerText = `${displaySizeName}${kitSuffix} (${selectedQty}x)`;
 
       updateAdminVisibility();
     }
@@ -2098,9 +2291,14 @@
       }
 
       const currentLot = getCurrentLot();
-      const unitPrice = isCustomSize ? (currentLot.price + CONFIG.CUSTOM_SIZE_FEE) : currentLot.price;
+      let unitPrice = isCustomSize ? (currentLot.price + CONFIG.CUSTOM_SIZE_FEE) : currentLot.price;
+      if (hasAbadaKit) unitPrice += CONFIG.ABADA_KIT_ADDON_FEE;
+
+      const itemTitle = hasAbadaKit ? "Abadá Prog Folia 2027 + Kit" : "Abadá Prog Folia 2027";
 
       const existingIndex = cart.findIndex(item => {
+        if (item.productType && item.productType !== 'abada') return false;
+        if (Boolean(item.withKit) !== hasAbadaKit) return false;
         if (isCustomSize) {
           return item.isCustom && item.customLabel.toLowerCase() === customLabel.toLowerCase();
         }
@@ -2112,6 +2310,9 @@
       } else {
         cart.push({
           id: 'abada_' + Date.now(),
+          productType: 'abada',
+          title: itemTitle,
+          withKit: hasAbadaKit,
           size: isCustomSize ? 'Sob Encomenda' : selectedSize,
           isCustom: isCustomSize,
           customLabel: customLabel,
@@ -2129,7 +2330,8 @@
       });
 
       const label = isCustomSize ? `Sob Encomenda (${customLabel})` : selectedSize;
-      showToast("Adicionado ao Carrinho!", `${selectedQty}x Abadá ${label} adicionado(s) com sucesso.`);
+      const kitNote = hasAbadaKit ? " com Kit Prog Folia" : "";
+      showToast("Adicionado ao Carrinho!", `${selectedQty}x Abadá ${label}${kitNote} adicionado(s) com sucesso.`);
 
       selectedQty = 1;
       renderStockBadges();
@@ -2187,15 +2389,18 @@
       let html = '';
       cart.forEach((item, index) => {
         const itemSubtotal = item.unitPrice * item.quantity;
-        const sizeTag = item.isCustom ? `Encomenda: ${item.customLabel}` : `Tamanho: ${item.size}`;
+        const itemTitle = item.title || (item.withKit ? "Abadá Prog Folia 2027 + Kit" : "Abadá Prog Folia 2027");
+        const itemIcon = item.icon || "fa-shirt";
+        let sizeTag = item.isCustom ? `Encomenda: ${item.customLabel}` : (item.productType && item.productType !== 'abada' ? item.size : `Tamanho: ${item.size}`);
+        if (item.withKit) sizeTag += " • + Kit Completo";
 
         html += `
           <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3 relative group">
             <div class="w-12 h-14 rounded-xl bg-gradient-to-b from-sky-500 to-blue-600 flex items-center justify-center text-white text-lg shrink-0 shadow-md">
-              <i class="fa-solid fa-shirt"></i>
+              <i class="fa-solid ${itemIcon}"></i>
             </div>
             <div class="flex-1 min-w-0 pr-6">
-              <h5 class="font-psy font-bold text-xs text-white truncate">Abadá Prog Folia 2027</h5>
+              <h5 class="font-psy font-bold text-xs text-white truncate">${itemTitle}</h5>
               <span class="inline-block px-2 py-0.5 mt-0.5 rounded-md bg-white/10 text-trance-neonCyan font-mono text-[10px] font-bold">
                 ${sizeTag}
               </span>
@@ -2280,10 +2485,11 @@
       let html = '';
       cart.forEach(item => {
         const itemSubtotal = item.unitPrice * item.quantity;
+        const itemTitle = item.title || (item.withKit ? "Abadá + Kit Prog Folia" : "Abadá Oficial");
         const sizeTag = item.isCustom ? `Sob Encomenda (${item.customLabel})` : item.size;
         html += `
           <div class="flex justify-between items-center py-0.5 border-b border-white/5">
-            <span>• ${item.quantity}x Abadá Oficial [${sizeTag}]</span>
+            <span>• ${item.quantity}x ${itemTitle} [${sizeTag}]</span>
             <span class="text-white font-bold">R$ ${itemSubtotal.toFixed(2).replace('.', ',')}</span>
           </div>
         `;
@@ -2372,15 +2578,15 @@
         // Se não houver backend ativo na prévia estática, redireciona para o WhatsApp de confirmação
         const currentSales = getTotalSalesCount();
         localStorage.setItem('progfolia_total_sales_2027', currentSales + totalItemsCount);
-        
-        let orderSummary = `*NOVO PEDIDO DE ABADÁ - PROG FOLIA 2027*\n`;
+        let orderSummary = `*NOVO PEDIDO - PROG FOLIA 2027*\n`;
         orderSummary += `👤 *Nome:* ${name}\n`;
         orderSummary += `📱 *WhatsApp:* ${phone}\n`;
         orderSummary += `✉️ *E-mail:* ${email}\n\n`;
-        orderSummary += `👕 *Itens:* \n`;
+        orderSummary += `🛍️ *Itens:* \n`;
         cart.forEach(item => {
+          const itemTitle = item.title || (item.withKit ? "Abadá + Kit Prog Folia" : "Abadá");
           const tag = item.isCustom ? `Sob Encomenda (${item.customLabel})` : item.size;
-          orderSummary += `• ${item.quantity}x Abadá [${tag}] - R$ ${(item.unitPrice * item.quantity).toFixed(2)}\n`;
+          orderSummary += `• ${item.quantity}x ${itemTitle} [${tag}] - R$ ${(item.unitPrice * item.quantity).toFixed(2)}\n`;
         });
         orderSummary += `\n💰 *Total:* R$ ${totalAmount.toFixed(2)}`;
 
@@ -3137,9 +3343,10 @@
         let itemsHtml = "";
         order.items.forEach(item => {
           const isCustom = item.isCustom;
+          const itemTitle = item.title || (item.withKit ? "Abadá + Kit" : "Abadá");
           const customBadge = isCustom 
-            ? `<span class="px-2 py-0.5 rounded bg-trance-solarGold/20 border border-trance-solarGold/40 text-trance-solarGold font-bold text-[10px]">Sob Encomenda: "${item.customLabel || 'Não especificado'}"</span>` 
-            : `<span class="px-2 py-0.5 rounded bg-white/10 text-trance-neonCyan font-bold text-[10px]">Tamanho: ${item.size}</span>`;
+            ? `<span class="px-2 py-0.5 rounded bg-trance-solarGold/20 border border-trance-solarGold/40 text-trance-solarGold font-bold text-[10px]">${itemTitle} — Sob Encomenda: "${item.customLabel || 'Não especificado'}"</span>` 
+            : `<span class="px-2 py-0.5 rounded bg-white/10 text-trance-neonCyan font-bold text-[10px]">${itemTitle} (${item.size})</span>`;
 
           itemsHtml += `
             <div class="flex items-center justify-between text-xs py-1 border-b border-white/5">
