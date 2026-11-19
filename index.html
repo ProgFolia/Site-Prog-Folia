@@ -1529,8 +1529,12 @@
       <div id="adminDashboard" class="hidden space-y-4">
         <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2 font-mono text-xs">
           <div class="flex justify-between">
-            <span>Vendas Registradas:</span>
+            <span>Abadás Vendidos (Lote):</span>
             <strong id="adminSalesCountDisplay" class="text-trance-neonCyan">0 un.</strong>
+          </div>
+          <div class="flex justify-between">
+            <span>Pedidos de Produtos:</span>
+            <strong id="adminOrdersCountDisplay" class="text-trance-neonPink">0 pedidos</strong>
           </div>
           <div class="flex justify-between">
             <span>Lote Vigente:</span>
@@ -1554,10 +1558,10 @@
 
           <button type="button" onclick="openOrdersListModal()" class="p-3 rounded-xl bg-sky-950/40 hover:bg-sky-900/70 border border-sky-500/40 text-left transition-all group">
             <div class="flex items-center justify-between text-xs text-trance-neonCyan font-psy font-bold mb-1">
-              <span>Vendas Abadás</span>
-              <i class="fa-solid fa-shirt text-sm group-hover:scale-110 transition-transform"></i>
+              <span>Vendas & Itens</span>
+              <i class="fa-solid fa-bag-shopping text-sm group-hover:scale-110 transition-transform"></i>
             </div>
-            <p class="text-[10px] text-gray-300">Tamanhos e quantidades</p>
+            <p class="text-[10px] text-gray-300">Abadás, copos e kits</p>
           </button>
         </div>
 
@@ -1635,10 +1639,10 @@
       <div class="flex items-center justify-between border-b border-white/10 pb-4 shrink-0">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center text-lg">
-            <i class="fa-solid fa-shirt"></i>
+            <i class="fa-solid fa-bag-shopping"></i>
           </div>
           <div>
-            <h3 class="font-psy font-bold text-sm sm:text-base text-white uppercase tracking-wider">Vendas de Abadás</h3>
+            <h3 class="font-psy font-bold text-sm sm:text-base text-white uppercase tracking-wider">Vendas de Abadás & Produtos</h3>
             <p class="text-[11px] text-gray-400 font-mono" id="adminOrdersTotalCounter">0 pedidos registrados</p>
           </div>
         </div>
@@ -1647,14 +1651,18 @@
         </button>
       </div>
 
-      <div class="my-3 flex items-center justify-between gap-3">
+      <div class="my-3 flex items-center justify-between gap-2 sm:gap-3">
         <div class="relative flex-1">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-gray-400"></i>
-          <input type="text" id="orderSearchInput" oninput="filterOrdersList()" placeholder="Buscar por comprador, WhatsApp ou e-mail..." 
+          <input type="text" id="orderSearchInput" oninput="filterOrdersList()" placeholder="Buscar por comprador, produto, WhatsApp..." 
                  class="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-black/50 border border-white/15 text-white placeholder-gray-500 focus:outline-none focus:border-trance-neonCyan">
         </div>
+        <button onclick="syncDataFromGoogleSheets(true)" title="Sincronizar vendas com a planilha" class="px-3 py-2 rounded-xl bg-sky-900/40 hover:bg-sky-900/80 border border-sky-500/40 text-trance-neonCyan text-xs font-mono font-bold flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-arrows-rotate" id="syncOrdersIcon"></i>
+          <span class="hidden sm:inline">Sincronizar</span>
+        </button>
         <div id="adminTotalAbadasBadge" class="px-3 py-2 rounded-xl bg-sky-950/60 border border-sky-500/30 font-mono text-xs text-sky-300 font-bold whitespace-nowrap">
-          Total: 0 peças
+          Total: 0 itens
         </div>
       </div>
 
@@ -1663,7 +1671,7 @@
       </div>
 
       <div class="pt-3 border-t border-white/10 shrink-0 flex items-center justify-between text-xs text-gray-400 font-mono">
-        <span>📦 Especificações de tamanhos sob encomenda são discriminadas em amarelo.</span>
+        <span>📦 Todas as vendas ficam salvas na aba "Pedidos" da sua planilha.</span>
         <button onclick="closeOrdersListModal()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-colors">
           Fechar
         </button>
@@ -1778,60 +1786,51 @@
       </div>
     </div>
 
-    <!-- Rodapé de Dicas e Atalhos -->
-    <div class="w-full max-w-4xl pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 font-mono gap-2 text-center sm:text-left z-20">
-      <span>💡 Role o scroll do mouse ou use os botões para dar zoom. Arraste para navegar pelos detalhes.</span>
-      <button onclick="closeAbadaZoomModal()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-all text-xs">
-        Fechar Visualização
-      </button>
+    <!-- Rodapé de Instrução -->
+    <div class="w-full max-w-4xl pt-3 border-t border-white/10 text-center text-[11px] text-gray-400 font-mono z-20">
+      💡 Use os botões acima, a roda do mouse ou arraste para inspecionar os detalhes • Pressione ESC para fechar
     </div>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- JAVASCRIPT: ENGINE DE ÁUDIO, ESTOQUE & CHECKOUT DINÂMICO VIA MERCADO PAGO -->
+  <!-- JAVASCRIPT: ENGINE DE ÁUDIO, ESTOQUE, SORTEIO & CHECKOUT MERCADO PAGO -->
   <!-- ========================================================================= -->
   <script>
     const CONFIG = {
       ADMIN_PIN: "progzito1602",
       CUSTOM_SIZE_FEE: 10,
       ABADA_KIT_ADDON_FEE: 18,
-      ACCESSORIES: {
-        copo: { name: "Copo Oficial Prog Folia", price: 15, tag: "Copo Eco 2027", icon: "fa-cup-straw" },
-        tirante: { name: "Tirante Oficial Prog Folia", price: 18, tag: "Tirante UV", icon: "fa-ribbon" },
-        kit: { name: "Kit Completo Prog Folia", price: 25, tag: "Copo + Tirante + Porta Copo", icon: "fa-box-open" }
-      },
       ORGANIZER_WHATSAPP: "5527988138664",
-      SPOTIFY_PLAYLIST_URL: "https://open.spotify.com/playlist/50JIH1pE0ujzoXbOA99UwH?si=4tuOhwZpRiWYLuOS5MiPCw",
       PIX_KEY: "blocoprogfolia@gmail.com",
       PIX_TITULAR: "Lara Tassinae Guimaraes",
       WHATSAPP_NUMBER: "5527988138664",
       TRACK_NAME: "Prog Folia by Zeppy",
 
-      // =======================================================================
-      // CONTROLE DE ACESSO E MANUTENÇÃO POR SENHA
-      // =======================================================================
-      // Mude para true quando quiser tirar do ar e exigir senha para entrar.
-      // Mude para false para liberar o site para todo mundo.
-      MAINTENANCE_MODE: false,
-      SITE_PASSWORD: "dinoodinossauro", // Senha configurada para o desbloqueio
-      
-      // ENDPOINT DA API SERVERLESS (Cloudflare Pages Function / Netlify / Vercel para Mercado Pago)
-      API_CHECKOUT_ENDPOINT: "/api/create-preference",
+      // Catálogo de Acessórios Oficiais Avulsos
+      ACCESSORIES: {
+        copo: { name: "Copo Oficial Prog Folia", price: 15, tag: "Edição 2027", icon: "fa-cup-straw" },
+        tirante: { name: "Tirante Oficial Prog Folia", price: 18, tag: "Edição 2027", icon: "fa-ribbon" },
+        kit: { name: "Kit Completo (Copo + Tirante + Porta Copo)", price: 25, tag: "Combo Oficial", icon: "fa-box-open" }
+      },
 
-      // URL DO WEBHOOK GOOGLE APPS SCRIPT PARA O GOOGLE PLANILHAS
+      // Controle de Acesso e Manutenção por Senha
+      MAINTENANCE_MODE: false,
+      SITE_PASSWORD: "dinoodinossauro",
+
+      // Integração com Google Sheets (Apps Script Webhook)
       GOOGLE_SHEETS_URL: localStorage.getItem('progfolia_google_sheets_url') || "https://script.google.com/macros/s/AKfycbzIlCIBqDET8ivNUNNdKajR_UpwcIQKa_zLVB9kt0Zc_OPfcgklNz4GCexc9ueRIZhs/exec",
 
-      // REGRAS DE LOTES E PREÇOS
+      // Endpoint da API Serverless (Cloudflare Pages Function para Mercado Pago)
+      API_CHECKOUT_ENDPOINT: "/api/create-preference",
+
+      // Regras de Lotes e Preços
       PRE_SALE_PRICE: 55,
       FIRST_LOT_PRICE: 65,
       PRE_SALE_MAX_SALES: 60,
-      
-      // DATAS DE TRANSIÇÃO (Horário de Brasília GMT-3)
-      PRE_SALE_END_DATE: new Date('2026-12-01T23:59:59-03:00'),
-      FIRST_LOT_END_DATE: new Date('2026-12-25T23:59:59-03:00'),
 
-      // DATA ALVO DO CARNAVAL 2027 (Vitória - ES: 08/02/2027 às 08:00h)
-      CARNAVAL_TARGET_DATE: new Date('2027-02-08T08:00:00-03:00')
+      // Datas de Transição (Horário de Brasília GMT-3)
+      PRE_SALE_END_DATE: new Date('2026-12-01T23:59:59-03:00'),
+      FIRST_LOT_END_DATE: new Date('2026-12-25T23:59:59-03:00')
     };
 
     function getTotalSalesCount() {
@@ -1839,18 +1838,22 @@
       return stored !== null ? parseInt(stored, 10) : 0;
     }
 
-    // Variável global em memória sincronizada com a Planilha do Google
+    // Variáveis globais em memória sincronizadas com a Planilha do Google
     let remoteLotteryList = [];
+    let remoteOrdersList = [];
+    let pendingDeleteCpf = null;
 
     function getLotteryEntriesCount() {
       return remoteLotteryList.length || (JSON.parse(localStorage.getItem('progfolia_registered_cpfs') || '[]').length);
     }
 
-    // Sincroniza os dados da planilha Google em qualquer dispositivo (PC, celular, etc.)
-    async function syncSorteioFromGoogleSheets(showNotification = false) {
+    // Sincroniza os dados do sorteio e das vendas com a Planilha Google em qualquer dispositivo
+    async function syncDataFromGoogleSheets(showNotification = false) {
       if (!CONFIG.GOOGLE_SHEETS_URL || !CONFIG.GOOGLE_SHEETS_URL.startsWith('http')) return;
-      const icon = document.getElementById('syncSheetsIcon');
-      if (icon) icon.classList.add('animate-spin');
+      const iconSorteio = document.getElementById('syncSheetsIcon');
+      const iconOrders = document.getElementById('syncOrdersIcon');
+      if (iconSorteio) iconSorteio.classList.add('animate-spin');
+      if (iconOrders) iconOrders.classList.add('animate-spin');
 
       try {
         const response = await fetch(CONFIG.GOOGLE_SHEETS_URL);
@@ -1862,18 +1865,46 @@
             
             const countEl = document.getElementById('adminSorteioCountDisplay');
             if (countEl) countEl.innerText = `${remoteLotteryList.length} participantes`;
-
-            if (showNotification) {
-              showToast("Sincronizado", `${remoteLotteryList.length} cadastros carregados da planilha!`);
-            }
             renderSorteioList();
+          }
+
+          if (data && Array.isArray(data.orders)) {
+            remoteOrdersList = data.orders;
+            localStorage.setItem('progfolia_orders_list', JSON.stringify(remoteOrdersList));
+
+            // Recalcula o total de abadás vendidos para o controle de lote
+            const totalAbadasSold = remoteOrdersList.reduce((acc, order) => {
+              const abadasInOrder = (order.items || []).reduce((sum, item) => {
+                return (!item.productType || item.productType === 'abada') ? sum + (item.quantity || 1) : sum;
+              }, 0);
+              return acc + abadasInOrder;
+            }, 0);
+
+            if (totalAbadasSold > getTotalSalesCount()) {
+              localStorage.setItem('progfolia_total_sales_2027', totalAbadasSold);
+              updatePriceDisplay();
+            }
+
+            const ordersCountEl = document.getElementById('adminOrdersCountDisplay');
+            if (ordersCountEl) ordersCountEl.innerText = `${remoteOrdersList.length} pedidos`;
+            renderOrdersList();
+          }
+
+          if (showNotification) {
+            showToast("Sincronizado", `Dados atualizados: ${remoteLotteryList.length} inscritos e ${remoteOrdersList.length} pedidos!`);
           }
         }
       } catch (err) {
         console.warn("Falha ao sincronizar com a planilha:", err);
       } finally {
-        if (icon) icon.classList.remove('animate-spin');
+        if (iconSorteio) iconSorteio.classList.remove('animate-spin');
+        if (iconOrders) iconOrders.classList.remove('animate-spin');
       }
+    }
+
+    // Alias de compatibilidade
+    function syncSorteioFromGoogleSheets(showNotification = false) {
+      return syncDataFromGoogleSheets(showNotification);
     }
 
     function generateRandomLotteryCode() {
@@ -2000,8 +2031,11 @@
       const totalSales = getTotalSalesCount();
       const currentLot = getCurrentLot();
       const lotteryCount = getLotteryEntriesCount();
+      const ordersCount = getOrdersList().length;
 
       document.getElementById('adminSalesCountDisplay').innerText = `${totalSales} un.`;
+      const ordersCountEl = document.getElementById('adminOrdersCountDisplay');
+      if (ordersCountEl) ordersCountEl.innerText = `${ordersCount} pedidos`;
       document.getElementById('adminCurrentLotDisplay').innerText = `${currentLot.name} (R$ ${currentLot.price.toFixed(0)})`;
       document.getElementById('adminSorteioCountDisplay').innerText = `${lotteryCount} participantes`;
 
@@ -2528,25 +2562,51 @@
       }
 
       const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const totalAbadasCount = cart.reduce((sum, item) => (!item.productType || item.productType === 'abada') ? sum + item.quantity : sum, 0);
       const totalAmount = cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
 
       btn.disabled = true;
       btn.classList.add('opacity-75');
       btnIcon.className = "fa-solid fa-spinner animate-spin text-base";
-      btnText.innerText = "GERANDO PEDIDO...";
+      btnText.innerText = "REGISTRANDO PEDIDO...";
 
-      // Salva o pedido localmente para acompanhamento no painel admin
+      // Monta resumo textual dos itens para a Planilha Google
+      const itemsTextSummary = cart.map(item => {
+        const itemTitle = item.title || (item.withKit ? "Abadá + Kit Prog Folia" : "Abadá Oficial");
+        const tag = item.isCustom ? `Sob Encomenda: ${item.customLabel}` : item.size;
+        return `${item.quantity}x ${itemTitle} [${tag}]`;
+      }).join(" | ");
+
+      // Salva o pedido localmente e sincroniza com a Planilha do Google
       const existingOrders = getOrdersList();
       const newOrder = {
         id: `PED-${Date.now().toString().slice(-6)}`,
         buyer: { name, phone, email },
         items: JSON.parse(JSON.stringify(cart)),
+        itemsSummary: itemsTextSummary,
         totalItems: totalItemsCount,
         totalAmount: totalAmount,
         data: new Date().toLocaleString('pt-BR')
       };
       existingOrders.unshift(newOrder);
+      remoteOrdersList.unshift(newOrder);
       localStorage.setItem('progfolia_orders_list', JSON.stringify(existingOrders));
+
+      // Grava a venda na aba "Pedidos" do Google Sheets
+      if (CONFIG.GOOGLE_SHEETS_URL && CONFIG.GOOGLE_SHEETS_URL.startsWith('http')) {
+        try {
+          await fetch(CONFIG.GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'order',
+              order: newOrder
+            })
+          });
+        } catch (sheetErr) {
+          console.warn("Disparo de pedido para a planilha efetuado:", sheetErr);
+        }
+      }
 
       try {
         const controller = new AbortController();
@@ -2568,7 +2628,7 @@
           const data = await response.json();
           if (data && data.init_point) {
             const currentSales = getTotalSalesCount();
-            localStorage.setItem('progfolia_total_sales_2027', currentSales + totalItemsCount);
+            localStorage.setItem('progfolia_total_sales_2027', currentSales + totalAbadasCount);
             showToast("Bilheteria Aberta!", "Redirecionando para a tela de pagamento...");
             setTimeout(() => { window.location.href = data.init_point; }, 600);
             return;
@@ -2577,8 +2637,8 @@
 
         // Se não houver backend ativo na prévia estática, redireciona para o WhatsApp de confirmação
         const currentSales = getTotalSalesCount();
-        localStorage.setItem('progfolia_total_sales_2027', currentSales + totalItemsCount);
-        let orderSummary = `*NOVO PEDIDO - PROG FOLIA 2027*\n`;
+        localStorage.setItem('progfolia_total_sales_2027', currentSales + totalAbadasCount);
+        let orderSummary = `*NOVO PEDIDO (${newOrder.id}) - PROG FOLIA 2027*\n`;
         orderSummary += `👤 *Nome:* ${name}\n`;
         orderSummary += `📱 *WhatsApp:* ${phone}\n`;
         orderSummary += `✉️ *E-mail:* ${email}\n\n`;
@@ -2591,17 +2651,21 @@
         orderSummary += `\n💰 *Total:* R$ ${totalAmount.toFixed(2)}`;
 
         const waUrl = `https://wa.me/${CONFIG.ORGANIZER_WHATSAPP}?text=${encodeURIComponent(orderSummary)}`;
-        showToast("Pedido Gerado!", "Abrindo WhatsApp para confirmação do pagamento.");
+        showToast("Pedido Salvo!", "Abrindo WhatsApp para confirmação do pagamento.");
         setTimeout(() => { window.open(waUrl, '_blank'); }, 600);
         closeCheckoutModal();
         clearCart();
+        updatePriceDisplay();
 
       } catch (err) {
         // Redirecionamento alternativo via WhatsApp em caso de falha de conexão com a API
-        let orderSummary = `*PEDIDO DE ABADÁ - PROG FOLIA 2027*\n👤 *Nome:* ${name}\n📱 *Tel:* ${phone}\n💰 *Total:* R$ ${totalAmount.toFixed(2)}`;
+        const currentSales = getTotalSalesCount();
+        localStorage.setItem('progfolia_total_sales_2027', currentSales + totalAbadasCount);
+        let orderSummary = `*PEDIDO (${newOrder.id}) - PROG FOLIA 2027*\n👤 *Nome:* ${name}\n📱 *Tel:* ${phone}\n🛍️ *Itens:* ${itemsTextSummary}\n💰 *Total:* R$ ${totalAmount.toFixed(2)}`;
         window.open(`https://wa.me/${CONFIG.ORGANIZER_WHATSAPP}?text=${encodeURIComponent(orderSummary)}`, '_blank');
         closeCheckoutModal();
         clearCart();
+        updatePriceDisplay();
       } finally {
         btn.disabled = false;
         btn.classList.remove('opacity-75');
@@ -2611,685 +2675,10 @@
     }
 
     // =========================================================================
-    // FORMULÁRIO DE IMPRENSA & CRIADORES DE CONTEÚDO
-    // =========================================================================
-    function handleImprensaSubmit(event) {
-      event.preventDefault();
-
-      const nome = document.getElementById('imprensaNome').value.trim();
-      const area = document.getElementById('imprensaArea').value.trim();
-      const cidade = document.getElementById('imprensaCidade').value.trim();
-      const portfolio = document.getElementById('imprensaPortfolio').value.trim();
-      const motivo = document.getElementById('imprensaMotivo').value.trim();
-
-      if (!nome || !area || !cidade || !portfolio || !motivo) {
-        showToast("Atenção", "Preencha todos os campos do formulário.", false);
-        return;
-      }
-
-      let msg = `*CADASTRO COLETIVO AUDIOVISUAL - PROG FOLIA 2027*\n\n`;
-      msg += `👤 *Nome:* ${nome}\n`;
-      msg += `🎥 *Área:* ${area}\n`;
-      msg += `📍 *Cidade/UF:* ${cidade}\n`;
-      msg += `🔗 *Portfólio / Instagram:* ${portfolio}\n\n`;
-      msg += `💬 *Por que quer participar:*\n"${motivo}"`;
-
-      const waUrl = `https://wa.me/${CONFIG.ORGANIZER_WHATSAPP}?text=${encodeURIComponent(msg)}`;
-      window.open(waUrl, '_blank');
-      showToast("Mensagem Preparada!", "Redirecionando para o WhatsApp do Prog Folia.");
-      document.getElementById('imprensaForm').reset();
-    }
-
-    // =========================================================================
-    // VALIDAÇÃO DE CPF & VERIFICAÇÕES DO SORTEIO
-    // =========================================================================
-    function getRegisteredCpfs() {
-      return JSON.parse(localStorage.getItem('progfolia_registered_cpfs') || '[]');
-    }
-
-    function formatCpfString(cleanCpf) {
-      if (!cleanCpf || cleanCpf.length !== 11) return cleanCpf || "";
-      return cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-    }
-
-    function validateCpf(cpf) {
-      const clean = cpf.replace(/\D/g, '');
-      if (clean.length !== 11) return false;
-      if (/^(\d)\1{10}$/.test(clean)) return false;
-
-      let sum = 0, rest;
-      for (let i = 1; i <= 9; i++) sum += parseInt(clean.substring(i - 1, i)) * (11 - i);
-      rest = (sum * 10) % 11;
-      if (rest === 10 || rest === 11) rest = 0;
-      if (rest !== parseInt(clean.substring(9, 10))) return false;
-
-      sum = 0;
-      for (let i = 1; i <= 10; i++) sum += parseInt(clean.substring(i - 1, i)) * (12 - i);
-      rest = (sum * 10) % 11;
-      if (rest === 10 || rest === 11) rest = 0;
-      if (rest !== parseInt(clean.substring(10, 11))) return false;
-
-      return true;
-    }
-
-    // Máscara e validação visual de CPF em tempo real
-    const cpfInputEl = document.getElementById('sorteioCpf');
-    if (cpfInputEl) {
-      cpfInputEl.addEventListener('input', (e) => {
-        let v = e.target.value.replace(/\D/g, '');
-        if (v.length > 11) v = v.slice(0, 11);
-        if (v.length > 9) {
-          v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-        } else if (v.length > 6) {
-          v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-        } else if (v.length > 3) {
-          v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-        }
-        e.target.value = v;
-
-        const hint = document.getElementById('cpfValidationHint');
-        if (v.replace(/\D/g, '').length === 11) {
-          if (!validateCpf(v)) {
-            hint.innerText = "CPF inválido. Verifique os números digitados.";
-            hint.classList.remove('hidden');
-          } else {
-            hint.classList.add('hidden');
-          }
-        } else {
-          hint.classList.add('hidden');
-        }
-      });
-    }
-
-    function checkUserRegistrationStatus() {
-      const ticket = JSON.parse(localStorage.getItem('progfolia_user_registered_ticket') || 'null');
-      if (ticket) {
-        const form = document.getElementById('sorteioForm');
-        const notice = document.getElementById('sorteioAlreadyRegisteredNotice');
-        if (form && notice) {
-          form.classList.add('hidden');
-          notice.classList.remove('hidden');
-        }
-      }
-    }
-
-    function showSavedLotteryTicket() {
-      const ticket = JSON.parse(localStorage.getItem('progfolia_user_registered_ticket') || 'null');
-      if (!ticket) return;
-
-      document.getElementById('luckyNumberDisplay').innerText = ticket.numeroFormatado;
-      document.getElementById('luckyParticipantName').innerText = `${ticket.nome} (${ticket.instagram})`;
-      document.getElementById('luckyParticipantCpf').innerText = `CPF: ${ticket.cpfMascarado || ticket.cpf}`;
-      
-      document.getElementById('sorteioAlreadyRegisteredNotice').classList.add('hidden');
-      document.getElementById('sorteioForm').classList.add('hidden');
-      document.getElementById('sorteioResult').classList.remove('hidden');
-    }
-
-    // Submissão do Formulário do Sorteio
-    document.getElementById('sorteioForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      const nome = document.getElementById('sorteioNome').value.trim();
-      const rawCpf = document.getElementById('sorteioCpf').value.trim();
-      const whatsapp = document.getElementById('sorteioWhatsapp').value.trim();
-      const instagram = document.getElementById('sorteioInstagram').value.trim();
-      const cleanCpf = rawCpf.replace(/\D/g, '');
-
-      if (!validateCpf(rawCpf)) {
-        showToast("CPF Inválido", "Por favor, digite um CPF válido.", false);
-        document.getElementById('sorteioCpf').focus();
-        return;
-      }
-
-      // Verificação de CPF no cache local e nos dados da planilha
-      const registeredList = remoteLotteryList.length > 0 ? remoteLotteryList : getRegisteredCpfs();
-      const alreadyRegistered = registeredList.some(r => r.cleanCpf === cleanCpf || (r.cpf && r.cpf.replace(/\D/g, '') === cleanCpf));
-
-      if (alreadyRegistered) {
-        showToast("CPF Já Cadastrado", "Este CPF já gerou um número da sorte.", false);
-        return;
-      }
-
-      const btnSubmit = document.getElementById('btnSubmitSorteio');
-      const btnText = document.getElementById('btnSorteioText');
-      const btnIcon = document.getElementById('btnSorteioIcon');
-
-      btnSubmit.disabled = true;
-      btnSubmit.classList.add('opacity-75');
-      btnIcon.className = "fa-solid fa-spinner animate-spin";
-      btnText.innerText = "GRAVANDO NA PLANILHA...";
-
-      const codeObj = generateRandomLotteryCode();
-      const maskedCpf = `***.${cleanCpf.substring(3, 6)}.${cleanCpf.substring(6, 9)}-**`;
-      const dataFormatada = new Date().toLocaleString('pt-BR');
-
-      const entryPayload = {
-        numeroSorte: codeObj.numeric,
-        numeroFormatado: codeObj.formatted,
-        nome: nome,
-        cpf: rawCpf,
-        cleanCpf: cleanCpf,
-        cpfMascarado: maskedCpf,
-        whatsapp: whatsapp,
-        instagram: instagram,
-        dataRegistro: dataFormatada
-      };
-
-      // Gravação na Planilha Google via Apps Script
-      if (CONFIG.GOOGLE_SHEETS_URL && CONFIG.GOOGLE_SHEETS_URL.startsWith('http')) {
-        try {
-          const response = await fetch(CONFIG.GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(entryPayload)
-          });
-          if (response.ok) {
-            const resData = await response.json().catch(() => ({}));
-            if (resData.status === 'duplicate') {
-              showToast("CPF Já Registrado", "Esse CPF já consta na planilha do sorteio.", false);
-              btnSubmit.disabled = false;
-              btnSubmit.classList.remove('opacity-75');
-              btnIcon.className = "fa-solid fa-ticket";
-              btnText.innerText = "CADASTRAR E GERAR NÚMERO DA SORTE";
-              return;
-            }
-          }
-        } catch (err) {
-          console.warn("Disparo para a planilha efetuado:", err);
-        }
-      }
-
-      // Salva no registro local
-      const localList = getRegisteredCpfs();
-      localList.push(entryPayload);
-      localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(localList));
-      localStorage.setItem('progfolia_user_registered_ticket', JSON.stringify(entryPayload));
-      remoteLotteryList.push(entryPayload);
-
-      // Exibe o cupom do sorteio
-      document.getElementById('luckyNumberDisplay').innerText = codeObj.formatted;
-      document.getElementById('luckyParticipantName').innerText = `${nome} (${instagram})`;
-      document.getElementById('luckyParticipantCpf').innerText = `CPF: ${maskedCpf}`;
-
-      document.getElementById('sorteioForm').classList.add('hidden');
-      document.getElementById('sorteioResult').classList.remove('hidden');
-
-      confetti({ particleCount: 150, spread: 90, origin: { y: 0.65 } });
-      showToast("Inscrição Confirmada!", `Seu número da sorte é ${codeObj.formatted}`);
-
-      btnSubmit.disabled = false;
-      btnSubmit.classList.remove('opacity-75');
-      btnIcon.className = "fa-solid fa-ticket";
-      btnText.innerText = "CADASTRAR E GERAR NÚMERO DA SORTE";
-      showAdminDashboard();
-    });
-
-    // =========================================================================
-    // CONTAGEM REGRESSIVA (08/02/2027 às 08:00h)
-    // =========================================================================
-    function initCountdown() {
-      const daysEl = document.getElementById('countdownDays');
-      const hoursEl = document.getElementById('countdownHours');
-      const minsEl = document.getElementById('countdownMinutes');
-      const secsEl = document.getElementById('countdownSeconds');
-
-      function updateClock() {
-        const now = new Date();
-        const diff = CONFIG.CARNAVAL_TARGET_DATE - now;
-
-        if (diff <= 0) {
-          if (daysEl) daysEl.innerText = "00";
-          if (hoursEl) hoursEl.innerText = "00";
-          if (minsEl) minsEl.innerText = "00";
-          if (secsEl) secsEl.innerText = "00";
-          return;
-        }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const mins = Math.floor((diff / (1000 * 60)) % 60);
-        const secs = Math.floor((diff / 1000) % 60);
-
-        if (daysEl) daysEl.innerText = String(days).padStart(2, '0');
-        if (hoursEl) hoursEl.innerText = String(hours).padStart(2, '0');
-        if (minsEl) minsEl.innerText = String(mins).padStart(2, '0');
-        if (secsEl) secsEl.innerText = String(secs).padStart(2, '0');
-      }
-
-      updateClock();
-      setInterval(updateClock, 1000);
-    }
-
-    // =========================================================================
-    // UTILITÁRIOS GERAIS & CLIPBOARD
-    // =========================================================================
-    function copyPixKey() {
-      const input = document.getElementById('pixKeyInput');
-      input.select();
-      document.execCommand('copy');
-      showToast("PIX Copiado!", "Chave PIX copiada para a área de transferência.");
-    }
-
-    function copySpotifyLink() {
-      const dummyInput = document.createElement('input');
-      dummyInput.value = CONFIG.SPOTIFY_PLAYLIST_URL;
-      document.body.appendChild(dummyInput);
-      dummyInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(dummyInput);
-      showToast("Link Copiado!", "Link da playlist do Spotify copiado com sucesso!");
-    }
-
-    function toggleFaqPopup() {
-      document.getElementById('faqPopup').classList.toggle('hidden');
-    }
-
-    function faqAnswer(topic) {
-      if (topic === 'gratuito') {
-        showToast("100% Gratuito na Rua", "O cortejo na avenida é livre para todos. O abadá garante brindes e apoia o trio.");
-      } else if (topic === 'abada') {
-        showToast("Uso do Abadá", "Não é obrigatório para curtir na rua, mas fortalece a sustentabilidade do bloco.");
-      }
-    }
-
-    function showToast(title, message, isSuccess = true) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastTitle').innerText = title;
-      document.getElementById('toastMessage').innerText = message;
-      document.getElementById('toastIcon').className = isSuccess 
-        ? "w-9 h-9 rounded-full flex items-center justify-center bg-trance-neonCyan text-trance-black font-black text-sm shrink-0"
-        : "w-9 h-9 rounded-full flex items-center justify-center bg-red-500 text-white font-black text-sm shrink-0";
-      document.getElementById('toastIcon').innerHTML = isSuccess ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-exclamation"></i>';
-
-      toast.classList.remove('translate-x-[160%]');
-      toast.classList.add('translate-x-0');
-
-      setTimeout(() => {
-        toast.classList.remove('translate-x-0');
-        toast.classList.add('translate-x-[160%]');
-      }, 4000);
-    }
-
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (mobileMenuBtn && mobileMenu) {
-      mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-      document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
-    }
-
-    // =========================================================================
-    // VISUALIZADOR DE ZOOM DO ABADÁ & CARREGAMENTO RESILIENTE (DESKTOP & MOBILE)
-    // =========================================================================
-    let currentAbadaZoom = 1;
-    let abadaPanX = 0;
-    let abadaPanY = 0;
-    let isDraggingAbada = false;
-    let startDragX = 0;
-    let startDragY = 0;
-    let activeAbadaImageUrl = null;
-
-    // Detecta imagens reais sem quebrar a tela ou gerar loops de erro
-    function detectAndApplyAbadaImage() {
-      // 1. Prioridade: Imagem carregada pelo admin localmente
-      const savedCustom = localStorage.getItem('progfolia_custom_abada_image');
-      if (savedCustom) {
-        applyAbadaImageToUI(savedCustom);
-        return;
-      }
-
-      // 2. Procura silenciosa pelos arquivos mais comuns no GitHub
-      const candidates = [
-        'mockup-abada.png',
-        'mockup-abada.PNG',
-        'abada.png',
-        'abada.PNG',
-        'mockup.png',
-        'mockup-abada.jpg',
-        'abada.jpg'
-      ];
-
-      function probeNext(index) {
-        if (index >= candidates.length) {
-          // Mantém o mockup vetorial em exibição perfeita
-          return;
-        }
-
-        const tester = new Image();
-        tester.onload = function() {
-          applyAbadaImageToUI(candidates[index]);
-        };
-        tester.onerror = function() {
-          probeNext(index + 1);
-        };
-        tester.src = candidates[index];
-      }
-
-      probeNext(0);
-    }
-
-    function applyAbadaImageToUI(url) {
-      activeAbadaImageUrl = url;
-      const thumb = document.getElementById('abadaThumbImg');
-      const svgGraphic = document.getElementById('mockupSvgGraphic');
-      const modalImg = document.getElementById('abadaModalImage');
-      const modalSvg = document.getElementById('abadaModalSvgHolder');
-
-      if (thumb && svgGraphic) {
-        thumb.src = url;
-        thumb.classList.remove('hidden');
-        svgGraphic.classList.add('hidden');
-      }
-
-      if (modalImg && modalSvg) {
-        modalImg.src = url;
-        modalImg.classList.remove('hidden');
-        modalSvg.classList.add('hidden');
-      }
-    }
-
-    function handleAdminAbadaUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const base64 = e.target.result;
-        localStorage.setItem('progfolia_custom_abada_image', base64);
-        applyAbadaImageToUI(base64);
-        showToast("Mockup Atualizado!", "Sua imagem agora está ativa no card e no zoom!");
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function handleAdminResetAbadaImage() {
-      localStorage.removeItem('progfolia_custom_abada_image');
-      activeAbadaImageUrl = null;
-      const thumb = document.getElementById('abadaThumbImg');
-      const svgGraphic = document.getElementById('mockupSvgGraphic');
-      const modalImg = document.getElementById('abadaModalImage');
-      const modalSvg = document.getElementById('abadaModalSvgHolder');
-
-      if (thumb) thumb.classList.add('hidden');
-      if (svgGraphic) svgGraphic.classList.remove('hidden');
-      if (modalImg) modalImg.classList.add('hidden');
-      if (modalSvg) modalSvg.classList.remove('hidden');
-
-      detectAndApplyAbadaImage();
-      showToast("Padrão Restaurado", "Exibindo o mockup oficial do sistema.");
-    }
-
-    function openAbadaZoomModal() {
-      const modal = document.getElementById('abadaZoomModal');
-      resetAbadaZoom();
-      if (modal) {
-        modal.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
-      }
-    }
-
-    function closeAbadaZoomModal() {
-      const modal = document.getElementById('abadaZoomModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
-      }
-      resetAbadaZoom();
-    }
-
-    function updateAbadaTransform() {
-      const wrapper = document.getElementById('abadaZoomWrapper');
-      const display = document.getElementById('abadaZoomLevelDisplay');
-      if (wrapper) {
-        wrapper.style.transform = `translate(${abadaPanX}px, ${abadaPanY}px) scale(${currentAbadaZoom})`;
-      }
-      if (display) {
-        display.innerText = `${Math.round(currentAbadaZoom * 100)}%`;
-      }
-    }
-
-    function zoomAbada(delta) {
-      let nextZoom = currentAbadaZoom + delta;
-      if (nextZoom < 0.75) nextZoom = 0.75;
-      if (nextZoom > 3.5) nextZoom = 3.5;
-      currentAbadaZoom = nextZoom;
-      if (currentAbadaZoom === 1) {
-        abadaPanX = 0;
-        abadaPanY = 0;
-      }
-      updateAbadaTransform();
-    }
-
-    function resetAbadaZoom() {
-      currentAbadaZoom = 1;
-      abadaPanX = 0;
-      abadaPanY = 0;
-      updateAbadaTransform();
-    }
-
-    function initAbadaZoomEvents() {
-      const container = document.getElementById('abadaZoomContainer');
-      if (!container) return;
-
-      container.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const delta = e.deltaY < 0 ? 0.2 : -0.2;
-        zoomAbada(delta);
-      }, { passive: false });
-
-      container.addEventListener('mousedown', (e) => {
-        if (e.button !== 0) return;
-        isDraggingAbada = true;
-        startDragX = e.clientX - abadaPanX;
-        startDragY = e.clientY - abadaPanY;
-      });
-
-      window.addEventListener('mousemove', (e) => {
-        if (!isDraggingAbada) return;
-        abadaPanX = e.clientX - startDragX;
-        abadaPanY = e.clientY - startDragY;
-        updateAbadaTransform();
-      });
-
-      window.addEventListener('mouseup', () => {
-        isDraggingAbada = false;
-      });
-
-      let initialTouchDist = null;
-      container.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          isDraggingAbada = true;
-          startDragX = e.touches[0].clientX - abadaPanX;
-          startDragY = e.touches[0].clientY - abadaPanY;
-        } else if (e.touches.length === 2) {
-          initialTouchDist = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
-        }
-      });
-
-      container.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 1 && isDraggingAbada) {
-          abadaPanX = e.touches[0].clientX - startDragX;
-          abadaPanY = e.touches[0].clientY - startDragY;
-          updateAbadaTransform();
-        } else if (e.touches.length === 2 && initialTouchDist) {
-          const newDist = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
-          const zoomFactor = (newDist - initialTouchDist) * 0.005;
-          zoomAbada(zoomFactor);
-          initialTouchDist = newDist;
-        }
-      });
-
-      container.addEventListener('touchend', () => {
-        isDraggingAbada = false;
-        initialTouchDist = null;
-      });
-
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeAbadaZoomModal();
-        }
-      });
-    }
-
-    // =========================================================================
-    // GERENCIAMENTO AVANÇADO DE CADASTROS DO SORTEIO (ADMIN POP-UP)
-    // =========================================================================
-    let targetIndexToDelete = null;
-
-    function openSorteioListModal() {
-      const modal = document.getElementById('adminSorteioListModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        renderSorteioList();
-      }
-    }
-
-    function closeSorteioListModal() {
-      const modal = document.getElementById('adminSorteioListModal');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function renderSorteioList(filterText = "") {
-      const listContainer = document.getElementById('adminSorteioItemsList');
-      const counterEl = document.getElementById('adminSorteioTotalCounter');
-      const registered = remoteLotteryList.length > 0 ? remoteLotteryList : getRegisteredCpfs();
-
-      let items = registered.map((item, index) => ({ ...item, originalIndex: index }));
-
-      if (filterText.trim()) {
-        const q = filterText.toLowerCase();
-        items = items.filter(i => 
-          (i.nome && i.nome.toLowerCase().includes(q)) ||
-          (i.cleanCpf && i.cleanCpf.includes(q)) ||
-          (i.cpf && i.cpf.includes(q)) ||
-          (i.instagram && i.instagram.toLowerCase().includes(q)) ||
-          (i.whatsapp && i.whatsapp.includes(q)) ||
-          (i.numeroFormatado && i.numeroFormatado.toLowerCase().includes(q))
-        );
-      }
-
-      if (counterEl) {
-        counterEl.innerText = `${items.length} de ${registered.length} cadastro(s) sincronizado(s)`;
-      }
-
-      if (items.length === 0) {
-        listContainer.innerHTML = `
-          <div class="p-8 text-center bg-white/5 rounded-2xl border border-white/10 space-y-2">
-            <span class="text-3xl">🎟️</span>
-            <h5 class="text-xs font-psy font-bold text-white uppercase">Nenhum cadastro encontrado</h5>
-            <p class="text-[11px] text-gray-400">Os participantes cadastrados na planilha aparecerão listados aqui.</p>
-          </div>
-        `;
-        return;
-      }
-
-      let html = "";
-      items.forEach(item => {
-        const displayName = item.nome || "Participante Anônimo";
-        const displayCpf = item.cpfMascarado || (item.cpf || (item.cleanCpf ? formatCpfString(item.cleanCpf) : "Não informado"));
-        const displayDate = item.dataRegistro || (item.data ? new Date(item.data).toLocaleString('pt-BR') : "Data indisponível");
-
-        html += `
-          <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div class="space-y-1 min-w-0">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="px-2 py-0.5 rounded-md bg-trance-solarGold/15 border border-trance-solarGold/40 text-trance-solarGold font-psy font-black text-xs">
-                  ${item.numeroFormatado || '#PROG-' + (item.numero || item.numeroSorte)}
-                </span>
-                <span class="font-bold text-xs text-white truncate">${displayName}</span>
-              </div>
-              <div class="text-[11px] text-gray-300 flex items-center gap-3 flex-wrap font-mono">
-                <span><i class="fa-solid fa-id-card text-gray-400 mr-1"></i>${displayCpf}</span>
-                <span><i class="fa-brands fa-whatsapp text-green-400 mr-1"></i>${item.whatsapp || '-'}</span>
-                <span><i class="fa-brands fa-instagram text-pink-400 mr-1"></i>${item.instagram || '-'}</span>
-              </div>
-              <div class="text-[10px] text-gray-500 font-mono">
-                <i class="fa-regular fa-clock mr-1"></i>${displayDate}
-              </div>
-            </div>
-
-            <button type="button" onclick="promptDeleteLotteryEntry(${item.originalIndex})" 
-                    class="self-end sm:self-center px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/25 border border-red-500/30 text-red-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-all">
-              <i class="fa-regular fa-trash-can"></i>
-              <span>Apagar</span>
-            </button>
-          </div>
-        `;
-      });
-
-      listContainer.innerHTML = html;
-    }
-
-    function filterSorteioList() {
-      const q = document.getElementById('sorteioSearchInput').value;
-      renderSorteioList(q);
-    }
-
-    function promptDeleteLotteryEntry(index) {
-      const registered = remoteLotteryList.length > 0 ? remoteLotteryList : getRegisteredCpfs();
-      const target = registered[index];
-      if (!target) return;
-
-      targetIndexToDelete = index;
-      const targetDesc = document.getElementById('deleteConfirmTargetDescription');
-      const name = target.nome || "Participante";
-      const ticket = target.numeroFormatado || target.numero || target.numeroSorte;
-      targetDesc.innerHTML = `Deseja realmente apagar o cadastro de <strong>${name}</strong> (${ticket})?`;
-
-      document.getElementById('adminDeleteConfirmModal').classList.remove('hidden');
-    }
-
-    function closeDeleteConfirmModal() {
-      targetIndexToDelete = null;
-      document.getElementById('adminDeleteConfirmModal').classList.add('hidden');
-    }
-
-    async function executeConfirmedDelete() {
-      if (targetIndexToDelete === null) return;
-      const registered = remoteLotteryList.length > 0 ? remoteLotteryList : getRegisteredCpfs();
-      const deleted = registered.splice(targetIndexToDelete, 1)[0];
-
-      // Remove do cache local
-      remoteLotteryList = registered;
-      localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(registered));
-
-      // Se o usuário excluído era o salvo neste aparelho, libera o formulário
-      const localTicket = JSON.parse(localStorage.getItem('progfolia_user_registered_ticket') || 'null');
-      if (localTicket && deleted && (deleted.cleanCpf === localTicket.cleanCpf || deleted.numeroFormatado === localTicket.numeroFormatado)) {
-        localStorage.removeItem('progfolia_user_registered_ticket');
-        const form = document.getElementById('sorteioForm');
-        const res = document.getElementById('sorteioResult');
-        const notice = document.getElementById('sorteioAlreadyRegisteredNotice');
-        if (form) form.classList.remove('hidden');
-        if (res) res.classList.add('hidden');
-        if (notice) notice.classList.add('hidden');
-      }
-
-      // Comunica a exclusão para a Planilha do Google
-      if (deleted && deleted.cleanCpf && CONFIG.GOOGLE_SHEETS_URL) {
-        fetch(CONFIG.GOOGLE_SHEETS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'delete', cpf: deleted.cleanCpf })
-        }).catch(() => {});
-      }
-
-      closeDeleteConfirmModal();
-      renderSorteioList(document.getElementById('sorteioSearchInput').value);
-      showAdminDashboard();
-      showToast("Cadastro Removido", "O registro foi excluído da base e da planilha com sucesso.");
-    }
-
-    // =========================================================================
-    // GERENCIAMENTO AVANÇADO DE VENDAS DE ABADÁS (ADMIN POP-UP)
+    // GERENCIAMENTO AVANÇADO DE VENDAS DE ABADÁS & PRODUTOS (ADMIN POP-UP)
     // =========================================================================
     function getOrdersList() {
+      if (remoteOrdersList.length > 0) return remoteOrdersList;
       return JSON.parse(localStorage.getItem('progfolia_orders_list') || '[]');
     }
 
@@ -3319,12 +2708,13 @@
           (o.buyer && o.buyer.name && o.buyer.name.toLowerCase().includes(q)) ||
           (o.buyer && o.buyer.phone && o.buyer.phone.includes(q)) ||
           (o.buyer && o.buyer.email && o.buyer.email.toLowerCase().includes(q)) ||
-          (o.id && o.id.toLowerCase().includes(q))
+          (o.id && o.id.toLowerCase().includes(q)) ||
+          (o.itemsSummary && o.itemsSummary.toLowerCase().includes(q))
         );
       }
 
       const totalPieces = orders.reduce((sum, o) => sum + (o.totalItems || 0), 0);
-      if (totalPiecesEl) totalPiecesEl.innerText = `Total: ${totalPieces} peças`;
+      if (totalPiecesEl) totalPiecesEl.innerText = `Total: ${totalPieces} itens`;
       if (counterEl) counterEl.innerText = `${filtered.length} de ${orders.length} pedido(s)`;
 
       if (filtered.length === 0) {
@@ -3332,7 +2722,7 @@
           <div class="p-8 text-center bg-white/5 rounded-2xl border border-white/10 space-y-2">
             <span class="text-3xl">🛍️</span>
             <h5 class="text-xs font-psy font-bold text-white uppercase">Nenhum pedido registrado</h5>
-            <p class="text-[11px] text-gray-400">Assim que os pedidos forem iniciados, a lista com tamanhos e especificações aparecerá aqui.</p>
+            <p class="text-[11px] text-gray-400">Assim que os pedidos de abadás, copos, tirantes ou kits forem feitos, aparecerão aqui.</p>
           </div>
         `;
         return;
@@ -3341,12 +2731,19 @@
       let html = "";
       filtered.forEach((order, idx) => {
         let itemsHtml = "";
-        order.items.forEach(item => {
+        (order.items || []).forEach(item => {
           const isCustom = item.isCustom;
           const itemTitle = item.title || (item.withKit ? "Abadá + Kit" : "Abadá");
-          const customBadge = isCustom 
-            ? `<span class="px-2 py-0.5 rounded bg-trance-solarGold/20 border border-trance-solarGold/40 text-trance-solarGold font-bold text-[10px]">${itemTitle} — Sob Encomenda: "${item.customLabel || 'Não especificado'}"</span>` 
-            : `<span class="px-2 py-0.5 rounded bg-white/10 text-trance-neonCyan font-bold text-[10px]">${itemTitle} (${item.size})</span>`;
+          const isAccessory = item.productType && item.productType !== 'abada';
+          let customBadge = "";
+
+          if (isCustom) {
+            customBadge = `<span class="px-2 py-0.5 rounded bg-trance-solarGold/20 border border-trance-solarGold/40 text-trance-solarGold font-bold text-[10px]">${itemTitle} — Sob Encomenda: "${item.customLabel || 'Não especificado'}"</span>`;
+          } else if (isAccessory) {
+            customBadge = `<span class="px-2 py-0.5 rounded bg-trance-neonPink/20 border border-trance-neonPink/40 text-pink-300 font-bold text-[10px]">${itemTitle} (${item.size})</span>`;
+          } else {
+            customBadge = `<span class="px-2 py-0.5 rounded bg-white/10 text-trance-neonCyan font-bold text-[10px]">${itemTitle} (${item.size})</span>`;
+          }
 
           itemsHtml += `
             <div class="flex items-center justify-between text-xs py-1 border-b border-white/5">
@@ -3367,7 +2764,7 @@
                 <span class="font-bold text-xs text-white">${order.buyer ? order.buyer.name : 'Cliente'}</span>
               </div>
               <span class="font-psy font-black text-sm text-trance-solarGold">
-                R$ ${(order.totalAmount || 0).toFixed(2).replace('.', ',')}
+                R$ ${(Number(order.totalAmount) || 0).toFixed(2).replace('.', ',')}
               </span>
             </div>
 
@@ -3391,6 +2788,562 @@
     function filterOrdersList() {
       const q = document.getElementById('orderSearchInput').value;
       renderOrdersList(q);
+    }
+
+    // =========================================================================
+    // CONTAGEM REGRESSIVA OFICIAL (08/02/2027 ÀS 08:00H)
+    // =========================================================================
+    function initCountdown() {
+      const targetDate = new Date('2027-02-08T08:00:00-03:00').getTime();
+
+      function updateTimer() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        const daysEl = document.getElementById('countdownDays');
+        const hoursEl = document.getElementById('countdownHours');
+        const minsEl = document.getElementById('countdownMinutes');
+        const secsEl = document.getElementById('countdownSeconds');
+        if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
+
+        if (distance <= 0) {
+          daysEl.innerText = "00";
+          hoursEl.innerText = "00";
+          minsEl.innerText = "00";
+          secsEl.innerText = "00";
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        daysEl.innerText = String(days).padStart(2, '0');
+        hoursEl.innerText = String(hours).padStart(2, '0');
+        minsEl.innerText = String(minutes).padStart(2, '0');
+        secsEl.innerText = String(seconds).padStart(2, '0');
+      }
+
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+
+    // =========================================================================
+    // SORTEIO MEMENTO VIVERE: MÁSCARA DE CPF, VALIDAÇÃO & SINCRONIZAÇÃO
+    // =========================================================================
+    function formatCpfMask(value) {
+      return value
+        .replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+        .replace(/(-\d{2})\d+?$/, '$1');
+    }
+
+    function isValidCPF(cpf) {
+      const clean = cpf.replace(/\D/g, '');
+      if (clean.length !== 11 || /^(\d)\1{10}$/.test(clean)) return false;
+
+      let sum = 0;
+      for (let i = 0; i < 9; i++) sum += parseInt(clean.charAt(i)) * (10 - i);
+      let rev = 11 - (sum % 11);
+      if (rev === 10 || rev === 11) rev = 0;
+      if (rev !== parseInt(clean.charAt(9))) return false;
+
+      sum = 0;
+      for (let i = 0; i < 10; i++) sum += parseInt(clean.charAt(i)) * (11 - i);
+      rev = 11 - (sum % 11);
+      if (rev === 10 || rev === 11) rev = 0;
+      return rev === parseInt(clean.charAt(10));
+    }
+
+    function maskCpfPrivacy(cpf) {
+      const digits = cpf.replace(/\D/g, '');
+      if (digits.length !== 11) return cpf;
+      return `***.${digits.slice(3, 6)}.${digits.slice(6, 9)}-**`;
+    }
+
+    function checkUserRegistrationStatus() {
+      const savedTicket = JSON.parse(localStorage.getItem('progfolia_user_registered_ticket') || 'null');
+      const notice = document.getElementById('sorteioAlreadyRegisteredNotice');
+      if (savedTicket && notice) {
+        notice.classList.remove('hidden');
+      }
+    }
+
+    function showSavedLotteryTicket() {
+      const savedTicket = JSON.parse(localStorage.getItem('progfolia_user_registered_ticket') || 'null');
+      if (!savedTicket) return;
+      document.getElementById('luckyNumberDisplay').innerText = savedTicket.numeroFormatado;
+      document.getElementById('luckyParticipantName').innerText = `${savedTicket.nome} (${savedTicket.instagram})`;
+      document.getElementById('luckyParticipantCpf').innerText = `CPF: ${maskCpfPrivacy(savedTicket.cpf)}`;
+      document.getElementById('sorteioForm').classList.add('hidden');
+      document.getElementById('sorteioAlreadyRegisteredNotice').classList.add('hidden');
+      document.getElementById('sorteioResult').classList.remove('hidden');
+    }
+
+    const cpfInputEl = document.getElementById('sorteioCpf');
+    if (cpfInputEl) {
+      cpfInputEl.addEventListener('input', (e) => {
+        e.target.value = formatCpfMask(e.target.value);
+        const hint = document.getElementById('cpfValidationHint');
+        if (hint) hint.classList.add('hidden');
+      });
+    }
+
+    const sorteioFormEl = document.getElementById('sorteioForm');
+    if (sorteioFormEl) {
+      sorteioFormEl.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const nome = document.getElementById('sorteioNome').value.trim();
+        const cpf = document.getElementById('sorteioCpf').value.trim();
+        const whatsapp = document.getElementById('sorteioWhatsapp').value.trim();
+        const instagram = document.getElementById('sorteioInstagram').value.trim();
+        const hint = document.getElementById('cpfValidationHint');
+        const btn = document.getElementById('btnSubmitSorteio');
+        const btnText = document.getElementById('btnSorteioText');
+        const btnIcon = document.getElementById('btnSorteioIcon');
+
+        if (!isValidCPF(cpf)) {
+          if (hint) {
+            hint.innerText = "CPF inválido. Verifique os 11 dígitos digitados.";
+            hint.classList.remove('hidden');
+          }
+          showToast("CPF Inválido", "Por favor, informe um CPF válido.", false);
+          return;
+        }
+
+        const cleanCpf = cpf.replace(/\D/g, '');
+        const localList = JSON.parse(localStorage.getItem('progfolia_registered_cpfs') || '[]');
+        const allEntries = remoteLotteryList.length > 0 ? remoteLotteryList : localList;
+
+        if (allEntries.some(item => (item.cleanCpf || (item.cpf || '').replace(/\D/g, '')) === cleanCpf)) {
+          if (hint) {
+            hint.innerText = "Este CPF já possui um número da sorte cadastrado!";
+            hint.classList.remove('hidden');
+          }
+          showToast("Cadastro Duplicado", "Cada CPF pode participar apenas 1 vez do sorteio.", false);
+          return;
+        }
+
+        btn.disabled = true;
+        btn.classList.add('opacity-75');
+        btnIcon.className = "fa-solid fa-spinner animate-spin";
+        btnText.innerText = "VERIFICANDO E REGISTRANDO...";
+
+        const lotteryObj = generateRandomLotteryCode();
+        const nowStr = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
+        const entryData = {
+          numeroSorte: lotteryObj.numeric,
+          numeroFormatado: lotteryObj.formatted,
+          nome,
+          cpf,
+          cleanCpf,
+          whatsapp,
+          instagram,
+          dataRegistro: nowStr
+        };
+
+        try {
+          if (CONFIG.GOOGLE_SHEETS_URL && CONFIG.GOOGLE_SHEETS_URL.startsWith('http')) {
+            const resp = await fetch(CONFIG.GOOGLE_SHEETS_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(entryData)
+            });
+
+            if (resp.ok) {
+              const resJson = await resp.json().catch(() => ({}));
+              if (resJson && resJson.status === 'duplicate') {
+                if (hint) {
+                  hint.innerText = "Este CPF já está registrado na planilha oficial!";
+                  hint.classList.remove('hidden');
+                }
+                showToast("CPF Já Cadastrado", "Este CPF já garantiu seu número da sorte anteriormente.", false);
+                return;
+              }
+            }
+          }
+
+          localList.unshift(entryData);
+          remoteLotteryList.unshift(entryData);
+          localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(localList));
+          localStorage.setItem('progfolia_user_registered_ticket', JSON.stringify(entryData));
+
+          document.getElementById('luckyNumberDisplay').innerText = lotteryObj.formatted;
+          document.getElementById('luckyParticipantName').innerText = `${nome} (${instagram})`;
+          document.getElementById('luckyParticipantCpf').innerText = `CPF: ${maskCpfPrivacy(cpf)}`;
+          document.getElementById('sorteioForm').classList.add('hidden');
+          document.getElementById('sorteioAlreadyRegisteredNotice').classList.add('hidden');
+          document.getElementById('sorteioResult').classList.remove('hidden');
+
+          confetti({ particleCount: 150, spread: 90, origin: { y: 0.65 } });
+          showToast("Número Gerado!", `Seu número da sorte é ${lotteryObj.formatted}.`);
+        } catch (err) {
+          console.error("Erro ao registrar sorteio:", err);
+          showToast("Erro de Conexão", "Não foi possível validar com a planilha agora. Tente novamente.", false);
+        } finally {
+          btn.disabled = false;
+          btn.classList.remove('opacity-75');
+          btnIcon.className = "fa-solid fa-ticket";
+          btnText.innerText = "CADASTRAR E GERAR NÚMERO DA SORTE";
+        }
+      });
+    }
+
+    // =========================================================================
+    // ADMIN: POP-UP DE INSCRITOS NO SORTEIO & EXCLUSÃO INDIVIDUAL SEGURA
+    // =========================================================================
+    function openSorteioListModal() {
+      const modal = document.getElementById('adminSorteioListModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        renderSorteioList();
+      }
+    }
+
+    function closeSorteioListModal() {
+      const modal = document.getElementById('adminSorteioListModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function renderSorteioList(filterText = "") {
+      const container = document.getElementById('adminSorteioItemsList');
+      const counterEl = document.getElementById('adminSorteioTotalCounter');
+      if (!container) return;
+
+      const list = remoteLotteryList.length > 0
+        ? remoteLotteryList
+        : JSON.parse(localStorage.getItem('progfolia_registered_cpfs') || '[]');
+
+      let filtered = list;
+      if (filterText.trim()) {
+        const q = filterText.toLowerCase();
+        filtered = list.filter(item =>
+          (item.nome && item.nome.toLowerCase().includes(q)) ||
+          (item.cpf && item.cpf.includes(q)) ||
+          (item.instagram && item.instagram.toLowerCase().includes(q)) ||
+          (item.numeroFormatado && item.numeroFormatado.toLowerCase().includes(q))
+        );
+      }
+
+      if (counterEl) counterEl.innerText = `${filtered.length} de ${list.length} cadastro(s)`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-white/5 rounded-2xl border border-white/10 space-y-2">
+            <span class="text-3xl">🎟️</span>
+            <h5 class="text-xs font-psy font-bold text-white uppercase">Nenhum inscrito encontrado</h5>
+            <p class="text-[11px] text-gray-400">Os cadastros realizados no sorteio aparecerão aqui.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(item => {
+        const cleanCpf = item.cleanCpf || (item.cpf || '').replace(/\D/g, '');
+        html += `
+          <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded bg-trance-solarGold/20 border border-trance-solarGold/40 text-trance-solarGold font-psy font-bold text-xs">
+                  ${item.numeroFormatado || '#PROG'}
+                </span>
+                <span class="font-bold text-xs text-white">${item.nome}</span>
+                <span class="text-[11px] text-pink-400 font-mono">${item.instagram}</span>
+              </div>
+              <div class="text-[11px] text-gray-400 font-mono flex items-center gap-3 flex-wrap">
+                <span><i class="fa-regular fa-id-card text-trance-neonCyan mr-1"></i>${item.cpf}</span>
+                <span><i class="fa-brands fa-whatsapp text-green-400 mr-1"></i>${item.whatsapp}</span>
+                <span class="text-gray-500"><i class="fa-regular fa-clock mr-1"></i>${item.dataRegistro || '-'}</span>
+              </div>
+            </div>
+            <button type="button" onclick="requestDeleteSorteioEntry('${cleanCpf}', '${item.nome.replace(/'/g, "\\'")}')"
+                    class="self-end sm:self-center px-3 py-2 rounded-xl bg-red-500/15 hover:bg-red-600 border border-red-500/40 text-red-300 hover:text-white text-xs font-bold flex items-center gap-1.5 transition-all shrink-0">
+              <i class="fa-regular fa-trash-can"></i>
+              <span>Apagar</span>
+            </button>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function filterSorteioList() {
+      const q = document.getElementById('sorteioSearchInput').value;
+      renderSorteioList(q);
+    }
+
+    function requestDeleteSorteioEntry(cleanCpf, nome) {
+      pendingDeleteCpf = cleanCpf;
+      const desc = document.getElementById('deleteConfirmTargetDescription');
+      if (desc) {
+        desc.innerHTML = `Tem certeza que deseja apagar permanentemente o cadastro de <strong class="text-white">${nome}</strong>?`;
+      }
+      const modal = document.getElementById('adminDeleteConfirmModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeDeleteConfirmModal() {
+      pendingDeleteCpf = null;
+      const modal = document.getElementById('adminDeleteConfirmModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function executeConfirmedDelete() {
+      if (!pendingDeleteCpf) return;
+      const targetCpf = pendingDeleteCpf;
+      closeDeleteConfirmModal();
+
+      remoteLotteryList = remoteLotteryList.filter(i => (i.cleanCpf || (i.cpf || '').replace(/\D/g, '')) !== targetCpf);
+      const localList = JSON.parse(localStorage.getItem('progfolia_registered_cpfs') || '[]')
+        .filter(i => (i.cleanCpf || (i.cpf || '').replace(/\D/g, '')) !== targetCpf);
+      localStorage.setItem('progfolia_registered_cpfs', JSON.stringify(localList));
+
+      const savedTicket = JSON.parse(localStorage.getItem('progfolia_user_registered_ticket') || 'null');
+      if (savedTicket && (savedTicket.cleanCpf || savedTicket.cpf.replace(/\D/g, '')) === targetCpf) {
+        localStorage.removeItem('progfolia_user_registered_ticket');
+        const notice = document.getElementById('sorteioAlreadyRegisteredNotice');
+        const form = document.getElementById('sorteioForm');
+        const result = document.getElementById('sorteioResult');
+        if (notice) notice.classList.add('hidden');
+        if (result) result.classList.add('hidden');
+        if (form) { form.reset(); form.classList.remove('hidden'); }
+      }
+
+      renderSorteioList();
+      showAdminDashboard();
+      showToast("Cadastro Removido", "O participante foi removido e o CPF liberado.");
+
+      if (CONFIG.GOOGLE_SHEETS_URL && CONFIG.GOOGLE_SHEETS_URL.startsWith('http')) {
+        try {
+          await fetch(CONFIG.GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'delete', cpf: targetCpf })
+          });
+        } catch (err) {
+          console.warn("Erro ao sincronizar exclusão com a planilha:", err);
+        }
+      }
+    }
+
+    // =========================================================================
+    // FORMULÁRIO IMPRENSA E CRIADORES -> REDIRECIONAMENTO WHATSAPP
+    // =========================================================================
+    function handleImprensaSubmit(event) {
+      event.preventDefault();
+      const nome = document.getElementById('imprensaNome').value.trim();
+      const area = document.getElementById('imprensaArea').value.trim();
+      const cidade = document.getElementById('imprensaCidade').value.trim();
+      const portfolio = document.getElementById('imprensaPortfolio').value.trim();
+      const motivo = document.getElementById('imprensaMotivo').value.trim();
+
+      if (!nome || !area || !cidade || !portfolio || !motivo) {
+        showToast("Campos Obrigatórios", "Preencha todas as informações antes de enviar.", false);
+        return;
+      }
+
+      const msg = `*CADASTRO COLETIVO AUDIOVISUAL - PROG FOLIA 2027*\n\n` +
+                  `👤 *Nome:* ${nome}\n` +
+                  `🎬 *Área de Atuação:* ${area}\n` +
+                  `📍 *Cidade/UF:* ${cidade}\n` +
+                  `📸 *Portfólio/Instagram:* ${portfolio}\n` +
+                  `💬 *Por que quer participar:* ${motivo}`;
+
+      const waUrl = `https://wa.me/${CONFIG.ORGANIZER_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+      showToast("Redirecionando...", "Abrindo WhatsApp com seus dados preenchidos!");
+    }
+
+    // =========================================================================
+    // MOCKUP DO ABADÁ: DETECÇÃO DE IMAGEM & VIEWER COM ZOOM
+    // =========================================================================
+    let abadaZoomScale = 1;
+    let abadaPanX = 0;
+    let abadaPanY = 0;
+    let isDraggingAbada = false;
+    let startPanX = 0;
+    let startPanY = 0;
+
+    function detectAndApplyAbadaImage() {
+      const candidates = ['mockup-abada.png', 'mockup-abada.PNG', 'mockup-abada.jpg', 'abada.png', 'mockup.png'];
+      const thumbImg = document.getElementById('abadaThumbImg');
+      const modalImg = document.getElementById('abadaModalImage');
+      const svgGraphic = document.getElementById('mockupSvgGraphic');
+      const modalSvg = document.getElementById('abadaModalSvgHolder');
+      if (!thumbImg) return;
+
+      let idx = 0;
+      function tryNext() {
+        if (idx >= candidates.length) return;
+        const probe = new Image();
+        probe.onload = function() {
+          thumbImg.src = candidates[idx];
+          thumbImg.classList.remove('hidden');
+          if (svgGraphic) svgGraphic.classList.add('hidden');
+          if (modalImg) {
+            modalImg.src = candidates[idx];
+            modalImg.classList.remove('hidden');
+          }
+          if (modalSvg) modalSvg.classList.add('hidden');
+        };
+        probe.onerror = function() {
+          idx++;
+          tryNext();
+        };
+        probe.src = candidates[idx];
+      }
+      tryNext();
+    }
+
+    function updateAbadaTransform() {
+      const wrapper = document.getElementById('abadaZoomWrapper');
+      const label = document.getElementById('abadaZoomLevelDisplay');
+      if (wrapper) {
+        wrapper.style.transform = `translate(${abadaPanX}px, ${abadaPanY}px) scale(${abadaZoomScale})`;
+      }
+      if (label) {
+        label.innerText = `${Math.round(abadaZoomScale * 100)}%`;
+      }
+    }
+
+    function openAbadaZoomModal() {
+      const modal = document.getElementById('abadaZoomModal');
+      if (!modal) return;
+      resetAbadaZoom();
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeAbadaZoomModal() {
+      const modal = document.getElementById('abadaZoomModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    function zoomAbada(delta) {
+      abadaZoomScale = Math.min(3.5, Math.max(0.75, abadaZoomScale + delta));
+      if (abadaZoomScale === 1) {
+        abadaPanX = 0;
+        abadaPanY = 0;
+      }
+      updateAbadaTransform();
+    }
+
+    function resetAbadaZoom() {
+      abadaZoomScale = 1;
+      abadaPanX = 0;
+      abadaPanY = 0;
+      updateAbadaTransform();
+    }
+
+    function initAbadaZoomEvents() {
+      const container = document.getElementById('abadaZoomContainer');
+      if (!container) return;
+
+      container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        zoomAbada(e.deltaY < 0 ? 0.25 : -0.25);
+      }, { passive: false });
+
+      container.addEventListener('mousedown', (e) => {
+        isDraggingAbada = true;
+        startPanX = e.clientX - abadaPanX;
+        startPanY = e.clientY - abadaPanY;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDraggingAbada) return;
+        abadaPanX = e.clientX - startPanX;
+        abadaPanY = e.clientY - startPanY;
+        updateAbadaTransform();
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDraggingAbada = false;
+      });
+
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDraggingAbada = true;
+          startPanX = e.touches[0].clientX - abadaPanX;
+          startPanY = e.touches[0].clientY - abadaPanY;
+        }
+      }, { passive: true });
+
+      container.addEventListener('touchmove', (e) => {
+        if (!isDraggingAbada || e.touches.length !== 1) return;
+        abadaPanX = e.touches[0].clientX - startPanX;
+        abadaPanY = e.touches[0].clientY - startPanY;
+        updateAbadaTransform();
+      }, { passive: true });
+
+      container.addEventListener('touchend', () => {
+        isDraggingAbada = false;
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeAbadaZoomModal();
+        }
+      });
+    }
+
+    // =========================================================================
+    // UTILITÁRIOS DE NOTIFICAÇÃO, PIX, FAQ & MENU MOBILE
+    // =========================================================================
+    function copyPixKey() {
+      const input = document.getElementById('pixKeyInput');
+      if (!input) return;
+      input.select();
+      input.setSelectionRange(0, 99999);
+      document.execCommand('copy');
+      showToast("Chave PIX Copiada!", "Cole no aplicativo do seu banco para contribuir. Gratidão! 🩵");
+    }
+
+    function toggleFaqPopup() {
+      const popup = document.getElementById('faqPopup');
+      if (popup) popup.classList.toggle('hidden');
+    }
+
+    function faqAnswer(topic) {
+      if (topic === 'gratuito') {
+        showToast("Bloco 100% Gratuito", "O cortejo na rua é aberto e gratuito para todos os foliões!");
+      } else if (topic === 'abada') {
+        showToast("Uso do Abadá", "Não é obrigatório, mas ao adquirir o abadá você fortalece o som e a estrutura do trio.");
+      }
+    }
+
+    function showToast(title, message, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      document.getElementById('toastTitle').innerText = title;
+      document.getElementById('toastMessage').innerText = message;
+      document.getElementById('toastIcon').className = isSuccess
+        ? "w-9 h-9 rounded-full flex items-center justify-center bg-trance-neonCyan text-trance-black font-black text-sm shrink-0"
+        : "w-9 h-9 rounded-full flex items-center justify-center bg-red-500 text-white font-black text-sm shrink-0";
+      document.getElementById('toastIcon').innerHTML = isSuccess ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-exclamation"></i>';
+
+      toast.classList.remove('translate-x-[160%]');
+      toast.classList.add('translate-x-0');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-x-0');
+        toast.classList.add('translate-x-[160%]');
+      }, 4200);
+    }
+
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+      document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
     }
 
     function initCarnivalConfetti() {
