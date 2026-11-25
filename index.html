@@ -175,6 +175,135 @@
   </div>
 
   <!-- ========================================================================= -->
+  <!-- PÁGINA SECRETA DE CADASTRO DE ABADÁ (SENHA: abada2027) -->
+  <!-- ========================================================================= -->
+  <div id="secretAbadaPage" class="fixed inset-0 z-[100001] bg-trance-black flex flex-col items-center justify-center p-4 sm:p-6 overflow-y-auto hidden">
+    <!-- Nebulosas Cósmicas de Fundo -->
+    <div class="fixed -top-32 -left-32 w-96 h-96 bg-trance-neonCyan rounded-full blur-[180px] opacity-25 pointer-events-none animate-glow-pulse"></div>
+    <div class="fixed -bottom-32 -right-32 w-96 h-96 bg-trance-neonPink rounded-full blur-[180px] opacity-30 pointer-events-none animate-glow-pulse" style="animation-delay: 1.5s;"></div>
+
+    <div class="relative z-10 w-full max-w-lg my-auto bg-trance-dark/95 border-2 border-trance-neonCyan/50 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-2xl space-y-6 glow-cyan">
+      
+      <!-- Cabeçalho -->
+      <div class="text-center space-y-2 border-b border-white/10 pb-5">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-trance-neonCyan/15 border border-trance-neonCyan/40 text-trance-neonCyan font-psy font-bold text-[10px] uppercase tracking-widest">
+          <i class="fa-solid fa-key animate-pulse"></i>
+          <span>Acesso Exclusivo • Abadá 2027</span>
+        </div>
+        <h2 class="font-psy font-black text-2xl sm:text-3xl text-white">
+          CADASTRO DE <span class="text-trance-solarGold">ABADÁ</span>
+        </h2>
+        <p class="text-xs text-gray-300 font-light">
+          Preencha seus dados abaixo para registrar sua reserva de abadá do <strong>Prog Folia 2027</strong>.
+        </p>
+      </div>
+
+      <!-- Formulário de Cadastro -->
+      <form id="secretAbadaForm" onsubmit="handleSecretAbadaSubmit(event)" class="space-y-4 text-left">
+        <div>
+          <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+            Nome Completo <span class="text-trance-neonPink">*</span>:
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400">
+              <i class="fa-regular fa-user"></i>
+            </span>
+            <input type="text" id="secretAbadaNome" required placeholder="Digite seu nome completo"
+                   class="w-full pl-10 pr-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white placeholder-gray-500 focus:outline-none focus:border-trance-neonCyan text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+            E-mail <span class="text-trance-neonPink">*</span>:
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400">
+              <i class="fa-regular fa-envelope"></i>
+            </span>
+            <input type="email" id="secretAbadaEmail" required placeholder="seu@email.com"
+                   class="w-full pl-10 pr-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white placeholder-gray-500 focus:outline-none focus:border-trance-neonCyan text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+            WhatsApp (com DDD) <span class="text-trance-neonPink">*</span>:
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400">
+              <i class="fa-brands fa-whatsapp text-green-400"></i>
+            </span>
+            <input type="tel" id="secretAbadaWhatsapp" required placeholder="(27) 99999-9999"
+                   class="w-full pl-10 pr-4 py-3 rounded-xl bg-black/60 border border-white/15 text-white placeholder-gray-500 focus:outline-none focus:border-trance-neonCyan text-sm font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-psy font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+            Tamanho do Abadá <span class="text-trance-neonPink">*</span>:
+          </label>
+          <select id="secretAbadaTamanho" required onchange="toggleSecretCustomSize(this.value)"
+                  class="w-full px-4 py-3 rounded-xl bg-black/80 border border-white/15 text-white focus:outline-none focus:border-trance-neonCyan text-sm font-semibold">
+            <option value="" disabled selected>Selecione o tamanho...</option>
+            <option value="PP">PP</option>
+            <option value="P">P</option>
+            <option value="M">M</option>
+            <option value="G">G</option>
+            <option value="GG">GG</option>
+            <option value="G1">G1</option>
+            <option value="Outro">Outro tamanho (especificar)</option>
+          </select>
+        </div>
+
+        <div id="secretCustomSizeContainer" class="hidden">
+          <label class="block text-xs font-psy font-bold uppercase tracking-wider text-trance-solarGold mb-1.5">
+            Qual tamanho você precisa? <span class="text-trance-neonPink">*</span>
+          </label>
+          <input type="text" id="secretAbadaCustomSize" placeholder="Ex: G2, G3, Infantil 12..."
+                 class="w-full px-4 py-3 rounded-xl bg-black/60 border border-trance-solarGold/50 text-white placeholder-gray-500 focus:outline-none focus:border-trance-solarGold text-sm">
+        </div>
+
+        <div class="pt-2 space-y-2.5">
+          <button type="submit" id="btnSubmitSecretAbada"
+                  class="w-full py-4 rounded-xl bg-gradient-to-r from-trance-neonPink via-trance-uvPurple to-trance-neonCyan text-white font-psy font-black text-xs sm:text-sm uppercase tracking-wider shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 glow-pink">
+            <i class="fa-solid fa-shirt" id="secretAbadaBtnIcon"></i>
+            <span id="secretAbadaBtnText">CONFIRMAR CADASTRO DO ABADÁ</span>
+          </button>
+
+          <button type="button" onclick="closeSecretAbadaPage()"
+                  class="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white text-xs font-mono transition-colors">
+            <i class="fa-solid fa-arrow-left mr-1.5"></i> Voltar para a tela de senha
+          </button>
+        </div>
+      </form>
+
+      <!-- Tela de Confirmação após Envio -->
+      <div id="secretAbadaSuccess" class="hidden text-center space-y-4 py-4">
+        <div class="w-16 h-16 mx-auto rounded-full bg-trance-neonCyan/20 border border-trance-neonCyan/50 text-trance-neonCyan flex items-center justify-center text-3xl shadow-lg">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-psy font-black text-xl text-white">Cadastro Confirmado!</h3>
+          <p class="text-xs text-gray-300">Seus dados para o abadá 2027 foram registrados com sucesso.</p>
+        </div>
+        <div id="secretAbadaReceipt" class="p-4 rounded-2xl bg-black/50 border border-white/10 text-left text-xs font-mono text-gray-300 space-y-1.5"></div>
+        <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
+          <button type="button" onclick="resetSecretAbadaForm()"
+                  class="flex-1 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-psy font-bold text-xs uppercase tracking-wider transition-all">
+            Novo Cadastro
+          </button>
+          <button type="button" onclick="closeSecretAbadaPage()"
+                  class="flex-1 py-3 rounded-xl bg-gradient-to-r from-trance-neonPink to-trance-uvPurple text-white font-psy font-bold text-xs uppercase tracking-wider transition-all">
+            Sair
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
   <!-- 0. TELA DE ABERTURA PSICODÉLICA (SPLASH SCREEN / PORTAL DE ENTRADA) -->
   <!-- ========================================================================= -->
   <div id="splashScreen" class="fixed inset-0 z-[9999] bg-trance-black flex flex-col items-center justify-center p-6 text-center select-none overflow-hidden transition-all duration-700">
@@ -1824,6 +1953,7 @@
       // Controle de Acesso e Manutenção por Senha
       MAINTENANCE_MODE: true,
       SITE_PASSWORD: "dinoodinossauro",
+      SECRET_ABADA_PASSWORD: "abada2027",
 
       // Integração com Google Sheets (Apps Script Webhook)
       GOOGLE_SHEETS_URL: localStorage.getItem('progfolia_google_sheets_url') || "https://script.google.com/macros/s/AKfycbzIlCIBqDET8ivNUNNdKajR_UpwcIQKa_zLVB9kt0Zc_OPfcgklNz4GCexc9ueRIZhs/exec",
@@ -3448,6 +3578,7 @@
       const enteredPass = input ? input.value.trim() : "";
 
       if (enteredPass === CONFIG.SITE_PASSWORD) {
+        if (err) err.classList.add('hidden');
         sessionStorage.setItem('progfolia_gate_unlocked', 'true');
         const gate = document.getElementById('maintenanceGate');
         if (gate) {
@@ -3458,6 +3589,11 @@
           }, 350);
         }
         showToast("Acesso Liberado!", "Bem-vindo ao Prog Folia 2027.");
+      } else if (enteredPass.toLowerCase() === CONFIG.SECRET_ABADA_PASSWORD.toLowerCase()) {
+        if (err) err.classList.add('hidden');
+        if (input) input.value = "";
+        openSecretAbadaPage();
+        showToast("Cadastro Liberado!", "Preencha seus dados para o Abadá 2027.");
       } else {
         if (err) err.classList.remove('hidden');
         if (input) {
@@ -3465,6 +3601,132 @@
           input.focus();
         }
       }
+    }
+
+    // =========================================================================
+    // PÁGINA SECRETA DE CADASTRO DE ABADÁ (SENHA: abada2027)
+    // =========================================================================
+    function openSecretAbadaPage() {
+      const page = document.getElementById('secretAbadaPage');
+      if (page) {
+        page.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      }
+    }
+
+    function closeSecretAbadaPage() {
+      const page = document.getElementById('secretAbadaPage');
+      if (page) {
+        page.classList.add('hidden');
+      }
+      resetSecretAbadaForm();
+    }
+
+    function toggleSecretCustomSize(val) {
+      const container = document.getElementById('secretCustomSizeContainer');
+      const customInput = document.getElementById('secretAbadaCustomSize');
+      if (!container || !customInput) return;
+
+      if (val === 'Outro') {
+        container.classList.remove('hidden');
+        customInput.required = true;
+        customInput.focus();
+      } else {
+        container.classList.add('hidden');
+        customInput.required = false;
+        customInput.value = "";
+      }
+    }
+
+    function resetSecretAbadaForm() {
+      const form = document.getElementById('secretAbadaForm');
+      const success = document.getElementById('secretAbadaSuccess');
+      const customContainer = document.getElementById('secretCustomSizeContainer');
+      const customInput = document.getElementById('secretAbadaCustomSize');
+
+      if (form) {
+        form.reset();
+        form.classList.remove('hidden');
+      }
+      if (success) success.classList.add('hidden');
+      if (customContainer) customContainer.classList.add('hidden');
+      if (customInput) customInput.required = false;
+    }
+
+    async function handleSecretAbadaSubmit(event) {
+      event.preventDefault();
+
+      const nome = document.getElementById('secretAbadaNome').value.trim();
+      const email = document.getElementById('secretAbadaEmail').value.trim();
+      const whatsapp = document.getElementById('secretAbadaWhatsapp').value.trim();
+      const tamanhoSelect = document.getElementById('secretAbadaTamanho').value;
+      const customSize = document.getElementById('secretAbadaCustomSize').value.trim();
+      const tamanhoFinal = tamanhoSelect === 'Outro' ? `Outro (${customSize})` : tamanhoSelect;
+
+      if (!nome || !email || !whatsapp || !tamanhoSelect || (tamanhoSelect === 'Outro' && !customSize)) {
+        showToast("Campos Obrigatórios", "Preencha todas as informações para continuar.", false);
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmitSecretAbada');
+      const btnText = document.getElementById('secretAbadaBtnText');
+      const btnIcon = document.getElementById('secretAbadaBtnIcon');
+
+      btn.disabled = true;
+      btn.classList.add('opacity-75');
+      btnIcon.className = "fa-solid fa-spinner animate-spin";
+      btnText.innerText = "ENVIANDO CADASTRO...";
+
+      const registro = {
+        nome,
+        email,
+        whatsapp,
+        tamanho: tamanhoFinal,
+        dataRegistro: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+      };
+
+      // Salva localmente como backup
+      const localVip = JSON.parse(localStorage.getItem('progfolia_vip_abada_list') || '[]');
+      localVip.unshift(registro);
+      localStorage.setItem('progfolia_vip_abada_list', JSON.stringify(localVip));
+
+      // Envia para a Planilha do Google (aba "Cadastro VIP Abada")
+      if (CONFIG.GOOGLE_SHEETS_URL && CONFIG.GOOGLE_SHEETS_URL.startsWith('http')) {
+        try {
+          await fetch(CONFIG.GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'vip_abada',
+              cadastro: registro
+            })
+          });
+        } catch (err) {
+          console.warn("Falha ao enviar cadastro VIP para a planilha:", err);
+        }
+      }
+
+      // Exibe tela de confirmação
+      const receipt = document.getElementById('secretAbadaReceipt');
+      if (receipt) {
+        receipt.innerHTML = `
+          <div><strong class="text-trance-neonCyan">Nome:</strong> ${nome}</div>
+          <div><strong class="text-trance-neonCyan">E-mail:</strong> ${email}</div>
+          <div><strong class="text-trance-neonCyan">WhatsApp:</strong> ${whatsapp}</div>
+          <div><strong class="text-trance-solarGold">Tamanho do Abadá:</strong> ${tamanhoFinal}</div>
+        `;
+      }
+
+      document.getElementById('secretAbadaForm').classList.add('hidden');
+      document.getElementById('secretAbadaSuccess').classList.remove('hidden');
+
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+      showToast("Cadastro Enviado!", `Abadá tamanho ${tamanhoFinal} registrado com sucesso.`);
+
+      btn.disabled = false;
+      btn.classList.remove('opacity-75');
+      btnIcon.className = "fa-solid fa-shirt";
+      btnText.innerText = "CONFIRMAR CADASTRO DO ABADÁ";
     }
 
     window.addEventListener('DOMContentLoaded', () => {
